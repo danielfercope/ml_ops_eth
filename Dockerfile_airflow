@@ -1,0 +1,9 @@
+FROM apache/airflow:2.7.1
+
+# Instala as dependências de Machine Learning direto na imagem
+# Assim não precisa instalar toda vez que liga o PC
+RUN pip install --no-cache-dir \
+    mlflow==2.7.1 \
+    xgboost \
+    pandas \
+    scikit-learn

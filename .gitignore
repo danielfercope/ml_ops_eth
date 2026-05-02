@@ -1,0 +1,4 @@
+.idea
+dags/__pycache__
+mlartifacts/
+.DS_Store

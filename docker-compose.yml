@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.7.1
+    ports:
+      - "5001:5000"
+    command: mlflow server --backend-store-uri sqlite:////mlflow_db/mlflow.db --default-artifact-root /mlflow/artifacts --host 0.0.0.0
+    volumes:
+      - ./mlartifacts:/mlflow/artifacts
+      - ./mlflow_db:/mlflow_db
+
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile_airflow
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW_UID=50000
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+      - ./mlartifacts:/mlflow/artifacts
+    ports:
+      - "8081:8080"
+    command: |
+      bash -c "
+        set -e
+        rm -f /opt/airflow/airflow-webserver.pid
+        airflow db init
+        airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true
+        airflow scheduler &
+        (until airflow dags list 2>/dev/null | grep -q pipeline_fraude_ethereum; do sleep 5; done && airflow dags unpause pipeline_fraude_ethereum && airflow dags trigger pipeline_fraude_ethereum) &
+        exec airflow webserver
+      "
+  streamlit_app:
+    build: ./app
+    ports:
+      - "8501:8501"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    depends_on:
+      - mlflow
+    volumes:
+      - ./mlartifacts:/mlflow/artifacts

@@ -1,0 +1,1140 @@
+[2025-12-19T00:00:56.410+0000] {processor.py:157} INFO - Started process (PID=17326) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T00:00:56.420+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T00:00:56.433+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:00:56.428+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T00:00:58.925+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T00:01:01.033+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:01:01.032+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a83a90>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T00:01:05.041+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:01:05.040+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a32580>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T00:01:17.021+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:01:17.016+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a32550>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T00:36:05.808+0000] {processor.py:157} INFO - Started process (PID=17347) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T00:36:05.810+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T00:36:05.812+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:36:05.811+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T00:36:07.812+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T00:36:07.878+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:36:07.878+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81bbaa60>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T00:36:11.902+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:36:11.894+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81abd940>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T00:36:19.946+0000] {logging_mixin.py:151} INFO - [2025-12-19T00:36:19.940+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81abda60>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T01:01:54.667+0000] {logging_mixin.py:151} INFO - [2025-12-19T01:01:54.648+0000] {timeout.py:68} ERROR - Process timed out, PID: 17347
+[2025-12-19T01:01:54.875+0000] {logging_mixin.py:151} INFO - [2025-12-19T01:01:54.700+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff81abda00>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17347
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17347
+[2025-12-19T01:01:54.895+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T01:01:55.317+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.690 seconds
+[2025-12-19T01:38:17.587+0000] {processor.py:157} INFO - Started process (PID=17368) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T01:38:17.589+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T01:38:17.592+0000] {logging_mixin.py:151} INFO - [2025-12-19T01:38:17.590+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T01:38:19.258+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T01:38:19.301+0000] {logging_mixin.py:151} INFO - [2025-12-19T01:38:19.301+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819b30d0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T01:38:23.317+0000] {logging_mixin.py:151} INFO - [2025-12-19T01:38:23.313+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819b33a0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T01:38:31.356+0000] {logging_mixin.py:151} INFO - [2025-12-19T01:38:31.351+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a2cf10>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:21:15.462+0000] {processor.py:157} INFO - Started process (PID=17389) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T02:21:15.464+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T02:21:15.465+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:21:15.464+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T02:21:17.598+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T02:21:17.677+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:21:17.677+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81b1c9d0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:21:21.693+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:21:21.688+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a314f0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:21:29.735+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:21:29.720+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a31640>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:36:54.355+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:36:54.326+0000] {timeout.py:68} ERROR - Process timed out, PID: 17389
+[2025-12-19T02:36:54.400+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:36:54.361+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff81a31940>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17389
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17389
+[2025-12-19T02:36:54.409+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T02:36:54.544+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.242 seconds
+[2025-12-19T02:52:49.058+0000] {processor.py:157} INFO - Started process (PID=17410) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T02:52:49.062+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T02:52:49.063+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:52:49.063+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T02:52:51.225+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T02:52:51.292+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:52:51.291+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819b9760>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:52:55.305+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:52:55.302+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819b97f0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:53:03.328+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:53:03.325+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819b9a00>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T02:53:19.089+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:53:19.077+0000] {timeout.py:68} ERROR - Process timed out, PID: 17410
+[2025-12-19T02:53:19.110+0000] {logging_mixin.py:151} INFO - [2025-12-19T02:53:19.094+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff819b99d0>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17410
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17410
+[2025-12-19T02:53:19.112+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T02:53:19.168+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.120 seconds
+[2025-12-19T03:04:20.345+0000] {processor.py:157} INFO - Started process (PID=17429) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:04:20.348+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T03:04:20.352+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:04:20.350+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:04:21.687+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T03:04:21.744+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:04:21.744+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f9f40>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:04:25.756+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:04:25.753+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f94c0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:04:33.777+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:04:33.776+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f93a0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:20:46.013+0000] {processor.py:157} INFO - Started process (PID=17448) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:20:46.014+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T03:20:46.016+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:20:46.015+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:20:47.555+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T03:20:47.618+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:20:47.618+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a183d0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:20:51.652+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:20:51.646+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a31fa0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:21:00.531+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:21:00.528+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a31880>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:52:35.712+0000] {processor.py:157} INFO - Started process (PID=17465) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:52:35.714+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T03:52:35.718+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:52:35.716+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:52:37.475+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T03:52:37.536+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:52:37.536+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a08310>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:52:41.557+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:52:41.555+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a08400>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:52:49.589+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:52:49.585+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a3d730>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:53:05.603+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:53:05.601+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=1, connect=1, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a821f0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T03:53:05.727+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:53:05.722+0000] {timeout.py:68} ERROR - Process timed out, PID: 17465
+[2025-12-19T03:53:05.743+0000] {logging_mixin.py:151} INFO - [2025-12-19T03:53:05.729+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff819c7c10>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  [Previous line repeated 1 more time]
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17465
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17465
+[2025-12-19T03:53:05.744+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T03:53:05.780+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.094 seconds
+[2025-12-19T04:05:21.473+0000] {processor.py:157} INFO - Started process (PID=17482) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:05:21.475+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T04:05:21.477+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:05:21.476+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:05:23.505+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T04:05:23.576+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:05:23.576+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a0d1f0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:05:27.594+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:05:27.591+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a0d2b0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:05:35.618+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:05:35.614+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a0d520>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:21:07.630+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:21:07.618+0000] {timeout.py:68} ERROR - Process timed out, PID: 17482
+[2025-12-19T04:21:07.647+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:21:07.633+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff81a0d940>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17482
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17482
+[2025-12-19T04:21:07.648+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:21:07.703+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.112 seconds
+[2025-12-19T04:21:38.188+0000] {processor.py:157} INFO - Started process (PID=17505) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:21:38.192+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T04:21:38.194+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:21:38.193+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:21:39.468+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T04:21:39.525+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:21:39.525+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a386a0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:21:43.547+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:21:43.541+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a71970>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:21:51.592+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:21:51.587+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a718e0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:53:28.811+0000] {processor.py:157} INFO - Started process (PID=17520) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:53:28.813+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T04:53:28.815+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:28.814+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:53:30.033+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T04:53:30.097+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:30.096+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819d9040>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:53:34.109+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:34.106+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819d91c0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:53:42.132+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:42.129+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819d9610>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:53:58.169+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:58.167+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=1, connect=1, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819d9820>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T04:53:58.827+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:58.823+0000] {timeout.py:68} ERROR - Process timed out, PID: 17520
+[2025-12-19T04:53:58.842+0000] {logging_mixin.py:151} INFO - [2025-12-19T04:53:58.829+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff819d9940>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  [Previous line repeated 1 more time]
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17520
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17520
+[2025-12-19T04:53:58.844+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T04:53:58.902+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.102 seconds
+[2025-12-19T05:09:54.048+0000] {processor.py:157} INFO - Started process (PID=17539) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:09:54.050+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T05:09:54.052+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:09:54.051+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:09:55.950+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T05:09:56.014+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:09:56.014+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81b5c970>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:10:00.028+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:10:00.026+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a716d0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:10:08.051+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:10:08.049+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a71640>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:26:18.717+0000] {processor.py:157} INFO - Started process (PID=17558) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:26:18.721+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T05:26:18.723+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:26:18.722+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:26:19.985+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T05:26:20.042+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:26:20.042+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81aee250>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:26:24.054+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:26:24.053+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81abd7f0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:26:32.083+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:26:32.076+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81abd8b0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:26:48.158+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:26:48.148+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=1, connect=1, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81abd850>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:42:14.351+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:42:14.344+0000] {timeout.py:68} ERROR - Process timed out, PID: 17558
+[2025-12-19T05:42:14.369+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:42:14.354+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff81abdc70>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  [Previous line repeated 1 more time]
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17558
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17558
+[2025-12-19T05:42:14.371+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:42:14.449+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.138 seconds
+[2025-12-19T05:58:09.838+0000] {processor.py:157} INFO - Started process (PID=17577) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:58:09.854+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T05:58:09.859+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:58:09.858+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:58:11.754+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T05:58:11.808+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:58:11.808+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a32e20>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:58:15.824+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:58:15.822+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a32d00>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:58:23.851+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:58:23.849+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819b8ee0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T05:58:39.894+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:58:39.878+0000] {timeout.py:68} ERROR - Process timed out, PID: 17577
+[2025-12-19T05:58:39.926+0000] {logging_mixin.py:151} INFO - [2025-12-19T05:58:39.900+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff819b8100>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17577
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17577
+[2025-12-19T05:58:39.927+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T05:58:39.969+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.145 seconds
+[2025-12-19T06:14:09.877+0000] {processor.py:157} INFO - Started process (PID=17594) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:14:09.879+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T06:14:09.881+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:09.880+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:14:11.624+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T06:14:11.696+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:11.696+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a86c10>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:14:15.711+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:15.707+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a719d0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:14:23.725+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:23.723+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a718b0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:14:39.765+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:39.763+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=1, connect=1, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a71b20>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:14:39.898+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:39.891+0000] {timeout.py:68} ERROR - Process timed out, PID: 17594
+[2025-12-19T06:14:39.919+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:14:39.901+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff81a71f70>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  [Previous line repeated 1 more time]
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17594
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17594
+[2025-12-19T06:14:39.921+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:14:39.974+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.104 seconds
+[2025-12-19T06:30:34.208+0000] {processor.py:157} INFO - Started process (PID=17613) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:30:34.210+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T06:30:34.212+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:30:34.211+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:30:36.216+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T06:30:36.284+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:30:36.284+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f5d30>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:30:40.305+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:30:40.299+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f52b0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:30:48.325+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:30:48.324+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a6cfd0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:46:29.876+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:46:29.859+0000] {timeout.py:68} ERROR - Process timed out, PID: 17613
+[2025-12-19T06:46:29.903+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:46:29.880+0000] {dagbag.py:347} ERROR - Failed to import: /opt/airflow/dags/dag_fraud_ethereum.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 174, in _new_conn
+    conn = connection.create_connection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/connection.py", line 72, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+  File "/usr/local/lib/python3.8/socket.py", line 918, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+socket.gaierror: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 714, in urlopen
+    httplib_response = self._make_request(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 415, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 244, in request
+    super(HTTPConnection, self).request(method, url, body=body, headers=headers)
+  File "/usr/local/lib/python3.8/http/client.py", line 1256, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1302, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1251, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/local/lib/python3.8/http/client.py", line 1011, in _send_output
+    self.send(msg)
+  File "/usr/local/lib/python3.8/http/client.py", line 951, in send
+    self.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 205, in connect
+    conn = self._new_conn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connection.py", line 186, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0xffff81a35490>: Failed to establish a new connection: [Errno -2] Name or service not known
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 92, in http_request
+    return _get_http_response_with_retries(
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/request_utils.py", line 135, in _get_http_response_with_retries
+    return session.request(method, url, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/requests/adapters.py", line 486, in send
+    resp = conn.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 826, in urlopen
+    return self.urlopen(
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/connectionpool.py", line 801, in urlopen
+    retries.sleep()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 432, in sleep
+    self._sleep_backoff()
+  File "/home/airflow/.local/lib/python3.8/site-packages/urllib3/util/retry.py", line 416, in _sleep_backoff
+    time.sleep(backoff)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/timeout.py", line 69, in handle_timeout
+    raise AirflowTaskTimeout(self.error_message)
+airflow.exceptions.AirflowTaskTimeout: DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17613
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/dagbag.py", line 343, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/opt/airflow/dags/dag_fraud_ethereum.py", line 11, in <module>
+    mlflow.set_experiment("deteccao_fraude_eth")
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/fluent.py", line 128, in set_experiment
+    experiment = client.get_experiment_by_name(experiment_name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/client.py", line 508, in get_experiment_by_name
+    return self._tracking_client.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/tracking/_tracking_service/client.py", line 220, in get_experiment_by_name
+    return self.store.get_experiment_by_name(name)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 306, in get_experiment_by_name
+    response_proto = self._call_endpoint(GetExperimentByName, req_body)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/store/tracking/rest_store.py", line 59, in _call_endpoint
+    return call_endpoint(self.get_host_creds(), endpoint, method, json_body, response_proto)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 198, in call_endpoint
+    response = http_request(**call_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/mlflow/utils/rest_utils.py", line 112, in http_request
+    raise MlflowException(f"API request to {url} failed with exception {e}")
+mlflow.exceptions.MlflowException: API request to http://mlflow:5000/api/2.0/mlflow/experiments/get-by-name failed with exception DagBag import timeout for /opt/airflow/dags/dag_fraud_ethereum.py after 30.0s.
+Please take a look at these docs to improve your DAG import time:
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#top-level-python-code
+* https://airflow.apache.org/docs/apache-airflow/2.7.1/best-practices.html#reducing-dag-complexity, PID: 17613
+[2025-12-19T06:46:29.905+0000] {processor.py:841} WARNING - No viable dags retrieved from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:46:29.976+0000] {processor.py:179} INFO - Processing /opt/airflow/dags/dag_fraud_ethereum.py took 30.143 seconds
+[2025-12-19T06:47:00.564+0000] {processor.py:157} INFO - Started process (PID=17634) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:47:00.571+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T06:47:00.577+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:47:00.574+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T06:47:01.822+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T06:47:01.888+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:47:01.887+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819cd1f0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:47:05.900+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:47:05.898+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819cd2b0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T06:47:13.927+0000] {logging_mixin.py:151} INFO - [2025-12-19T06:47:13.922+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819cd520>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T07:03:25.346+0000] {processor.py:157} INFO - Started process (PID=17649) to work on /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T07:03:25.348+0000] {processor.py:829} INFO - Processing file /opt/airflow/dags/dag_fraud_ethereum.py for tasks to queue
+[2025-12-19T07:03:25.350+0000] {logging_mixin.py:151} INFO - [2025-12-19T07:03:25.349+0000] {dagbag.py:539} INFO - Filling up the DagBag from /opt/airflow/dags/dag_fraud_ethereum.py
+[2025-12-19T07:03:26.614+0000] {logging_mixin.py:151} WARNING - /home/airflow/.local/lib/python3.8/site-packages/pydantic/_internal/_fields.py:127 UserWarning: Field "model_server_url" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+[2025-12-19T07:03:26.675+0000] {logging_mixin.py:151} INFO - [2025-12-19T07:03:26.675+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=4, connect=4, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff81a396a0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T07:03:30.688+0000] {logging_mixin.py:151} INFO - [2025-12-19T07:03:30.686+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=3, connect=3, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f3970>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth
+[2025-12-19T07:03:38.719+0000] {logging_mixin.py:151} INFO - [2025-12-19T07:03:38.711+0000] {connectionpool.py:823} WARNING - Retrying (Retry(total=2, connect=2, read=5, redirect=5, status=5)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0xffff819f38e0>: Failed to establish a new connection: [Errno -2] Name or service not known')': /api/2.0/mlflow/experiments/get-by-name?experiment_name=deteccao_fraude_eth

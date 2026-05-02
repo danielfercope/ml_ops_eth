@@ -1,0 +1,213 @@
+[2026-04-30T00:03:09.370+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T00:03:09.377+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T00:03:09.377+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2026-04-30T00:03:09.388+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): treinar_modelo_v1> on 2026-04-29 00:00:00+00:00
+[2026-04-30T00:03:09.406+0000] {standard_task_runner.py:57} INFO - Started process 211 to run task
+[2026-04-30T00:03:09.410+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'pipeline_fraude_ethereum', 'treinar_modelo_v1', 'scheduled__2026-04-29T00:00:00+00:00', '--job-id', '13', '--raw', '--subdir', 'DAGS_FOLDER/dag_fraud_ethereum.py', '--cfg-path', '/tmp/tmpa51ii1fi']
+[2026-04-30T00:03:09.415+0000] {standard_task_runner.py:85} INFO - Job 13: Subtask treinar_modelo_v1
+[2026-04-30T00:03:09.466+0000] {task_command.py:415} INFO - Running <TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [running]> on host cfb6846296a7
+[2026-04-30T00:03:09.532+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='pipeline_fraude_ethereum' AIRFLOW_CTX_TASK_ID='treinar_modelo_v1' AIRFLOW_CTX_EXECUTION_DATE='2026-04-29T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-29T00:00:00+00:00'
+[2026-04-30T00:03:09.598+0000] {logging_mixin.py:151} WARNING - 2026/04/30 00:03:09 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.
+The git executable must be specified in one of the following ways:
+    - be included in your $PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(<full-path-to-git-executable>)
+
+All git commands will error until this is rectified.
+
+This initial message can be silenced or aggravated in the future by setting the
+$GIT_PYTHON_REFRESH environment variable. Use one of the following values:
+    - quiet|q|silence|s|silent|none|n|0: for no message or exception
+    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)
+    - error|e|exception|raise|r|2: for a raised exception
+
+Example:
+    export GIT_PYTHON_REFRESH=quiet
+[2026-04-30T00:03:10.258+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/xgboost/core.py:158 UserWarning: [00:03:10] WARNING: /workspace/src/c_api/c_api.cc:1374: Saving model in the UBJSON format as default.  You can use file extension: `json`, `ubj` or `deprecated` to choose between formats.
+[2026-04-30T00:03:13.105+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:33 UserWarning: Setuptools is replacing distutils.
+[2026-04-30T00:03:14.094+0000] {logging_mixin.py:151} WARNING - Successfully registered model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T00:03:14.215+0000] {logging_mixin.py:151} WARNING - 2026/04/30 00:03:14 INFO mlflow.tracking._model_registry.client: Waiting up to 300 seconds for model version to finish creation. Model name: Modelo_Fraude_Ethereum, version 1
+[2026-04-30T00:03:14.215+0000] {logging_mixin.py:151} WARNING - Created version '1' of model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T00:03:14.216+0000] {logging_mixin.py:151} INFO - Modelo treinado e enviado ao MLflow!
+[2026-04-30T00:03:14.235+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-04-30T00:03:14.265+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=pipeline_fraude_ethereum, task_id=treinar_modelo_v1, execution_date=20260429T000000, start_date=20260430T000309, end_date=20260430T000314
+[2026-04-30T00:03:14.333+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-04-30T00:03:14.369+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-04-30T00:41:39.857+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T00:41:39.864+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T00:41:39.864+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2026-04-30T00:41:39.878+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): treinar_modelo_v1> on 2026-04-29 00:00:00+00:00
+[2026-04-30T00:41:39.947+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'pipeline_fraude_ethereum', 'treinar_modelo_v1', 'scheduled__2026-04-29T00:00:00+00:00', '--job-id', '3', '--raw', '--subdir', 'DAGS_FOLDER/dag_fraud_ethereum.py', '--cfg-path', '/tmp/tmprgh8kxt1']
+[2026-04-30T00:41:39.949+0000] {standard_task_runner.py:85} INFO - Job 3: Subtask treinar_modelo_v1
+[2026-04-30T00:41:39.923+0000] {standard_task_runner.py:57} INFO - Started process 1905 to run task
+[2026-04-30T00:41:40.120+0000] {task_command.py:415} INFO - Running <TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [running]> on host 547e0cdf3526
+[2026-04-30T00:41:40.701+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='pipeline_fraude_ethereum' AIRFLOW_CTX_TASK_ID='treinar_modelo_v1' AIRFLOW_CTX_EXECUTION_DATE='2026-04-29T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-29T00:00:00+00:00'
+[2026-04-30T00:41:41.491+0000] {logging_mixin.py:151} WARNING - 2026/04/30 00:41:41 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.
+The git executable must be specified in one of the following ways:
+    - be included in your $PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(<full-path-to-git-executable>)
+
+All git commands will error until this is rectified.
+
+This initial message can be silenced or aggravated in the future by setting the
+$GIT_PYTHON_REFRESH environment variable. Use one of the following values:
+    - quiet|q|silence|s|silent|none|n|0: for no message or exception
+    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)
+    - error|e|exception|raise|r|2: for a raised exception
+
+Example:
+    export GIT_PYTHON_REFRESH=quiet
+[2026-04-30T00:41:42.748+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/xgboost/core.py:158 UserWarning: [00:41:42] WARNING: /workspace/src/c_api/c_api.cc:1374: Saving model in the UBJSON format as default.  You can use file extension: `json`, `ubj` or `deprecated` to choose between formats.
+[2026-04-30T00:41:54.789+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:33 UserWarning: Setuptools is replacing distutils.
+[2026-04-30T00:41:55.290+0000] {logging_mixin.py:151} WARNING - Registered model 'Modelo_Fraude_Ethereum' already exists. Creating a new version of this model...
+[2026-04-30T00:41:55.544+0000] {logging_mixin.py:151} WARNING - 2026/04/30 00:41:55 INFO mlflow.tracking._model_registry.client: Waiting up to 300 seconds for model version to finish creation. Model name: Modelo_Fraude_Ethereum, version 1
+[2026-04-30T00:41:55.547+0000] {logging_mixin.py:151} WARNING - Created version '1' of model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T00:41:55.670+0000] {logging_mixin.py:151} INFO - Modelo v2 promovido para Production!
+[2026-04-30T00:41:55.772+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-04-30T00:41:55.868+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=pipeline_fraude_ethereum, task_id=treinar_modelo_v1, execution_date=20260429T000000, start_date=20260430T004139, end_date=20260430T004155
+[2026-04-30T00:41:56.129+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-04-30T00:41:56.193+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-04-30T00:46:48.463+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T00:46:48.470+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T00:46:48.471+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2026-04-30T00:46:48.478+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): treinar_modelo_v1> on 2026-04-29 00:00:00+00:00
+[2026-04-30T00:46:48.498+0000] {standard_task_runner.py:57} INFO - Started process 281 to run task
+[2026-04-30T00:46:48.511+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'pipeline_fraude_ethereum', 'treinar_modelo_v1', 'scheduled__2026-04-29T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/dag_fraud_ethereum.py', '--cfg-path', '/tmp/tmpksegdv23']
+[2026-04-30T00:46:48.517+0000] {standard_task_runner.py:85} INFO - Job 2: Subtask treinar_modelo_v1
+[2026-04-30T00:46:48.676+0000] {task_command.py:415} INFO - Running <TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [running]> on host 41cafc0d2eb5
+[2026-04-30T00:46:48.821+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='pipeline_fraude_ethereum' AIRFLOW_CTX_TASK_ID='treinar_modelo_v1' AIRFLOW_CTX_EXECUTION_DATE='2026-04-29T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-29T00:00:00+00:00'
+[2026-04-30T00:46:48.969+0000] {logging_mixin.py:151} WARNING - 2026/04/30 00:46:48 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.
+The git executable must be specified in one of the following ways:
+    - be included in your $PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(<full-path-to-git-executable>)
+
+All git commands will error until this is rectified.
+
+This initial message can be silenced or aggravated in the future by setting the
+$GIT_PYTHON_REFRESH environment variable. Use one of the following values:
+    - quiet|q|silence|s|silent|none|n|0: for no message or exception
+    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)
+    - error|e|exception|raise|r|2: for a raised exception
+
+Example:
+    export GIT_PYTHON_REFRESH=quiet
+[2026-04-30T00:46:49.190+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/xgboost/core.py:158 UserWarning: [00:46:49] WARNING: /workspace/src/c_api/c_api.cc:1374: Saving model in the UBJSON format as default.  You can use file extension: `json`, `ubj` or `deprecated` to choose between formats.
+[2026-04-30T00:46:53.708+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:33 UserWarning: Setuptools is replacing distutils.
+[2026-04-30T00:46:53.974+0000] {logging_mixin.py:151} WARNING - Successfully registered model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T00:46:54.146+0000] {logging_mixin.py:151} WARNING - 2026/04/30 00:46:54 INFO mlflow.tracking._model_registry.client: Waiting up to 300 seconds for model version to finish creation. Model name: Modelo_Fraude_Ethereum, version 1
+[2026-04-30T00:46:54.146+0000] {logging_mixin.py:151} WARNING - Created version '1' of model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T00:46:54.203+0000] {logging_mixin.py:151} INFO - Modelo v1 promovido para Production!
+[2026-04-30T00:46:54.255+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-04-30T00:46:54.314+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=pipeline_fraude_ethereum, task_id=treinar_modelo_v1, execution_date=20260429T000000, start_date=20260430T004648, end_date=20260430T004654
+[2026-04-30T00:46:54.496+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-04-30T00:46:54.556+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-04-30T01:47:29.542+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T01:47:29.551+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T01:47:29.552+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2026-04-30T01:47:29.565+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): treinar_modelo_v1> on 2026-04-29 00:00:00+00:00
+[2026-04-30T01:47:29.596+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'pipeline_fraude_ethereum', 'treinar_modelo_v1', 'scheduled__2026-04-29T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/dag_fraud_ethereum.py', '--cfg-path', '/tmp/tmp482t_55h']
+[2026-04-30T01:47:29.593+0000] {standard_task_runner.py:57} INFO - Started process 297 to run task
+[2026-04-30T01:47:29.597+0000] {standard_task_runner.py:85} INFO - Job 2: Subtask treinar_modelo_v1
+[2026-04-30T01:47:29.684+0000] {task_command.py:415} INFO - Running <TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [running]> on host c7c95a766b93
+[2026-04-30T01:47:29.778+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='pipeline_fraude_ethereum' AIRFLOW_CTX_TASK_ID='treinar_modelo_v1' AIRFLOW_CTX_EXECUTION_DATE='2026-04-29T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-29T00:00:00+00:00'
+[2026-04-30T01:47:29.986+0000] {logging_mixin.py:151} WARNING - 2026/04/30 01:47:29 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.
+The git executable must be specified in one of the following ways:
+    - be included in your $PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(<full-path-to-git-executable>)
+
+All git commands will error until this is rectified.
+
+This initial message can be silenced or aggravated in the future by setting the
+$GIT_PYTHON_REFRESH environment variable. Use one of the following values:
+    - quiet|q|silence|s|silent|none|n|0: for no message or exception
+    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)
+    - error|e|exception|raise|r|2: for a raised exception
+
+Example:
+    export GIT_PYTHON_REFRESH=quiet
+[2026-04-30T01:47:30.448+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/xgboost/core.py:158 UserWarning: [01:47:30] WARNING: /workspace/src/c_api/c_api.cc:1374: Saving model in the UBJSON format as default.  You can use file extension: `json`, `ubj` or `deprecated` to choose between formats.
+[2026-04-30T01:47:36.219+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:33 UserWarning: Setuptools is replacing distutils.
+[2026-04-30T01:47:36.637+0000] {logging_mixin.py:151} WARNING - Successfully registered model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T01:47:36.763+0000] {logging_mixin.py:151} WARNING - 2026/04/30 01:47:36 INFO mlflow.tracking._model_registry.client: Waiting up to 300 seconds for model version to finish creation. Model name: Modelo_Fraude_Ethereum, version 1
+[2026-04-30T01:47:36.763+0000] {logging_mixin.py:151} WARNING - Created version '1' of model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T01:47:36.810+0000] {logging_mixin.py:151} INFO - Modelo v1 promovido para Production!
+[2026-04-30T01:47:36.830+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-04-30T01:47:36.873+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=pipeline_fraude_ethereum, task_id=treinar_modelo_v1, execution_date=20260429T000000, start_date=20260430T014729, end_date=20260430T014736
+[2026-04-30T01:47:36.956+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-04-30T01:47:36.990+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-04-30T01:52:10.856+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T01:52:10.862+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T01:52:10.862+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2026-04-30T01:52:10.871+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): treinar_modelo_v1> on 2026-04-29 00:00:00+00:00
+[2026-04-30T01:52:10.888+0000] {standard_task_runner.py:57} INFO - Started process 263 to run task
+[2026-04-30T01:52:10.891+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'pipeline_fraude_ethereum', 'treinar_modelo_v1', 'scheduled__2026-04-29T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/dag_fraud_ethereum.py', '--cfg-path', '/tmp/tmp64p61s16']
+[2026-04-30T01:52:10.892+0000] {standard_task_runner.py:85} INFO - Job 2: Subtask treinar_modelo_v1
+[2026-04-30T01:52:10.951+0000] {task_command.py:415} INFO - Running <TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [running]> on host 9009ae0560bc
+[2026-04-30T01:52:11.028+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='pipeline_fraude_ethereum' AIRFLOW_CTX_TASK_ID='treinar_modelo_v1' AIRFLOW_CTX_EXECUTION_DATE='2026-04-29T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-29T00:00:00+00:00'
+[2026-04-30T01:52:11.164+0000] {logging_mixin.py:151} WARNING - 2026/04/30 01:52:11 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.
+The git executable must be specified in one of the following ways:
+    - be included in your $PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(<full-path-to-git-executable>)
+
+All git commands will error until this is rectified.
+
+This initial message can be silenced or aggravated in the future by setting the
+$GIT_PYTHON_REFRESH environment variable. Use one of the following values:
+    - quiet|q|silence|s|silent|none|n|0: for no message or exception
+    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)
+    - error|e|exception|raise|r|2: for a raised exception
+
+Example:
+    export GIT_PYTHON_REFRESH=quiet
+[2026-04-30T01:52:11.969+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/xgboost/core.py:158 UserWarning: [01:52:11] WARNING: /workspace/src/c_api/c_api.cc:1374: Saving model in the UBJSON format as default.  You can use file extension: `json`, `ubj` or `deprecated` to choose between formats.
+[2026-04-30T01:52:17.338+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:33 UserWarning: Setuptools is replacing distutils.
+[2026-04-30T01:52:17.573+0000] {logging_mixin.py:151} WARNING - Registered model 'Modelo_Fraude_Ethereum' already exists. Creating a new version of this model...
+[2026-04-30T01:52:17.664+0000] {logging_mixin.py:151} WARNING - 2026/04/30 01:52:17 INFO mlflow.tracking._model_registry.client: Waiting up to 300 seconds for model version to finish creation. Model name: Modelo_Fraude_Ethereum, version 3
+[2026-04-30T01:52:17.665+0000] {logging_mixin.py:151} WARNING - Created version '3' of model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T01:52:17.783+0000] {logging_mixin.py:151} INFO - Modelo v3 promovido para Production!
+[2026-04-30T01:52:17.839+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-04-30T01:52:17.977+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=pipeline_fraude_ethereum, task_id=treinar_modelo_v1, execution_date=20260429T000000, start_date=20260430T015210, end_date=20260430T015217
+[2026-04-30T01:52:18.055+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-04-30T01:52:18.110+0000] {local_task_job_runner.py:115} ERROR - Received SIGTERM. Terminating subprocesses
+[2026-04-30T01:52:18.119+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 143
+[2026-04-30T01:52:18.167+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-04-30T01:52:18.224+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-04-30T01:53:26.902+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T01:53:26.908+0000] {taskinstance.py:1157} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [queued]>
+[2026-04-30T01:53:26.908+0000] {taskinstance.py:1359} INFO - Starting attempt 1 of 1
+[2026-04-30T01:53:26.915+0000] {taskinstance.py:1380} INFO - Executing <Task(PythonOperator): treinar_modelo_v1> on 2026-04-29 00:00:00+00:00
+[2026-04-30T01:53:26.932+0000] {standard_task_runner.py:57} INFO - Started process 263 to run task
+[2026-04-30T01:53:26.940+0000] {standard_task_runner.py:84} INFO - Running: ['***', 'tasks', 'run', 'pipeline_fraude_ethereum', 'treinar_modelo_v1', 'scheduled__2026-04-29T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/dag_fraud_ethereum.py', '--cfg-path', '/tmp/tmphrazk9e8']
+[2026-04-30T01:53:26.942+0000] {standard_task_runner.py:85} INFO - Job 2: Subtask treinar_modelo_v1
+[2026-04-30T01:53:27.006+0000] {task_command.py:415} INFO - Running <TaskInstance: pipeline_fraude_ethereum.treinar_modelo_v1 scheduled__2026-04-29T00:00:00+00:00 [running]> on host 0866cc58149d
+[2026-04-30T01:53:27.074+0000] {taskinstance.py:1660} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='pipeline_fraude_ethereum' AIRFLOW_CTX_TASK_ID='treinar_modelo_v1' AIRFLOW_CTX_EXECUTION_DATE='2026-04-29T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-04-29T00:00:00+00:00'
+[2026-04-30T01:53:27.201+0000] {logging_mixin.py:151} WARNING - 2026/04/30 01:53:27 WARNING mlflow.utils.git_utils: Failed to import Git (the Git executable is probably not on your PATH), so Git SHA is not available. Error: Failed to initialize: Bad git executable.
+The git executable must be specified in one of the following ways:
+    - be included in your $PATH
+    - be set via $GIT_PYTHON_GIT_EXECUTABLE
+    - explicitly set via git.refresh(<full-path-to-git-executable>)
+
+All git commands will error until this is rectified.
+
+This initial message can be silenced or aggravated in the future by setting the
+$GIT_PYTHON_REFRESH environment variable. Use one of the following values:
+    - quiet|q|silence|s|silent|none|n|0: for no message or exception
+    - warn|w|warning|log|l|1: for a warning message (logging level CRITICAL, displayed by default)
+    - error|e|exception|raise|r|2: for a raised exception
+
+Example:
+    export GIT_PYTHON_REFRESH=quiet
+[2026-04-30T01:53:27.845+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/xgboost/core.py:158 UserWarning: [01:53:27] WARNING: /workspace/src/c_api/c_api.cc:1374: Saving model in the UBJSON format as default.  You can use file extension: `json`, `ubj` or `deprecated` to choose between formats.
+[2026-04-30T01:53:31.720+0000] {logging_mixin.py:151} WARNING - /home/***/.local/lib/python3.8/site-packages/_distutils_hack/__init__.py:33 UserWarning: Setuptools is replacing distutils.
+[2026-04-30T01:53:32.023+0000] {logging_mixin.py:151} WARNING - Registered model 'Modelo_Fraude_Ethereum' already exists. Creating a new version of this model...
+[2026-04-30T01:53:32.111+0000] {logging_mixin.py:151} WARNING - 2026/04/30 01:53:32 INFO mlflow.tracking._model_registry.client: Waiting up to 300 seconds for model version to finish creation. Model name: Modelo_Fraude_Ethereum, version 5
+[2026-04-30T01:53:32.111+0000] {logging_mixin.py:151} WARNING - Created version '5' of model 'Modelo_Fraude_Ethereum'.
+[2026-04-30T01:53:32.163+0000] {logging_mixin.py:151} INFO - Modelo v5 promovido para Production!
+[2026-04-30T01:53:32.277+0000] {python.py:194} INFO - Done. Returned value was: None
+[2026-04-30T01:53:32.301+0000] {taskinstance.py:1398} INFO - Marking task as SUCCESS. dag_id=pipeline_fraude_ethereum, task_id=treinar_modelo_v1, execution_date=20260429T000000, start_date=20260430T015326, end_date=20260430T015332
+[2026-04-30T01:53:32.365+0000] {local_task_job_runner.py:228} INFO - Task exited with return code 0
+[2026-04-30T01:53:32.414+0000] {taskinstance.py:2776} INFO - 0 downstream tasks scheduled from follow-on schedule check

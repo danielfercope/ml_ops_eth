@@ -1,0 +1,8 @@
+streamlit
+pandas
+numpy
+joblib
+plotly
+xgboost
+mlflow==2.7.1
+scikit-learn
