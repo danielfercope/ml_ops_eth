@@ -46,8 +46,7 @@ ml_ops_eth/
 ├── logs/                       # Logs do Airflow (gerados em runtime)
 ├── mlartifacts/                # Artefatos dos modelos treinados
 ├── Dockerfile_airflow          # Imagem customizada do Airflow
-├── docker-compose.yml          # Orquestração completa dos serviços
-└── load_model_artifacts.py     # Utilitário de carregamento de artefatos
+└── docker-compose.yml          # Orquestração completa dos serviços
 ```
 
 ---
@@ -81,23 +80,20 @@ docker compose logs -f
 | MLflow (tracking) | http://localhost:5001 | — |
 | Streamlit (dashboard) | http://localhost:8501 | — |
 
-### 3. Treinar o primeiro modelo
+### 3. Treinar o primeiro modelo (automático)
 
-O Airflow já agenda a DAG `pipeline_fraude_ethereum` para executar diariamente. Para treinar imediatamente:
+Logo após o `docker compose up -d`, o próprio container do Airflow:
 
-1. Acesse o Airflow em http://localhost:8081
-2. Localize a DAG **pipeline_fraude_ethereum**
-3. Clique em **Trigger DAG** (ícone de play)
-4. Aguarde a task `treinar_modelo_v1` ficar verde (sucesso)
+1. Despausa a DAG `pipeline_fraude_ethereum`
+2. Dispara uma execução manual
+3. A task `treinar_modelo_v1` registra o modelo no MLflow como `Modelo_Fraude_Ethereum`
+4. A própria DAG promove a versão recém-criada para o stage **Production** (chamando `MlflowClient.transition_model_version_stage`)
 
-### 4. Promover o modelo para produção
+Acompanhe pelo Airflow em http://localhost:8081 até a task ficar verde (~30s após o stack subir). Se quiser executar novamente, use **Trigger DAG** na interface.
 
-1. Acesse o MLflow em http://localhost:5001
-2. Vá em **Models → Modelo_Fraude_Ethereum**
-3. Selecione a versão mais recente
-4. No campo **Stage**, selecione **Production** e confirme
+> **Observação:** se preferir gerenciar o estágio manualmente, basta editar a DAG `dags/dag_fraud_ethereum.py` e remover o bloco `client.transition_model_version_stage(...)`. A promoção poderá então ser feita pelo MLflow em **Models → Modelo_Fraude_Ethereum → versão mais recente → Stage → Production**.
 
-### 5. Usar o dashboard de monitoramento
+### 4. Usar o dashboard de monitoramento
 
 1. Acesse o Streamlit em http://localhost:8501
 2. O painel lateral exibirá **MLflow: Conectado** quando o modelo estiver em produção
@@ -105,7 +101,7 @@ O Airflow já agenda a DAG `pipeline_fraude_ethereum` para executar diariamente.
 4. Ajuste a **Velocidade de Simulação** (segundos entre transações)
 5. Clique em **INICIAR** para começar a simulação em tempo real
 
-### Parar os serviços
+### 5. Parar os serviços
 
 ```bash
 docker compose down
@@ -137,6 +133,7 @@ A DAG `pipeline_fraude_ethereum` executa a task `treinar_modelo_v1` diariamente 
 
 3. **Treinamento** — classifica transações com XGBClassifier (XGBoost)
 4. **Registro no MLflow** — loga métricas, parâmetros e salva o modelo no registry como `Modelo_Fraude_Ethereum`
+5. **Promoção automática** — a versão recém-registrada é movida para o stage **Production** e versões anteriores são automaticamente arquivadas
 
 ### Rastreamento de Experimentos (MLflow)
 
