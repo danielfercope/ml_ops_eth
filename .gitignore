@@ -4,3 +4,8 @@ mlartifacts/
 mlflow_db/
 logs/
 .DS_Store
+# --- pipeline N3 ---
+__pycache__/
+.ipynb_checkpoints/
+data/original/
+data/processed/*.parquet

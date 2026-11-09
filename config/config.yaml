@@ -1,0 +1,69 @@
+# =============================================================================
+# Configuração central do pipeline MLOps — Ethereum Fraud Detection
+# Regras fixadas ANTES do ciclo 1. Alterar métrica, limiar ou regra de votação
+# depois de ver resultados invalida a "decisão previamente definida".
+# Dono: Dev 1 (dados). Seções de votação e promoção: Dev 2 e Dev 3.
+# =============================================================================
+
+projeto:
+  nome: mlops-ethereum-fraude
+  experimento_mlflow: fraude_ethereum
+  tracking_uri: sqlite:///mlflow.db
+
+seeds:
+  global: 42          # usada por todos os estimadores e métodos de seleção
+  lotes: 42           # divisão do CSV original em lote_01 / lote_02
+  particao: "eth-n3"  # "sal" do hash do Address para a partição fixa
+
+dados:
+  kaggle_dataset: vagifa/ethereum-frauddetection-dataset
+  arquivo_original: transaction_dataset.csv
+  dir_original: data/original        # CSV baixado (fora do git)
+  dir_raw: data/raw                  # lotes que o pipeline enxerga
+  dir_reserva: data/reserva          # lote_02 aguardando o ciclo 2
+  dir_processed: data/processed
+  padrao_lotes: "lote_*.csv"
+  lotes:
+    - {nome: lote_01, fracao: 0.70}
+    - {nome: lote_02, fracao: 0.30}
+  id: Address
+  alvo: FLAG
+  classe_positiva: 1
+  colunas_descartadas:               # nunca entram como feature
+    - "Unnamed: 0"
+    - Index
+    - Address
+  colunas_categoricas_descartadas:   # alta cardinalidade e valores sujos ("0", vazio)
+    - ERC20 most sent token type
+    - ERC20_most_rec_token_type
+
+particao:
+  metodo: hash_md5_address
+  treino: 0.60
+  validacao: 0.20
+  teste: 0.20     # só gera o número final do relatório e o notebook 05
+
+preprocessamento:
+  transformacao_log: true     # sinal(x) * log1p(|x|): sem estado, não vaza
+  imputer: median             # ajustado só no treino
+  scaler: standard            # ajustado só no treino
+
+metrica:
+  principal: f1               # F1 da classe fraude (FLAG = 1)
+  direcao: maximizar
+  secundarias: [precision, recall]
+
+votacao:                      # Dev 2
+  metodos: [selectkbest_f_classif, random_forest, rfe_logistic]
+  top_k: 10
+  votos_minimos: 2
+  desempate: rank_medio
+  minimo_features: 5
+
+modelos:                      # Dev 3
+  A: logistic_regression
+  B: xgboost
+
+promocao:                     # Dev 3
+  margem_minima: 0.01         # F1_val >= F1_vigente + 0.01
+  f1_minimo: 0.60             # F1_val >= 0.60
