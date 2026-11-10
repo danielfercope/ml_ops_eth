@@ -30,14 +30,20 @@ Uso:
 """
 from __future__ import annotations
 
+import json
+import os
+from datetime import datetime, timezone
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import RFE, SelectKBest, f_classif
 from sklearn.linear_model import LogisticRegression
 
-from src.ingestao import carregar_config
-from src.preprocessamento import ALVO, montar_preprocessador
+from src.ingestao import RAIZ, carregar_config
+from src.preprocessamento import (ALVO, carregar_particoes, carregar_schema,
+                                  montar_preprocessador)
 
 METODOS = ("selectkbest_f_classif", "random_forest", "rfe_logistic")
 DESEMPATES = ("rank_medio",)
@@ -285,3 +291,154 @@ def executar_metodos(X: pd.DataFrame, y: pd.Series, cfg: dict | None = None) -> 
         "rfe_logistic": lambda: selecionar_rfe(X, y, cfg=cfg),
     }
     return {nome: disponiveis[nome]() for nome in regra["metodos"]}
+
+
+# --------------------------------------------------------------------------- #
+# Identificadores do ciclo e MLflow
+# --------------------------------------------------------------------------- #
+ETAPA = "votacao_features"
+ARQ_ELEITAS = "features_eleitas.json"
+ARQ_TABELA = "tabela_votos.csv"
+ARQ_RESUMO = "resumo_votacao.json"
+
+
+def obter_cycle_id() -> str:
+    """``cycle_id`` do ciclo: do ``src.rastreio`` do Dev 4 se existir, senão
+    da variável ``CYCLE_ID`` (definida pelo workflow), senão ``local-<data>``."""
+    try:  # convenção do Dev 4, quando disponível
+        from src import rastreio  # type: ignore
+        if hasattr(rastreio, "obter_cycle_id"):
+            return str(rastreio.obter_cycle_id())
+    except ImportError:
+        pass
+    cid = os.environ.get("CYCLE_ID", "").strip()
+    return cid or "local-" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+
+
+def dir_artifacts(cfg: dict | None = None) -> Path:
+    cfg = cfg or carregar_config()
+    return RAIZ / cfg.get("votacao", {}).get("dir_artifacts", "artifacts")
+
+
+def tracking_uri(cfg: dict | None = None) -> str:
+    """URI do MLflow: ``MLFLOW_TRACKING_URI`` se definida; senão a do config,
+    com caminho SQLite relativo resolvido a partir da raiz do repositório
+    (o mesmo ``mlflow.db`` seja o notebook rodado de ``notebooks/`` ou da raiz)."""
+    env = os.environ.get("MLFLOW_TRACKING_URI", "").strip()
+    if env:
+        return env
+    cfg = cfg or carregar_config()
+    uri = str(cfg["projeto"]["tracking_uri"])
+    prefixo = "sqlite:///"
+    if uri.startswith(prefixo) and not Path(uri[len(prefixo):]).is_absolute():
+        uri = prefixo + (RAIZ / uri[len(prefixo):]).resolve().as_posix()
+    return uri
+
+
+def configurar_mlflow(cfg: dict | None = None):
+    """Aponta o MLflow para o tracking do projeto e garante o experimento."""
+    import mlflow
+
+    cfg = cfg or carregar_config()
+    mlflow.set_tracking_uri(tracking_uri(cfg))
+    nome = cfg["projeto"]["experimento_mlflow"]
+    if mlflow.get_experiment_by_name(nome) is None:
+        mlflow.create_experiment(nome, artifact_location=(RAIZ / "mlartifacts").resolve().as_uri())
+    mlflow.set_experiment(nome)
+    return mlflow
+
+
+def registrar_votacao(resultados: dict[str, dict], tabela: pd.DataFrame, eleitas: list[str],
+                      regra: dict, data_version: str, cycle_id: str | None = None,
+                      cfg: dict | None = None, dir_saida: Path | None = None) -> dict:
+    """Grava os artefatos do ciclo em ``artifacts/<cycle_id>/`` e loga tudo no MLflow.
+
+    MLflow (um run por ciclo, etapa ``votacao_features``):
+        tags     cycle_id, data_version, etapa
+        params   regra de votação + hiperparâmetros de cada método (prefixados)
+        metrics  resumo da votação (nº eleitas, nº com 3/2/1/0 votos, ...)
+        artifacts rankings/<metodo>.csv, tabela_votos.csv, features_eleitas.json
+
+    Devolve dict com ``run_id``, ``cycle_id`` e os caminhos gravados.
+    """
+    cfg = cfg or carregar_config()
+    cycle_id = cycle_id or obter_cycle_id()
+    pasta = Path(dir_saida) if dir_saida else dir_artifacts(cfg) / cycle_id
+    (pasta / "rankings").mkdir(parents=True, exist_ok=True)
+
+    resumo = resumir_votacao(tabela, regra)
+    mlflow = configurar_mlflow(cfg)
+    with mlflow.start_run(run_name=f"{ETAPA}_{cycle_id}") as run:
+        mlflow.set_tags({"cycle_id": cycle_id, "data_version": data_version, "etapa": ETAPA})
+
+        mlflow.log_params({f"regra.{k}": (",".join(v) if isinstance(v, list) else v)
+                           for k, v in regra.items()})
+        for nome, r in resultados.items():
+            mlflow.log_params({f"{nome}.{k}": v for k, v in r["params"].items()})
+            r["ranking"].to_csv(pasta / "rankings" / f"{nome}.csv", index=False)
+
+        mlflow.log_metrics({k: v for k, v in resumo.items() if isinstance(v, (int, float))})
+
+        tabela.to_csv(pasta / ARQ_TABELA, index=False)
+        eleitas_json = {
+            "cycle_id": cycle_id,
+            "data_version": data_version,
+            "etapa": ETAPA,
+            "mlflow_run_id": run.info.run_id,
+            "gerado_em": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "regra": regra,
+            "n_features_avaliadas": resumo["n_features_avaliadas"],
+            "n_eleitas": len(eleitas),
+            "features": eleitas,
+            "motivo": dict(zip(tabela.loc[tabela["eleita"], "feature"],
+                               tabela.loc[tabela["eleita"], "motivo"])),
+            "top_k_por_metodo": {m: r["top_k"] for m, r in resultados.items()},
+        }
+        (pasta / ARQ_ELEITAS).write_text(json.dumps(eleitas_json, indent=2, ensure_ascii=False) + "\n",
+                                         encoding="utf-8")
+        (pasta / ARQ_RESUMO).write_text(json.dumps(resumo, indent=2, ensure_ascii=False) + "\n",
+                                        encoding="utf-8")
+        mlflow.log_artifacts(str(pasta))
+        mlflow.log_param("features_eleitas", ",".join(eleitas))
+
+    return {"run_id": run.info.run_id, "cycle_id": cycle_id, "data_version": data_version,
+            "dir": pasta, "features_eleitas": pasta / ARQ_ELEITAS,
+            "tabela_votos": pasta / ARQ_TABELA, "eleitas": eleitas}
+
+
+def executar_votacao(cfg: dict | None = None, cycle_id: str | None = None) -> dict:
+    """Fluxo completo do notebook 02: partições -> 3 métodos -> votação -> MLflow.
+
+    Usa só o treino. Devolve ``resultados``, ``tabela``, ``eleitas``, ``regra``
+    e o ``registro`` (run_id e caminhos).
+    """
+    cfg = cfg or carregar_config()
+    regra = carregar_regra_votacao(cfg)
+    schema = carregar_schema(cfg)
+    treino, _, _ = carregar_particoes(cfg)
+    X, y = preparar_treino(treino, schema["features"], cfg)
+    resultados = executar_metodos(X, y, cfg)
+    tabela, eleitas = votar(resultados, regra)
+    registro = registrar_votacao(resultados, tabela, eleitas, regra,
+                                 schema["data_version"], cycle_id, cfg)
+    return {"resultados": resultados, "tabela": tabela, "eleitas": eleitas,
+            "regra": regra, "registro": registro, "n_treino": int(len(X))}
+
+
+def carregar_features_eleitas(cycle_id: str | None = None, cfg: dict | None = None) -> dict:
+    """Lê ``artifacts/<cycle_id>/features_eleitas.json`` (contrato com o Dev 3).
+
+    Sem ``cycle_id`` usa a variável ``CYCLE_ID`` e, na falta dela, o arquivo
+    gerado mais recentemente.
+    """
+    cfg = cfg or carregar_config()
+    base = dir_artifacts(cfg)
+    cid = cycle_id or os.environ.get("CYCLE_ID", "").strip()
+    if cid:
+        arquivos = [base / cid / ARQ_ELEITAS]
+    else:
+        arquivos = sorted(base.glob(f"*/{ARQ_ELEITAS}"), key=lambda p: p.stat().st_mtime,
+                          reverse=True)
+    if not arquivos or not arquivos[0].exists():
+        raise FileNotFoundError(f"nenhum {ARQ_ELEITAS} em {base}; rode o notebook 02 antes")
+    return json.loads(arquivos[0].read_text(encoding="utf-8"))
