@@ -18,10 +18,15 @@ Formato devolvido por cada método (dict):
       "top_k":   ["feature_a", ...],   # as k melhores, em ordem
     }
 
+Votação (``votar``): cada método vota nas suas top-k; eleita com >= 2 de 3
+votos; desempate/ordem pela média dos ranks; mínimo de 5 features completado
+pelo rank médio. Regra lida de ``config.yaml`` por ``carregar_regra_votacao``.
+
 Uso:
-    from src.features import preparar_treino, executar_metodos
+    from src.features import preparar_treino, executar_metodos, votar
     X, y = preparar_treino(treino, features)
     resultados = executar_metodos(X, y)
+    tabela_votos, eleitas = votar(resultados)
 """
 from __future__ import annotations
 
@@ -183,6 +188,90 @@ def selecionar_rfe(X: pd.DataFrame, y: pd.Series, top_k: int | None = None,
     params = {"estimator": "LogisticRegression", **params_lr, "step": 1,
               "n_features_to_select_final": top_k}
     return _resultado("rfe_logistic", params, _montar_ranking(score), top_k)
+
+
+# --------------------------------------------------------------------------- #
+# Votação
+# --------------------------------------------------------------------------- #
+MOTIVO_VOTOS = "votos_suficientes"
+MOTIVO_MINIMO = "completou_minimo"
+
+
+def votar(resultados: dict[str, dict], regra: dict | None = None,
+          cfg: dict | None = None) -> tuple[pd.DataFrame, list[str]]:
+    """Aplica a regra de votação aos resultados dos métodos.
+
+    Regra (``config.yaml`` -> ``votacao``):
+        1. cada método vota nas suas ``top_k`` features;
+        2. é eleita quem tem ``votos_minimos`` ou mais votos;
+        3. desempate / ordem: média dos ranks nos 3 métodos (menor = melhor);
+        4. se sobrarem menos de ``minimo_features`` eleitas, completa-se com
+           as não eleitas de melhor rank médio (motivo ``completou_minimo``).
+
+    Devolve ``(tabela, eleitas)``:
+        tabela  -- uma linha por feature: ``voto_<m>`` (0/1) e ``rank_<m>`` por
+                   método, ``total_votos``, ``rank_medio``, ``eleita`` (bool) e
+                   ``motivo``; ordenada por eleita, total de votos e rank médio.
+        eleitas -- nomes das features eleitas, na ordem da tabela.
+    """
+    regra = regra or carregar_regra_votacao(cfg)
+    metodos = regra["metodos"]
+    faltando = [m for m in metodos if m not in resultados]
+    if faltando:
+        raise ValueError(f"faltam resultados dos métodos: {faltando}")
+
+    base = resultados[metodos[0]]["ranking"]["feature"]
+    for m in metodos[1:]:
+        if set(resultados[m]["ranking"]["feature"]) != set(base):
+            raise ValueError(f"o método {m} rankeou um conjunto diferente de features")
+
+    tabela = pd.DataFrame({"feature": sorted(base)})
+    for m in metodos:
+        rk = resultados[m]["ranking"].set_index("feature")["rank"]
+        tabela[f"rank_{m}"] = tabela["feature"].map(rk).astype(int)
+        tabela[f"voto_{m}"] = tabela["feature"].isin(resultados[m]["top_k"]).astype(int)
+
+    tabela["total_votos"] = tabela[[f"voto_{m}" for m in metodos]].sum(axis=1)
+    tabela["rank_medio"] = tabela[[f"rank_{m}" for m in metodos]].mean(axis=1).round(3)
+
+    tabela["eleita"] = tabela["total_votos"] >= regra["votos_minimos"]
+    tabela["motivo"] = np.where(tabela["eleita"], MOTIVO_VOTOS, "")
+
+    faltam = regra["minimo_features"] - int(tabela["eleita"].sum())
+    if faltam > 0:
+        candidatas = tabela.loc[~tabela["eleita"]].sort_values(
+            ["rank_medio", "total_votos", "feature"], ascending=[True, False, True],
+            kind="mergesort").head(faltam).index
+        tabela.loc[candidatas, ["eleita", "motivo"]] = [True, MOTIVO_MINIMO]
+
+    tabela = tabela.sort_values(
+        ["eleita", "total_votos", "rank_medio", "feature"],
+        ascending=[False, False, True, True], kind="mergesort",
+    ).reset_index(drop=True)
+
+    colunas = (["feature"] + [f"voto_{m}" for m in metodos] + ["total_votos"]
+               + [f"rank_{m}" for m in metodos] + ["rank_medio", "eleita", "motivo"])
+    tabela = tabela[colunas]
+    eleitas = tabela.loc[tabela["eleita"], "feature"].tolist()
+    return tabela, eleitas
+
+
+def resumir_votacao(tabela: pd.DataFrame, regra: dict) -> dict:
+    """Números para log/relatório: quantas eleitas, por quantos votos, etc."""
+    eleitas = tabela.loc[tabela["eleita"]]
+    return {
+        "n_features_avaliadas": int(len(tabela)),
+        "n_eleitas": int(len(eleitas)),
+        "n_eleitas_por_votos": int((eleitas["motivo"] == MOTIVO_VOTOS).sum()),
+        "n_completadas_pelo_minimo": int((eleitas["motivo"] == MOTIVO_MINIMO).sum()),
+        "n_com_3_votos": int((tabela["total_votos"] == 3).sum()),
+        "n_com_2_votos": int((tabela["total_votos"] == 2).sum()),
+        "n_com_1_voto": int((tabela["total_votos"] == 1).sum()),
+        "n_sem_votos": int((tabela["total_votos"] == 0).sum()),
+        "minimo_features": regra["minimo_features"],
+        "votos_minimos": regra["votos_minimos"],
+        "top_k": regra["top_k"],
+    }
 
 
 # --------------------------------------------------------------------------- #
