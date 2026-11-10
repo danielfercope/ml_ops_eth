@@ -58,7 +58,7 @@ def test_cycle_id_vem_da_variavel_ou_e_local(monkeypatch):
     monkeypatch.setenv("CYCLE_ID", "20261110-0900-r12")
     assert obter_cycle_id() == "20261110-0900-r12"
     monkeypatch.delenv("CYCLE_ID")
-    assert obter_cycle_id().startswith("local-")
+    assert obter_cycle_id().endswith("-local")
 
 
 def test_tracking_uri_sqlite_relativo_vira_absoluto(monkeypatch):

@@ -304,7 +304,7 @@ ARQ_RESUMO = "resumo_votacao.json"
 
 def obter_cycle_id() -> str:
     """``cycle_id`` do ciclo: do ``src.rastreio`` do Dev 4 se existir, senão
-    da variável ``CYCLE_ID`` (definida pelo workflow), senão ``local-<data>``."""
+    da variável ``CYCLE_ID`` (definida pelo workflow), senão ``<data>-local``."""
     try:  # convenção do Dev 4, quando disponível
         from src import rastreio  # type: ignore
         if hasattr(rastreio, "obter_cycle_id"):
@@ -312,7 +312,7 @@ def obter_cycle_id() -> str:
     except ImportError:
         pass
     cid = os.environ.get("CYCLE_ID", "").strip()
-    return cid or "local-" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
+    return cid or datetime.now().strftime("%Y%m%d-%H%M") + "-local"  # mesma convenção do notebook 01
 
 
 def dir_artifacts(cfg: dict | None = None) -> Path:
