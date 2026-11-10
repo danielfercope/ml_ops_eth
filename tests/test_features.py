@@ -92,7 +92,8 @@ def test_executar_metodos_segue_o_config(dados_sinteticos, cfg_teste):
 
 def test_metodo_desconhecido_da_erro(dados_sinteticos, cfg_teste):
     X, y = dados_sinteticos
-    cfg = {**cfg_teste, "votacao": {**cfg_teste["votacao"], "metodos": ["pca"]}}
+    cfg = {**cfg_teste, "votacao": {**cfg_teste["votacao"],
+                                    "metodos": ["pca", "random_forest", "rfe_logistic"]}}
     with pytest.raises(ValueError, match="desconhecido"):
         executar_metodos(X, y, cfg=cfg)
 

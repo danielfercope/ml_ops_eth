@@ -35,6 +35,57 @@ from src.ingestao import carregar_config
 from src.preprocessamento import ALVO, montar_preprocessador
 
 METODOS = ("selectkbest_f_classif", "random_forest", "rfe_logistic")
+DESEMPATES = ("rank_medio",)
+
+
+# --------------------------------------------------------------------------- #
+# Regra de votação (fixada em config.yaml ANTES de ver qualquer resultado)
+# --------------------------------------------------------------------------- #
+def carregar_regra_votacao(cfg: dict | None = None) -> dict:
+    """Lê e valida a seção ``votacao`` do ``config.yaml``.
+
+    A regra foi gravada antes do ciclo 1 e não deve mudar depois de ver
+    resultados (critério 4: "regra objetiva de votação"). Esta função é o
+    único ponto de leitura da regra, então notebook, votação e MLflow usam
+    exatamente os mesmos valores.
+
+    Campos:
+        metodos        -- os 3 métodos, na ordem em que aparecem na tabela
+        top_k          -- quantas features cada método "vota" (as k melhores)
+        votos_minimos  -- votos necessários para ser eleita (2 de 3)
+        desempate      -- 'rank_medio': média dos ranks nos 3 métodos
+        minimo_features-- se menos features forem eleitas, completa-se com as
+                          de melhor rank médio até atingir este mínimo
+    """
+    cfg = cfg or carregar_config()
+    v = cfg.get("votacao")
+    if not isinstance(v, dict):
+        raise ValueError("config.yaml sem a seção 'votacao'")
+
+    obrigatorios = ("metodos", "top_k", "votos_minimos", "desempate", "minimo_features")
+    faltando = [c for c in obrigatorios if c not in v]
+    if faltando:
+        raise ValueError(f"seção 'votacao' sem os campos: {faltando}")
+
+    metodos = list(v["metodos"])
+    if len(metodos) != 3 or len(set(metodos)) != 3:
+        raise ValueError("a votação exige exatamente 3 métodos distintos")
+    desconhecidos = [m for m in metodos if m not in METODOS]
+    if desconhecidos:
+        raise ValueError(f"métodos desconhecidos: {desconhecidos}; válidos: {list(METODOS)}")
+
+    top_k, votos, minimo = int(v["top_k"]), int(v["votos_minimos"]), int(v["minimo_features"])
+    if top_k < 1:
+        raise ValueError("top_k deve ser >= 1")
+    if not 1 <= votos <= len(metodos):
+        raise ValueError(f"votos_minimos deve estar entre 1 e {len(metodos)}")
+    if not 1 <= minimo <= top_k:
+        raise ValueError("minimo_features deve estar entre 1 e top_k")
+    if v["desempate"] not in DESEMPATES:
+        raise ValueError(f"desempate desconhecido: {v['desempate']}; válidos: {list(DESEMPATES)}")
+
+    return {"metodos": metodos, "top_k": top_k, "votos_minimos": votos,
+            "desempate": str(v["desempate"]), "minimo_features": minimo}
 
 
 # --------------------------------------------------------------------------- #
@@ -78,7 +129,7 @@ def _resultado(metodo: str, params: dict, ranking: pd.DataFrame, top_k: int) -> 
 
 def _top_k_e_seed(cfg: dict | None, top_k: int | None, seed: int | None) -> tuple[int, int]:
     cfg = cfg or carregar_config()
-    return (top_k if top_k is not None else int(cfg["votacao"]["top_k"]),
+    return (top_k if top_k is not None else carregar_regra_votacao(cfg)["top_k"],
             seed if seed is not None else int(cfg["seeds"]["global"]))
 
 
@@ -138,14 +189,10 @@ def selecionar_rfe(X: pd.DataFrame, y: pd.Series, top_k: int | None = None,
 def executar_metodos(X: pd.DataFrame, y: pd.Series, cfg: dict | None = None) -> dict[str, dict]:
     """Roda os três métodos listados em ``config.yaml`` e devolve {nome: resultado}."""
     cfg = cfg or carregar_config()
+    regra = carregar_regra_votacao(cfg)
     disponiveis = {
         "selectkbest_f_classif": lambda: selecionar_kbest(X, y, cfg=cfg),
         "random_forest": lambda: selecionar_random_forest(X, y, cfg=cfg),
         "rfe_logistic": lambda: selecionar_rfe(X, y, cfg=cfg),
     }
-    resultados = {}
-    for nome in cfg["votacao"]["metodos"]:
-        if nome not in disponiveis:
-            raise ValueError(f"método de seleção desconhecido no config.yaml: {nome}")
-        resultados[nome] = disponiveis[nome]()
-    return resultados
+    return {nome: disponiveis[nome]() for nome in regra["metodos"]}
