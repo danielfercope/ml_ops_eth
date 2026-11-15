@@ -57,4 +57,4 @@ services:
     depends_on:
       - mlflow
     volumes:
-      - ./mlartifacts:/mlflow/artifacts````````````
+      - ./mlartifacts:/mlflow/artifacts
