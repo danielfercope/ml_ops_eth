@@ -8,15 +8,15 @@ Sistema de detecção de fraudes em transações Ethereum com pipeline MLOps com
 
 O projeto implementa um fluxo de MLOps de ponta a ponta para classificar transações Ethereum como legítimas ou fraudulentas usando um modelo XGBoost. Todo o ambiente roda em containers Docker, tornando a execução simples e reproduzível.
 
-```
-Airflow (agendador) ──→ Treina XGBoost ──→ MLflow (registry)
-                                                  │
-                                        Promote para "Production"
-                                                  │
-                                        Streamlit (monitoring app)
-                                                  │
-                                        Simula transações em tempo real
-                                        e exibe predições no dashboard
+```md
+Airflow (agendador) ──> Treina XGBoost ──> MLflow (registry)
+                                                   │
+                                       Promote para "Production"
+                                                   │
+                                      Streamlit (monitoring app)
+                                                   │
+                                    Simula transações em tempo real
+                                    e exibe predições no dashboard
 ```
 
 ---
@@ -24,7 +24,7 @@ Airflow (agendador) ──→ Treina XGBoost ──→ MLflow (registry)
 ## Arquitetura
 
 | Componente | Tecnologia | Porta |
-|---|---|---|
+| --- | --- | --- |
 | Orquestrador de DAGs | Apache Airflow 2.7.1 | 8081 |
 | Tracking & Registry de modelos | MLflow 2.7.1 | 5001 |
 | Banco de dados do Airflow | PostgreSQL 13 | 5432 |
@@ -34,7 +34,7 @@ Airflow (agendador) ──→ Treina XGBoost ──→ MLflow (registry)
 
 ## Estrutura do Projeto
 
-```
+```md
 ml_ops_eth/
 ├── app/
 │   ├── app.py                  # Dashboard Streamlit de monitoramento
@@ -45,6 +45,11 @@ ml_ops_eth/
 ├── plugins/                    # Plugins do Airflow (extensível)
 ├── logs/                       # Logs do Airflow (gerados em runtime)
 ├── mlartifacts/                # Artefatos dos modelos treinados
+├── web/                        # Painel de acompanhamento (Vite + React + TS)
+├── public/                     # Arquivos estáticos do painel
+├── index.html                  # Página de entrada do painel (Vite)
+├── package.json                # Scripts e dependências do painel
+├── vite.config.ts              # Configuração do Vite
 ├── Dockerfile_airflow          # Imagem customizada do Airflow
 └── docker-compose.yml          # Orquestração completa dos serviços
 ```
@@ -75,10 +80,10 @@ docker compose logs -f
 ### 2. Acessar as interfaces
 
 | Interface | URL | Credenciais |
-|---|---|---|
-| Airflow (agendador) | http://localhost:8081 | `admin` / `admin` |
-| MLflow (tracking) | http://localhost:5001 | — |
-| Streamlit (dashboard) | http://localhost:8501 | — |
+| --- | --- | --- |
+| Airflow (agendador) | <http://localhost:8081> | `admin` / `admin` |
+| MLflow (tracking) | <http://localhost:5001> | — |
+| Streamlit (dashboard) | <http://localhost:8501> | — |
 
 ### 3. Treinar o primeiro modelo (automático)
 
@@ -89,13 +94,13 @@ Logo após o `docker compose up -d`, o próprio container do Airflow:
 3. A task `treinar_modelo_v1` registra o modelo no MLflow como `Modelo_Fraude_Ethereum`
 4. A própria DAG promove a versão recém-criada para o stage **Production** (chamando `MlflowClient.transition_model_version_stage`)
 
-Acompanhe pelo Airflow em http://localhost:8081 até a task ficar verde (~30s após o stack subir). Se quiser executar novamente, use **Trigger DAG** na interface.
+Acompanhe pelo Airflow em <http://localhost:8081> até a task ficar verde (~30s após o stack subir). Se quiser executar novamente, use **Trigger DAG** na interface.
 
 > **Observação:** se preferir gerenciar o estágio manualmente, basta editar a DAG `dags/dag_fraud_ethereum.py` e remover o bloco `client.transition_model_version_stage(...)`. A promoção poderá então ser feita pelo MLflow em **Models → Modelo_Fraude_Ethereum → versão mais recente → Stage → Production**.
 
 ### 4. Usar o dashboard de monitoramento
 
-1. Acesse o Streamlit em http://localhost:8501
+1. Acesse o Streamlit em <http://localhost:8501>
 2. O painel lateral exibirá **MLflow: Conectado** quando o modelo estiver em produção
 3. Ajuste a **Taxa de Injeção de Fraudes** (slider) para controlar quantas transações fraudulentas serão simuladas
 4. Ajuste a **Velocidade de Simulação** (segundos entre transações)
@@ -123,9 +128,8 @@ A DAG `pipeline_fraude_ethereum` executa a task `treinar_modelo_v1` diariamente 
 
 1. **Geração de dados sintéticos** — cria 500 amostras com distribuição 80% legítimas / 20% fraudulentas
 2. **Feature engineering** — quatro features numéricas descrevem cada transação:
-
 | Feature | Descrição |
-|---|---|
+| --- | --- |
 | `account_age_mins` | Antiguidade da conta em minutos |
 | `avg_min_sent` | Valor médio enviado por transação |
 | `avg_min_recv` | Valor médio recebido por transação |
@@ -169,6 +173,34 @@ MLFLOW_TRACKING_URI=http://localhost:5001 streamlit run app.py
 
 ---
 
+## Painel de Acompanhamento (`web/`) — em desenvolvimento
+
+Recurso adicional do trabalho (critério 10), frente do Dev 5 em [`docs/divisao_trabalho.pdf`](docs/divisao_trabalho.pdf). É um painel estático em Vite + React + TypeScript que mostra a evolução dos ciclos (modelo vigente, votação de features, competição e previsões) sem abrir o MLflow nem os notebooks. Ele será gerado pelo próprio pipeline e publicado no GitHub Pages, sem API nem servidor.
+
+### Executar localmente
+
+Requer Node.js 20.19+ ou 22.12+. Na raiz do repositório:
+
+```bash
+npm install
+npm run dev      # servidor de desenvolvimento em http://localhost:5173
+npm run build    # checagem de tipos (tsc) + build de produção em dist/
+npm run lint     # ESLint
+```
+
+### Progresso
+
+- [x] Projeto Vite + React + TypeScript criado em `web/` (ainda com a tela inicial do template)
+- [ ] Formato dos JSONs do painel (`ciclos.json`, `votacao.json`, `competicao.json`, `vigente.json`, `previsoes.json`) e versões mock
+- [ ] Protótipo navegável com dados fictícios e design tokens aprovados pelo grupo
+- [ ] React Router, layout com navegação e componentes compartilhados (cartão de KPI, tabela, selo `promovido`/`mantido`, estados de carregamento e erro)
+- [ ] Telas: Visão geral, Ciclos, Votação, Competição e Previsões
+- [ ] `src/exportar_painel.py` gerando os JSONs a partir do `mlflow.db`, do manifesto e do histórico de decisões
+- [ ] Build e deploy no GitHub Pages dentro do workflow, junto com o Dev 4
+- [ ] Testes de renderização com Vitest usando os JSONs mock
+
+---
+
 ## Tecnologias
 
 - **Apache Airflow 2.7.1** — orquestração e agendamento do pipeline
@@ -179,3 +211,4 @@ MLFLOW_TRACKING_URI=http://localhost:5001 streamlit run app.py
 - **Plotly** — gráficos no dashboard
 - **PostgreSQL 13** — backend de metadados do Airflow
 - **Docker & Docker Compose** — containerização e orquestração de serviços
+- **Typescript, React, Vite & ESLint** — aplicação e desenvolvimento web
