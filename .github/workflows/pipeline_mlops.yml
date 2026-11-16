@@ -1,0 +1,174 @@
+# =============================================================================
+# Pipeline MLOps — Ethereum Fraud Detection (fluxo único)
+#
+# Cada execução é um CICLO: 01_etl -> 02_votacao_features -> 03_treino_competicao
+# -> 04_selecao_promocao -> 05_previsoes, via run_pipeline.sh (o mesmo script
+# usado localmente). Se todos os notebooks passam, o estado do ciclo é
+# commitado de volta (mlflow.db, mlartifacts/, models/, lotes.json, artifacts/
+# e evidencias/<cycle_id>/). Se qualquer notebook falha, nada é commitado:
+# não existe promoção pela metade.
+#
+# Gatilhos: schedule (cron, só roda na branch padrão) e workflow_dispatch.
+# Requisitos do repositório:
+#   - Settings > Actions > General > Workflow permissions: "Read and write".
+#   - Settings > Pages > Source: "GitHub Actions" (só para o painel do Dev 5).
+# =============================================================================
+name: pipeline_mlops
+
+on:
+  schedule:
+    - cron: "0 12 * * *"        # todo dia às 12:00 UTC (09:00 em Brasília)
+  workflow_dispatch:
+
+# nunca dois ciclos ao mesmo tempo; um ciclo em andamento não é cancelado
+concurrency:
+  group: pipeline-mlops
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12"
+  PAINEL_DADOS: web/public/data   # saída de src/exportar_painel.py (Dev 5)
+
+jobs:
+  ciclo:
+    name: ciclo (01 → 05)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write             # commit do estado do ciclo
+    outputs:
+      cycle_id: ${{ steps.ciclo.outputs.cycle_id }}
+      commit: ${{ steps.commit.outputs.sha }}
+      painel: ${{ steps.painel.outputs.ok }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Python ${{ env.PYTHON_VERSION }} (com cache do pip)
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Testes unitários
+        run: python -m pytest -q
+
+      - name: Definir cycle_id
+        id: ciclo
+        run: |
+          CYCLE_ID="$(date -u +%Y%m%d-%H%M)-r${GITHUB_RUN_NUMBER}"
+          echo "CYCLE_ID=$CYCLE_ID" >> "$GITHUB_ENV"
+          echo "cycle_id=$CYCLE_ID" >> "$GITHUB_OUTPUT"
+          echo "ciclo: $CYCLE_ID (gatilho: $GITHUB_EVENT_NAME)"
+
+      - name: Executar o pipeline (01 → 05)
+        run: ./run_pipeline.sh
+
+      - name: Exportar dados do painel (Dev 5)
+        id: painel
+        if: hashFiles('src/exportar_painel.py') != ''
+        continue-on-error: true   # o painel nunca bloqueia o ciclo
+        run: |
+          python -m src.exportar_painel
+          echo "ok=true" >> "$GITHUB_OUTPUT"
+
+      - name: Resumo do ciclo
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          r = json.load(open(f"evidencias/{os.environ['CYCLE_ID']}/resumo_ciclo.json"))
+          v = r["vigente"]
+          print(f"## Ciclo `{r['cycle_id']}`\n")
+          print("| campo | valor |\n|---|---|")
+          print(f"| gatilho | `{r['gatilho']}` |")
+          print(f"| data_version | `{r['data_version']}` |")
+          print(f"| decisão | **{r['decisao']}** |")
+          print(f"| motivo | {r['motivo']} |")
+          print(f"| vigente | {v['algoritmo']} · run `{v['run_id']}` · treinado em `{v['treinado_no_ciclo']}` |")
+          if v["f1_validacao"] is not None:
+              print(f"| F1 validação / teste | {v['f1_validacao']:.4f} / {v['f1_teste']:.4f} |")
+          print(f"\n### Runs do MLflow ({len(r['runs_mlflow'])})\n")
+          print("| etapa | modelo | run_id | status |\n|---|---|---|---|")
+          for x in r["runs_mlflow"]:
+              print(f"| {x['etapa']} | {x['modelo'] or ''} | `{x['run_id']}` | {x['status']} |")
+          PY
+
+      - name: Commit do estado do ciclo
+        id: commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          caminhos=(mlflow.db mlartifacts models data/processed/lotes.json artifacts "evidencias/$CYCLE_ID")
+          [ -d "$PAINEL_DADOS" ] && caminhos+=("$PAINEL_DADOS")
+          git add -A -- "${caminhos[@]}"
+          decisao=$(python -c "import json;print(json.load(open('models/modelo_vigente.json')).get('decisao','sem_vigente'))" 2>/dev/null || echo sem_vigente)
+          git commit -m "🤖 Ciclo $CYCLE_ID: $decisao" -m "Gatilho: $GITHUB_EVENT_NAME · run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          # outro commit pode ter chegado durante o ciclo (ex.: lote novo): rebase antes do push
+          for tentativa in 1 2 3; do
+            git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && break
+            sleep $((tentativa * 5))
+          done
+          git diff --quiet "origin/$GITHUB_REF_NAME" HEAD   # falha se o push não entrou
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Evidências como artifact
+        if: always()              # também em falha, para depurar
+        uses: actions/upload-artifact@v5
+        with:
+          name: evidencias-${{ steps.ciclo.outputs.cycle_id || github.run_id }}
+          path: |
+            evidencias/
+            models/
+            artifacts/
+            mlflow.db
+          retention-days: 90
+          if-no-files-found: warn
+
+  painel:
+    name: painel (GitHub Pages)
+    needs: ciclo
+    if: needs.ciclo.outputs.painel == 'true'
+    runs-on: ubuntu-latest
+    continue-on-error: true       # falha no painel não deixa o ciclo vermelho
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Checkout do commit do ciclo
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.ciclo.outputs.commit }}
+
+      - name: Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build do painel
+        run: |
+          npm ci
+          npm run build -- --base=/${{ github.event.repository.name }}/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4

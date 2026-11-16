@@ -24,11 +24,11 @@ dist-ssr
 *.sw?
 .idea
 
-dags/__pycache__
-mlartifacts/
-mlflow_db/
-logs/
-.DS_Store
+# --- legado (Airflow/Docker/Streamlit): dados gerados pelos containers ---
+legado/logs/
+legado/plugins/
+legado/mlartifacts/
+legado/mlflow_db/
 
 # --- pipeline N3 ---
 __pycache__/
@@ -36,3 +36,8 @@ __pycache__/
 data/original/
 data/processed/*.parquet
 artifacts/*-local/
+evidencias/*-local/
+.venv/
+venv/
+mlruns/
+!evidencias/*/pipeline.log
