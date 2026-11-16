@@ -1,214 +1,179 @@
-# Ethereum Fraud Monitor — MLOps Pipeline
+# MLOps Ethereum — detecção de fraude com ciclos agendados
 
-Sistema de detecção de fraudes em transações Ethereum com pipeline MLOps completo: treinamento automatizado via Apache Airflow, rastreamento de experimentos com MLflow e interface de monitoramento em tempo real com Streamlit.
+Pipeline MLOps do Trabalho N3. Um **único workflow agendado** no GitHub Actions incorpora lotes do
+[Ethereum Fraud Detection Dataset](https://www.kaggle.com/datasets/vagifa/ethereum-frauddetection-dataset)
+(Kaggle, ODbL; veja [`data/README.md`](data/README.md)). A cada ciclo ele elege as features por votação de
+3 métodos, treina 2 modelos com as mesmas features, registra tudo no MLflow e **só troca o modelo vigente
+se o novo superar o limiar** fixado em [`config/config.yaml`](config/config.yaml).
 
----
-
-## Visão Geral
-
-O projeto implementa um fluxo de MLOps de ponta a ponta para classificar transações Ethereum como legítimas ou fraudulentas usando um modelo XGBoost. Todo o ambiente roda em containers Docker, tornando a execução simples e reproduzível.
-
-```md
-Airflow (agendador) ──> Treina XGBoost ──> MLflow (registry)
-                                                   │
-                                       Promote para "Production"
-                                                   │
-                                      Streamlit (monitoring app)
-                                                   │
-                                    Simula transações em tempo real
-                                    e exibe predições no dashboard
+```text
+           schedule (cron) / workflow_dispatch
+                         │
+             .github/workflows/pipeline_mlops.yml
+                         │  CYCLE_ID = AAAAMMDD-HHMM-r<run>
+                         ▼
+                   run_pipeline.sh  ─────────────►  evidencias/<cycle_id>/  (notebooks executados, log, resumo)
+                         │
+  01_etl ──► 02_votacao_features ──► 03_treino_competicao ──► 04_selecao_promocao ──► 05_previsoes
+  lotes,      3 métodos de seleção    A = Regressão Logística   vencedor vs vigente      vigente prevê
+  partições,  + votação → features    B = XGBoost (mesmas       regra do config →        o teste e
+  data_version  eleitas                features e partições)     promovido | mantido      compara ciclos
+                         │
+                         ▼   tudo verde?  ──não──►  nada é commitado (sem promoção pela metade)
+                        sim
+                         ▼
+   commit do estado: mlflow.db, mlartifacts/, models/, artifacts/, data/processed/lotes.json, evidencias/
+                         ▼
+               painel (Dev 5) → GitHub Pages
 ```
 
----
+| Notebook | Frente | O que faz | Saídas principais |
+|---|---|---|---|
+| [`01_etl`](notebooks/01_etl.ipynb) | Dev 1 | ingere `data/raw/lote_*.csv`, remove duplicados, partição fixa por hash do `Address` (60/20/20), `data_version` | `data/processed/*.parquet`, `schema.json`, `lotes.json` |
+| [`02_votacao_features`](notebooks/02_votacao_features.ipynb) | Dev 2 | SelectKBest, Random Forest e RFE; eleita com ≥ 2 de 3 votos | `artifacts/<cycle_id>/features_eleitas.json`, tabela de votos |
+| `03_treino_competicao` | Dev 3 | treina A e B no mesmo treino, avalia na mesma validação | `artifacts/<cycle_id>/competicao.json`, um run por modelo |
+| `04_selecao_promocao` | Dev 3 | `F1_val ≥ F1_vigente + 0,01` e `F1_val ≥ 0,60` → promove | `models/modelo_vigente.json`, `models/historico_decisoes.csv` |
+| [`05_previsoes`](notebooks/05_previsoes.ipynb) | Dev 4 | carrega o vigente pelo `run_id`, prevê o teste e mostra o que mudou entre os ciclos | `artifacts/<cycle_id>/previsoes.csv`, run `previsoes` |
 
-## Arquitetura
-
-| Componente | Tecnologia | Porta |
-| --- | --- | --- |
-| Orquestrador de DAGs | Apache Airflow 2.7.1 | 8081 |
-| Tracking & Registry de modelos | MLflow 2.7.1 | 5001 |
-| Banco de dados do Airflow | PostgreSQL 13 | 5432 |
-| Dashboard de monitoramento | Streamlit | 8501 |
-
----
-
-## Estrutura do Projeto
-
-```md
-ml_ops_eth/
-├── app/
-│   ├── app.py                  # Dashboard Streamlit de monitoramento
-│   ├── requirements.txt        # Dependências da aplicação
-│   └── Dockerfile              # Imagem do Streamlit
-├── dags/
-│   └── dag_fraud_ethereum.py   # DAG de treinamento diário
-├── plugins/                    # Plugins do Airflow (extensível)
-├── logs/                       # Logs do Airflow (gerados em runtime)
-├── mlartifacts/                # Artefatos dos modelos treinados
-├── web/                        # Painel de acompanhamento (Vite + React + TS)
-├── public/                     # Arquivos estáticos do painel
-├── index.html                  # Página de entrada do painel (Vite)
-├── package.json                # Scripts e dependências do painel
-├── vite.config.ts              # Configuração do Vite
-├── Dockerfile_airflow          # Imagem customizada do Airflow
-└── docker-compose.yml          # Orquestração completa dos serviços
-```
+Todo run do MLflow leva as tags `cycle_id`, `data_version` e `etapa` (`etl`, `votacao_features`,
+`treino_competicao`, `promocao`, `previsoes`). Veja [`src/rastreio.py`](src/rastreio.py).
 
 ---
 
-## Como Executar
+## Instalação
 
-### Pré-requisitos
-
-- [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
-- Portas **5432**, **5001**, **8081** e **8501** disponíveis
-
-### 1. Subir todos os serviços
+Requer **Python 3.12** (a mesma versão do workflow). As versões em `requirements.txt` são exatas: o modelo
+é serializado com cloudpickle e só carrega de volta com as mesmas versões de scikit-learn e XGBoost.
 
 ```bash
-git clone <url-do-repositório>
+git clone https://github.com/danielfercope/ml_ops_eth.git
 cd ml_ops_eth
-docker compose up -d
-```
-
-Aguarde cerca de 30–60 segundos para que todos os serviços inicializem. Você pode acompanhar com:
-
-```bash
-docker compose logs -f
-```
-
-### 2. Acessar as interfaces
-
-| Interface | URL | Credenciais |
-| --- | --- | --- |
-| Airflow (agendador) | <http://localhost:8081> | `admin` / `admin` |
-| MLflow (tracking) | <http://localhost:5001> | — |
-| Streamlit (dashboard) | <http://localhost:8501> | — |
-
-### 3. Treinar o primeiro modelo (automático)
-
-Logo após o `docker compose up -d`, o próprio container do Airflow:
-
-1. Despausa a DAG `pipeline_fraude_ethereum`
-2. Dispara uma execução manual
-3. A task `treinar_modelo_v1` registra o modelo no MLflow como `Modelo_Fraude_Ethereum`
-4. A própria DAG promove a versão recém-criada para o stage **Production** (chamando `MlflowClient.transition_model_version_stage`)
-
-Acompanhe pelo Airflow em <http://localhost:8081> até a task ficar verde (~30s após o stack subir). Se quiser executar novamente, use **Trigger DAG** na interface.
-
-> **Observação:** se preferir gerenciar o estágio manualmente, basta editar a DAG `dags/dag_fraud_ethereum.py` e remover o bloco `client.transition_model_version_stage(...)`. A promoção poderá então ser feita pelo MLflow em **Models → Modelo_Fraude_Ethereum → versão mais recente → Stage → Production**.
-
-### 4. Usar o dashboard de monitoramento
-
-1. Acesse o Streamlit em <http://localhost:8501>
-2. O painel lateral exibirá **MLflow: Conectado** quando o modelo estiver em produção
-3. Ajuste a **Taxa de Injeção de Fraudes** (slider) para controlar quantas transações fraudulentas serão simuladas
-4. Ajuste a **Velocidade de Simulação** (segundos entre transações)
-5. Clique em **INICIAR** para começar a simulação em tempo real
-
-### 5. Parar os serviços
-
-```bash
-docker compose down
-```
-
-Para remover também os volumes (banco de dados e artefatos):
-
-```bash
-docker compose down -v
-```
-
----
-
-## Como Funciona
-
-### Pipeline de Treinamento (Airflow DAG)
-
-A DAG `pipeline_fraude_ethereum` executa a task `treinar_modelo_v1` diariamente e realiza as seguintes etapas:
-
-1. **Geração de dados sintéticos** — cria 500 amostras com distribuição 80% legítimas / 20% fraudulentas
-2. **Feature engineering** — quatro features numéricas descrevem cada transação:
-| Feature | Descrição |
-| --- | --- |
-| `account_age_mins` | Antiguidade da conta em minutos |
-| `avg_min_sent` | Valor médio enviado por transação |
-| `avg_min_recv` | Valor médio recebido por transação |
-| `eth_balance` | Saldo atual em ETH |
-
-3. **Treinamento** — classifica transações com XGBClassifier (XGBoost)
-4. **Registro no MLflow** — loga métricas, parâmetros e salva o modelo no registry como `Modelo_Fraude_Ethereum`
-5. **Promoção automática** — a versão recém-registrada é movida para o stage **Production** e versões anteriores são automaticamente arquivadas
-
-### Rastreamento de Experimentos (MLflow)
-
-O MLflow centraliza:
-
-- Histórico de runs de treinamento (métricas, parâmetros, artefatos)
-- Versionamento de modelos
-- Controle de estágio: **None → Staging → Production → Archived**
-
-### Dashboard de Monitoramento (Streamlit)
-
-O `app.py` conecta-se ao MLflow e carrega o modelo na stage `Production`. Em seguida:
-
-1. Gera transações Ethereum aleatórias com probabilidade de fraude configurável
-2. Executa `predict_proba` para obter a probabilidade de fraude de cada transação
-3. Exibe em tempo real:
-   - **Métricas gerais**: total de transações, fraudes bloqueadas, percentual de risco, status do modelo
-   - **Gráfico temporal**: curva de risco com zona vermelha acima de 50%
-   - **Log de transações**: tabela das últimas 20 com carteira, saldo, idade da conta, risco e status (verde/vermelho)
-   - **Alerta visual**: banner vermelho quando fraude é detectada
-
----
-
-## Desenvolvimento Local (sem Docker)
-
-Para executar apenas o dashboard fora do Docker (exige um MLflow acessível):
-
-```bash
-cd app
+python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-MLFLOW_TRACKING_URI=http://localhost:5001 streamlit run app.py
+python -m pytest -q          # testes unitários
 ```
 
----
+Os lotes já estão versionados em `data/raw/` e `data/reserva/`, então não é preciso baixar nada do Kaggle.
+Para regerar os lotes a partir do CSV original: `python -m src.ingestao gerar-lotes`.
 
-## Painel de Acompanhamento (`web/`) — em desenvolvimento
-
-Recurso adicional do trabalho (critério 10), frente do Dev 5 em [`docs/divisao_trabalho.pdf`](docs/divisao_trabalho.pdf). É um painel estático em Vite + React + TypeScript que mostra a evolução dos ciclos (modelo vigente, votação de features, competição e previsões) sem abrir o MLflow nem os notebooks. Ele será gerado pelo próprio pipeline e publicado no GitHub Pages, sem API nem servidor.
-
-### Executar localmente
-
-Requer Node.js 20.19+ ou 22.12+. Na raiz do repositório:
+## Execução local
 
 ```bash
-npm install
-npm run dev      # servidor de desenvolvimento em http://localhost:5173
-npm run build    # checagem de tipos (tsc) + build de produção em dist/
-npm run lint     # ESLint
+./run_pipeline.sh                              # um ciclo completo, CYCLE_ID = AAAAMMDD-HHMM-local
+CYCLE_ID=20261110-0900-r12 ./run_pipeline.sh   # com um cycle_id escolhido
 ```
 
-### Progresso
+O script é o mesmo que o workflow executa: roda 01 → 05 com `jupyter nbconvert --execute`, para no
+primeiro erro e grava os notebooks executados e o `pipeline.log` em `evidencias/<cycle_id>/`.
+Os notebooks também podem ser abertos e executados um a um no Jupyter, a partir de `notebooks/`.
 
-- [x] Projeto Vite + React + TypeScript criado em `web/` (ainda com a tela inicial do template)
-- [ ] Formato dos JSONs do painel (`ciclos.json`, `votacao.json`, `competicao.json`, `vigente.json`, `previsoes.json`) e versões mock
-- [ ] Protótipo navegável com dados fictícios e design tokens aprovados pelo grupo
-- [ ] React Router, layout com navegação e componentes compartilhados (cartão de KPI, tabela, selo `promovido`/`mantido`, estados de carregamento e erro)
-- [ ] Telas: Visão geral, Ciclos, Votação, Competição e Previsões
-- [ ] `src/exportar_painel.py` gerando os JSONs a partir do `mlflow.db`, do manifesto e do histórico de decisões
-- [ ] Build e deploy no GitHub Pages dentro do workflow, junto com o Dev 4
-- [ ] Testes de renderização com Vitest usando os JSONs mock
+> **Não commite o estado de uma execução local.** O ciclo local altera `mlflow.db`, `mlartifacts/`,
+> `models/` e `data/processed/lotes.json`, que são o histórico oficial dos ciclos agendados.
+> Para descartar: `git restore mlflow.db models data/processed/lotes.json && git clean -fd mlartifacts`.
+> Se quiser um MLflow separado, use `MLFLOW_TRACKING_URI=sqlite:////tmp/mlflow_local.db ./run_pipeline.sh`.
+> As pastas `artifacts/*-local/` e `evidencias/*-local/` já ficam fora do git.
+
+## Execução agendada (GitHub Actions)
+
+[`.github/workflows/pipeline_mlops.yml`](.github/workflows/pipeline_mlops.yml):
+
+- **Gatilhos:** `schedule` (`0 12 * * *`, todo dia às 09:00 de Brasília) e `workflow_dispatch` (botão
+  *Run workflow* na aba Actions). O `schedule` só dispara na **branch padrão** e pode atrasar alguns minutos.
+- **Um job sequencial** com `concurrency: pipeline-mlops`, então dois ciclos nunca rodam juntos.
+- **Passos:** checkout → Python 3.12 com cache do pip → `pip install -r requirements.txt` → `pytest` →
+  `run_pipeline.sh` → exportar os JSONs do painel (`src/exportar_painel.py`, se existir) → resumo do ciclo
+  no *job summary* → commit do estado → upload de `evidencias/`, `models/`, `artifacts/` e `mlflow.db` como
+  artifact (também em caso de falha, para depurar).
+- **Persistência entre ciclos:** o próprio workflow commita `mlflow.db`, `mlartifacts/`, `models/`,
+  `artifacts/`, `data/processed/lotes.json` e `evidencias/<cycle_id>/` na branch padrão
+  (commit `🤖 Ciclo <cycle_id>: <decisão>`). Se qualquer notebook falha, o job para antes do commit e o
+  repositório continua no ciclo anterior.
+- **Painel:** um segundo job publica o build do `web/` no GitHub Pages. Ele usa `continue-on-error`, então
+  nunca deixa o ciclo vermelho.
+
+Configuração única do repositório (*Settings*):
+
+1. *Actions → General → Workflow permissions*: **Read and write permissions**.
+2. *Pages → Source*: **GitHub Actions** (só para o painel).
+3. Se a branch padrão tiver proteção, permitir o push do `github-actions[bot]`.
+
+### Demonstração dos ciclos
+
+| Ciclo | O que fazer antes | Resultado esperado |
+|---|---|---|
+| 1 | nada: `data/raw/` só tem o `lote_01` | `promovido` (ainda não há vigente) |
+| 2 | liberar o lote 2 e commitar (abaixo) | nova votação com `data_version v2-…`, `promovido` ou `mantido` com o motivo |
+| 3 (opcional) | nada (sem dados novos) | mesmo `data_version`, treino idêntico → `mantido` |
+
+```bash
+git pull                                           # traz o commit do ciclo 1 feito pelo workflow
+git mv data/reserva/lote_02.csv data/raw/lote_02.csv
+git commit -m "Libera o lote_02 para o ciclo 2" && git push
+```
+
+## MLflow
+
+```bash
+python -m src.rastreio ui                          # ajusta caminhos e abre http://127.0.0.1:5000
+# equivalente a:
+python -m src.rastreio preparar
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+O tracking é um SQLite (`mlflow.db`) e os artefatos ficam em `mlartifacts/`, ambos na raiz e commitados.
+O MLflow grava **caminhos absolutos** dos artefatos no banco (no runner, `/home/runner/work/...`).
+`python -m src.rastreio preparar`, que o `run_pipeline.sh` também chama, reescreve esses caminhos para
+a pasta atual, para o mesmo `mlflow.db` funcionar em qualquer máquina. Filtre os runs de um ciclo com
+`tags.cycle_id = '<cycle_id>'`.
+
+## Reproduzir as previsões
+
+```python
+import json, pandas as pd, mlflow
+from src.rastreio import configurar_mlflow
+
+configurar_mlflow()                                    # sqlite:///<raiz>/mlflow.db
+man = json.load(open("models/modelo_vigente.json"))   # manifesto do vigente (Dev 3)
+modelo = mlflow.sklearn.load_model(man["model_uri"])  # Pipeline: pré-processamento → features eleitas → estimador
+teste = pd.read_parquet("data/processed/teste.parquet")
+proba = modelo.predict_proba(teste)[:, 1]
+```
+
+Ou rode só o notebook `05_previsoes.ipynb`. É preciso que `data/processed/` exista (`python -m src.preprocessamento`).
+O F1 de teste calculado ali deve bater com `f1_teste` do manifesto.
 
 ---
+
+## Estrutura
+
+```text
+ml_ops_eth/
+├── .github/workflows/pipeline_mlops.yml   # workflow agendado (Dev 4)
+├── run_pipeline.sh                        # 01 → 05, usado pelo workflow e localmente (Dev 4)
+├── config/config.yaml                     # métrica, limiar, regra de votação, seeds (fixados antes do ciclo 1)
+├── data/
+│   ├── raw/                               # lotes visíveis ao pipeline
+│   ├── reserva/                           # lote_02, liberado antes do ciclo 2
+│   └── processed/                         # partições (fora do git) + lotes.json (commitado)
+├── notebooks/                             # 01 a 05
+├── src/
+│   ├── ingestao.py, preprocessamento.py   # Dev 1
+│   ├── features.py                        # Dev 2
+│   ├── modelagem.py, promocao.py          # Dev 3
+│   ├── rastreio.py, previsoes.py          # Dev 4
+│   └── exportar_painel.py                 # Dev 5
+├── artifacts/<cycle_id>/                  # features eleitas, competição, decisão e previsões do ciclo
+├── models/                                # modelo_vigente.json e historico_decisoes.csv
+├── mlflow.db, mlartifacts/                # tracking do MLflow (persistido pelo workflow)
+├── evidencias/<cycle_id>/                 # notebooks executados, pipeline.log, resumo_ciclo.json
+├── web/, public/, index.html              # painel (Vite + React + TS, Dev 5)
+├── docs/                                  # seções do relatório por frente
+├── tests/
+└── legado/                                # Airflow + Docker + Streamlit (versão anterior, fora do fluxo)
+```
 
 ## Tecnologias
 
-- **Apache Airflow 2.7.1** — orquestração e agendamento do pipeline
-- **MLflow 2.7.1** — rastreamento de experimentos e model registry
-- **XGBoost** — modelo de classificação binária
-- **scikit-learn** — utilitários de ML (train/test split, métricas)
-- **Streamlit** — interface web interativa em Python
-- **Plotly** — gráficos no dashboard
-- **PostgreSQL 13** — backend de metadados do Airflow
-- **Docker & Docker Compose** — containerização e orquestração de serviços
-- **Typescript, React, Vite & ESLint** — aplicação e desenvolvimento web
+Python 3.12 · pandas · scikit-learn · XGBoost · MLflow (SQLite) · Jupyter/nbconvert · GitHub Actions ·
+Vite + React + TypeScript (painel). A versão anterior com Airflow, Docker e Streamlit está em
+[`legado/`](legado/README.md).
