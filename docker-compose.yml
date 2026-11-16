@@ -32,10 +32,10 @@ services:
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - AIRFLOW_UID=50000
     volumes:
-      - ./dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./plugins:/opt/airflow/plugins
-      - ./mlartifacts:/mlflow/artifacts
+      - ./dags:/opt/airflow/dags:z
+      - ./logs:/opt/airflow/logs:z
+      - ./plugins:/opt/airflow/plugins:z
+      - ./mlartifacts:/mlflow/artifacts:z
     ports:
       - "8081:8080"
     command: |
