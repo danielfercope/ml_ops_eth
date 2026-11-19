@@ -1,0 +1,11 @@
+{
+  "versao_formato": 1,
+  "gerado_em": "2026-11-09T12:00:00Z",
+  "origem": "mock",
+  "metricas": [
+    "precision",
+    "recall",
+    "f1"
+  ],
+  "ciclos": []
+}

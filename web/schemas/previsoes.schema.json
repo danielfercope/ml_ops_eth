@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.painel/schemas/previsoes.schema.json",
+  "title": "previsoes.json — amostra do notebook 05 por ciclo (tela Previsões)",
+  "type": "object",
+  "allOf": [{ "$ref": "comum.schema.json#/$defs/envelope" }],
+  "properties": {
+    "ciclos": {
+      "description": "Um item por ciclo que tinha modelo vigente, em ordem cronológica.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/ciclo" }
+    }
+  },
+  "required": ["ciclos"],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "ciclo": {
+      "type": "object",
+      "properties": {
+        "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+        "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+        "modelo": {
+          "description": "Vigente usado nas previsões.",
+          "allOf": [{ "$ref": "comum.schema.json#/$defs/ref_modelo" }],
+          "unevaluatedProperties": false
+        },
+        "particao": { "const": "teste" },
+        "limiar": { "$ref": "comum.schema.json#/$defs/fracao" },
+        "n_total": {
+          "description": "Tamanho da partição de teste (as métricas usam todas as linhas, não só a amostra).",
+          "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo"
+        },
+        "metricas": { "$ref": "comum.schema.json#/$defs/metricas" },
+        "matriz_confusao": { "$ref": "comum.schema.json#/$defs/matriz_confusao" },
+        "criterio_amostra": { "type": "string", "minLength": 1 },
+        "amostra": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/linha" },
+          "maxItems": 200
+        }
+      },
+      "required": [
+        "cycle_id", "data_version", "modelo", "particao", "limiar", "n_total",
+        "metricas", "matriz_confusao", "criterio_amostra", "amostra"
+      ],
+      "additionalProperties": false
+    },
+    "linha": {
+      "type": "object",
+      "properties": {
+        "address": { "type": "string", "pattern": "^0x[0-9a-fA-F]{40}$" },
+        "lote": { "$ref": "comum.schema.json#/$defs/lote" },
+        "probabilidade": { "$ref": "comum.schema.json#/$defs/fracao" },
+        "previsao": { "enum": [0, 1] },
+        "rotulo_real": { "enum": [0, 1] }
+      },
+      "required": ["address", "lote", "probabilidade", "previsao", "rotulo_real"],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "versao_formato": 1,
+  "gerado_em": "2026-11-09T12:00:00Z",
+  "origem": "mock",
+  "regra": {
+    "top_k": 10,
+    "votos_minimos": 2,
+    "desempate": "rank_medio",
+    "minimo_features": 5
+  },
+  "metodos": [
+    {
+      "id": "selectkbest_f_classif",
+      "nome": "SelectKBest (F)"
+    },
+    {
+      "id": "random_forest",
+      "nome": "Random Forest"
+    },
+    {
+      "id": "rfe_logistic",
+      "nome": "RFE (Logística)"
+    }
+  ],
+  "ciclos": []
+}

@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.painel/schemas/ciclos.schema.json",
+  "title": "ciclos.json — histórico de ciclos (tela Ciclos)",
+  "type": "object",
+  "allOf": [{ "$ref": "comum.schema.json#/$defs/envelope" }],
+  "properties": {
+    "ciclos": {
+      "description": "Um item por ciclo concluído, em ordem cronológica (mais antigo primeiro).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/ciclo" }
+    }
+  },
+  "required": ["ciclos"],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "ciclo": {
+      "type": "object",
+      "properties": {
+        "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+        "executado_em": { "$ref": "comum.schema.json#/$defs/datahora" },
+        "gatilho": {
+          "description": "github.event_name do workflow; null se não registrado.",
+          "enum": ["schedule", "workflow_dispatch", "local", null]
+        },
+        "execucao_url": {
+          "description": "Link da execução no GitHub Actions; null em execuções locais.",
+          "type": ["string", "null"],
+          "pattern": "^https://"
+        },
+        "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+        "lotes": {
+          "type": "array",
+          "items": { "$ref": "comum.schema.json#/$defs/lote" },
+          "minItems": 1
+        },
+        "lotes_novos": {
+          "description": "Lotes ingeridos pela 1ª vez neste ciclo. Vazio = ciclo sem dados novos.",
+          "type": "array",
+          "items": { "$ref": "comum.schema.json#/$defs/lote" }
+        },
+        "dados": {
+          "type": "object",
+          "properties": {
+            "n_carteiras": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "duplicados_removidos": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_treino": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_validacao": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_teste": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "taxa_fraude_treino": { "$ref": "comum.schema.json#/$defs/fracao" }
+          },
+          "required": ["n_carteiras", "duplicados_removidos", "n_treino", "n_validacao", "n_teste", "taxa_fraude_treino"],
+          "additionalProperties": false
+        },
+        "n_features_eleitas": { "type": "integer", "minimum": 1 },
+        "vencedor": {
+          "description": "Melhor entre A e B pelo F1 de validação deste ciclo.",
+          "type": "object",
+          "properties": {
+            "modelo": { "$ref": "comum.schema.json#/$defs/papel" },
+            "algoritmo": { "$ref": "comum.schema.json#/$defs/algoritmo" },
+            "run_id": { "$ref": "comum.schema.json#/$defs/run_id" },
+            "f1_val": { "$ref": "comum.schema.json#/$defs/fracao" }
+          },
+          "required": ["modelo", "algoritmo", "run_id", "f1_val"],
+          "additionalProperties": false
+        },
+        "vigente_anterior": {
+          "description": "Vigente no início do ciclo, com F1 reavaliado na validação DESTE ciclo. null no 1º ciclo.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "allOf": [{ "$ref": "comum.schema.json#/$defs/ref_modelo" }],
+              "properties": { "f1_val": { "$ref": "comum.schema.json#/$defs/fracao" } },
+              "required": ["f1_val"],
+              "unevaluatedProperties": false
+            }
+          ]
+        },
+        "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
+        "motivo": { "type": "string", "minLength": 1 },
+        "vigente_apos": {
+          "description": "Vigente ao fim do ciclo. null só se nenhum modelo jamais atingiu o F1 mínimo.",
+          "oneOf": [
+            { "type": "null" },
+            { "allOf": [{ "$ref": "comum.schema.json#/$defs/ref_modelo" }], "unevaluatedProperties": false }
+          ]
+        }
+      },
+      "required": [
+        "cycle_id", "executado_em", "gatilho", "execucao_url", "data_version", "lotes", "lotes_novos",
+        "dados", "n_features_eleitas", "vencedor", "vigente_anterior", "decisao", "motivo", "vigente_apos"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

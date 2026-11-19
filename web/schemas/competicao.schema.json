@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.painel/schemas/competicao.schema.json",
+  "title": "competicao.json — A × B × vigente na validação de cada ciclo (tela Competição)",
+  "type": "object",
+  "allOf": [{ "$ref": "comum.schema.json#/$defs/envelope" }],
+  "properties": {
+    "metricas": {
+      "description": "Métricas a desenhar nas barras agrupadas, nesta ordem.",
+      "type": "array",
+      "items": { "enum": ["precision", "recall", "f1"] },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "ciclos": {
+      "description": "Um item por ciclo, em ordem cronológica.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/ciclo" }
+    }
+  },
+  "required": ["metricas", "ciclos"],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "ciclo": {
+      "type": "object",
+      "properties": {
+        "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+        "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+        "n_validacao": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+        "vencedor": { "$ref": "comum.schema.json#/$defs/papel" },
+        "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
+        "modelos": {
+          "description": "Sempre A e B (nesta ordem); 'vigente' aparece a partir do 2º ciclo.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/modelo" },
+          "minItems": 2,
+          "maxItems": 3
+        }
+      },
+      "required": ["cycle_id", "data_version", "n_validacao", "vencedor", "decisao", "modelos"],
+      "additionalProperties": false
+    },
+    "modelo": {
+      "type": "object",
+      "properties": {
+        "papel": { "enum": ["A", "B", "vigente"] },
+        "algoritmo": { "$ref": "comum.schema.json#/$defs/algoritmo" },
+        "run_id": { "$ref": "comum.schema.json#/$defs/run_id" },
+        "cycle_id_treino": {
+          "description": "Ciclo em que o modelo foi treinado (para A e B = o próprio ciclo).",
+          "$ref": "comum.schema.json#/$defs/cycle_id"
+        },
+        "features": { "$ref": "comum.schema.json#/$defs/features" },
+        "metricas": { "$ref": "comum.schema.json#/$defs/metricas" },
+        "matriz_confusao": { "$ref": "comum.schema.json#/$defs/matriz_confusao" }
+      },
+      "required": ["papel", "algoritmo", "run_id", "cycle_id_treino", "features", "metricas", "matriz_confusao"],
+      "additionalProperties": false
+    }
+  }
+}
