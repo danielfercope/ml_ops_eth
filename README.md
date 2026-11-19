@@ -47,7 +47,7 @@ ml_ops_eth/
 ├── mlartifacts/                # Artefatos dos modelos treinados
 ├── web/                        # Painel de acompanhamento (Vite + React + TS)
 ├── public/                     # Arquivos estáticos do painel
-├── index.html                  # Página de entrada do painel (Vite)
+├── index.html                  # Painel de acompanhamento (página principal, lê os mocks)
 ├── package.json                # Scripts e dependências do painel
 ├── vite.config.ts              # Configuração do Vite
 ├── Dockerfile_airflow          # Imagem customizada do Airflow
@@ -175,7 +175,9 @@ MLFLOW_TRACKING_URI=http://localhost:5001 streamlit run app.py
 
 ## Painel de Acompanhamento (`web/`) — em desenvolvimento
 
-Recurso adicional do trabalho (critério 10), frente do Dev 5 em [`docs/divisao_trabalho.pdf`](docs/divisao_trabalho.pdf). É um painel estático em Vite + React + TypeScript que mostra a evolução dos ciclos (modelo vigente, votação de features, competição e previsões) sem abrir o MLflow nem os notebooks. Ele será gerado pelo próprio pipeline e publicado no GitHub Pages, sem API nem servidor.
+Recurso adicional do trabalho (critério 10), frente do Dev 5 em [`docs/divisao_trabalho.pdf`](docs/divisao_trabalho.pdf). É um painel estático que mostra a evolução dos ciclos (modelo vigente, votação de features, competição e previsões) sem abrir o MLflow nem os notebooks. Ele será gerado pelo próprio pipeline e publicado no GitHub Pages, sem API nem servidor.
+
+Hoje a página principal (`index.html`) é o protótipo navegável das 5 telas: HTML único, sem dependências, lendo **só os dados mock** de `web/mocks/<cenario>/` (formato em [`docs/painel_dados.md`](docs/painel_dados.md)). No cabeçalho dá para trocar o cenário (`padrao`, `mantido`, `vazio`) e forçar os estados de carregamento e erro. O app em React (`web/`) vai substituí-lo depois que o grupo aprovar o protótipo e os design tokens.
 
 ### Executar localmente
 
@@ -183,16 +185,17 @@ Requer Node.js 20.19+ ou 22.12+. Na raiz do repositório:
 
 ```bash
 npm install
-npm run dev      # servidor de desenvolvimento em http://localhost:5173
-npm run build    # checagem de tipos (tsc) + build de produção em dist/
+npm run dev      # painel em http://localhost:5173 (ex.: /?cenario=mantido#/votacao)
+npm run build    # checagem de tipos (tsc) + build de produção em dist/ (inclui os mocks)
+npm run preview  # serve o dist/ para conferir o build
 npm run lint     # ESLint
 ```
 
 ### Progresso
 
-- [x] Projeto Vite + React + TypeScript criado em `web/` (ainda com a tela inicial do template)
-- [ ] Formato dos JSONs do painel (`ciclos.json`, `votacao.json`, `competicao.json`, `vigente.json`, `previsoes.json`) e versões mock
-- [ ] Protótipo navegável com dados fictícios e design tokens aprovados pelo grupo
+- [x] Projeto Vite + React + TypeScript criado em `web/` (ainda com a tela inicial do template, fora da página principal)
+- [x] Formato dos JSONs do painel (`ciclos.json`, `votacao.json`, `competicao.json`, `vigente.json`, `previsoes.json`) e versões mock
+- [ ] Protótipo navegável com dados fictícios e design tokens aprovados pelo grupo (versão inicial em `index.html`, aguardando aprovação)
 - [ ] React Router, layout com navegação e componentes compartilhados (cartão de KPI, tabela, selo `promovido`/`mantido`, estados de carregamento e erro)
 - [ ] Telas: Visão geral, Ciclos, Votação, Competição e Previsões
 - [ ] `src/exportar_painel.py` gerando os JSONs a partir do `mlflow.db`, do manifesto e do histórico de decisões

@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.painel/schemas/comum.schema.json",
+  "title": "Definições comuns aos JSONs do painel",
+  "$defs": {
+    "envelope": {
+      "description": "Campos presentes no topo de todo JSON do painel.",
+      "type": "object",
+      "properties": {
+        "versao_formato": { "const": 1, "description": "Sobe quando um campo muda de nome/tipo ou é removido." },
+        "gerado_em": { "$ref": "#/$defs/datahora" },
+        "origem": { "enum": ["mock", "pipeline"], "description": "mock = dados fictícios; pipeline = gerado por src/exportar_painel.py." }
+      },
+      "required": ["versao_formato", "gerado_em", "origem"]
+    },
+    "datahora": {
+      "description": "ISO 8601 em UTC, sem frações de segundo: 2026-11-17T09:06:12Z.",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "cycle_id": {
+      "description": "AAAAMMDD-HHMM-<sufixo> (hora UTC). Sufixo r<run_number> no workflow ou 'local'.",
+      "type": "string",
+      "pattern": "^\\d{8}-\\d{4}-[A-Za-z0-9]+$"
+    },
+    "data_version": {
+      "description": "v<nº de lotes>-<hash8>, calculado por src/ingestao.py.",
+      "type": "string",
+      "pattern": "^v\\d+-[0-9a-f]{8}$"
+    },
+    "run_id": {
+      "description": "run_id do MLflow (32 hex).",
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "lote": { "type": "string", "pattern": "^lote_\\d{2}$" },
+    "papel": { "enum": ["A", "B"], "description": "A = Regressão Logística, B = XGBoost (config.yaml → modelos)." },
+    "algoritmo": { "enum": ["logistic_regression", "xgboost"] },
+    "decisao": { "enum": ["promovido", "mantido"] },
+    "fracao": { "type": "number", "minimum": 0, "maximum": 1 },
+    "inteiro_nao_negativo": { "type": "integer", "minimum": 0 },
+    "features": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "metricas": {
+      "description": "Métricas da classe fraude (FLAG = 1), arredondadas a 4 casas.",
+      "type": "object",
+      "properties": {
+        "precision": { "$ref": "#/$defs/fracao" },
+        "recall": { "$ref": "#/$defs/fracao" },
+        "f1": { "$ref": "#/$defs/fracao" }
+      },
+      "required": ["precision", "recall", "f1"],
+      "additionalProperties": false
+    },
+    "matriz_confusao": {
+      "description": "vn = verdadeiro negativo, fp = falso positivo, fn = falso negativo, vp = verdadeiro positivo.",
+      "type": "object",
+      "properties": {
+        "vn": { "$ref": "#/$defs/inteiro_nao_negativo" },
+        "fp": { "$ref": "#/$defs/inteiro_nao_negativo" },
+        "fn": { "$ref": "#/$defs/inteiro_nao_negativo" },
+        "vp": { "$ref": "#/$defs/inteiro_nao_negativo" }
+      },
+      "required": ["vn", "fp", "fn", "vp"],
+      "additionalProperties": false
+    },
+    "ref_modelo": {
+      "description": "Aponta para um modelo treinado: ciclo em que foi treinado, papel, algoritmo e run do MLflow.",
+      "type": "object",
+      "properties": {
+        "cycle_id": { "$ref": "#/$defs/cycle_id" },
+        "modelo": { "$ref": "#/$defs/papel" },
+        "algoritmo": { "$ref": "#/$defs/algoritmo" },
+        "run_id": { "$ref": "#/$defs/run_id" }
+      },
+      "required": ["cycle_id", "modelo", "algoritmo", "run_id"]
+    }
+  }
+}

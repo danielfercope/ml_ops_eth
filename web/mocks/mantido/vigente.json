@@ -1,0 +1,45 @@
+{
+  "versao_formato": 1,
+  "gerado_em": "2026-11-18T09:25:48Z",
+  "origem": "mock",
+  "regra_promocao": {
+    "metrica": "f1",
+    "margem_minima": 0.01,
+    "f1_minimo": 0.6
+  },
+  "vigente": {
+    "cycle_id": "20261117-0900-r15",
+    "modelo": "B",
+    "algoritmo": "xgboost",
+    "run_id": "34cc2ff1c68a26be0c83867728a5c1b0",
+    "data_version": "v2-93f5fea1",
+    "features": [
+      "total_transactions_including_tnx_to_create_contract",
+      "avg_val_received",
+      "total_ether_received",
+      "time_diff_between_first_and_last_mins",
+      "erc20_uniq_rec_token_name",
+      "total_erc20_tnxs",
+      "unique_received_from_addresses"
+    ],
+    "f1_val": 0.9429,
+    "f1_teste": 0.9515,
+    "promovido_em": "2026-11-17T09:06:12Z"
+  },
+  "ultimo_ciclo": {
+    "cycle_id": "20261118-0900-r16",
+    "executado_em": "2026-11-18T09:05:48Z",
+    "data_version": "v2-93f5fea1",
+    "decisao": "mantido",
+    "motivo": "F1_val 0,9429 < vigente 0,9429 + 0,01 (ganho de 0,0000); vigente mantido.",
+    "vencedor": {
+      "modelo": "B",
+      "algoritmo": "xgboost",
+      "run_id": "28a26a93eee963e1a24bcd124fa1aec6",
+      "f1_val": 0.9429
+    },
+    "f1_vigente_anterior": 0.9429
+  },
+  "modelo_mudou": false,
+  "anterior": null
+}

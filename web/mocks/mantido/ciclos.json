@@ -1,0 +1,130 @@
+{
+  "versao_formato": 1,
+  "gerado_em": "2026-11-18T09:25:48Z",
+  "origem": "mock",
+  "ciclos": [
+    {
+      "cycle_id": "20261110-0900-r12",
+      "executado_em": "2026-11-10T09:07:31Z",
+      "gatilho": "schedule",
+      "execucao_url": "https://github.com/danielfercope/ml_ops_eth/actions/runs/19212345678",
+      "data_version": "v1-65ada979",
+      "lotes": [
+        "lote_01"
+      ],
+      "lotes_novos": [
+        "lote_01"
+      ],
+      "dados": {
+        "n_carteiras": 6878,
+        "duplicados_removidos": 10,
+        "n_treino": 4205,
+        "n_validacao": 1306,
+        "n_teste": 1367,
+        "taxa_fraude_treino": 0.225
+      },
+      "n_features_eleitas": 6,
+      "vencedor": {
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "0aeeec651be88b9478d1200d80fac978",
+        "f1_val": 0.9253
+      },
+      "vigente_anterior": null,
+      "decisao": "promovido",
+      "motivo": "Sem modelo vigente; vencedor (XGBoost) com F1_val 0,9253 atende o mínimo de 0,60.",
+      "vigente_apos": {
+        "cycle_id": "20261110-0900-r12",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "0aeeec651be88b9478d1200d80fac978"
+      }
+    },
+    {
+      "cycle_id": "20261117-0900-r15",
+      "executado_em": "2026-11-17T09:06:12Z",
+      "gatilho": "schedule",
+      "execucao_url": "https://github.com/danielfercope/ml_ops_eth/actions/runs/19398765432",
+      "data_version": "v2-93f5fea1",
+      "lotes": [
+        "lote_01",
+        "lote_02"
+      ],
+      "lotes_novos": [
+        "lote_02"
+      ],
+      "dados": {
+        "n_carteiras": 9816,
+        "duplicados_removidos": 25,
+        "n_treino": 5959,
+        "n_validacao": 1876,
+        "n_teste": 1981,
+        "taxa_fraude_treino": 0.2242
+      },
+      "n_features_eleitas": 7,
+      "vencedor": {
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "34cc2ff1c68a26be0c83867728a5c1b0",
+        "f1_val": 0.9429
+      },
+      "vigente_anterior": {
+        "cycle_id": "20261110-0900-r12",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "0aeeec651be88b9478d1200d80fac978",
+        "f1_val": 0.9166
+      },
+      "decisao": "promovido",
+      "motivo": "F1_val 0,9429 ≥ vigente 0,9166 + 0,01 e ≥ 0,60 (ganho de 0,0263).",
+      "vigente_apos": {
+        "cycle_id": "20261117-0900-r15",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "34cc2ff1c68a26be0c83867728a5c1b0"
+      }
+    },
+    {
+      "cycle_id": "20261118-0900-r16",
+      "executado_em": "2026-11-18T09:05:48Z",
+      "gatilho": "schedule",
+      "execucao_url": "https://github.com/danielfercope/ml_ops_eth/actions/runs/19421234567",
+      "data_version": "v2-93f5fea1",
+      "lotes": [
+        "lote_01",
+        "lote_02"
+      ],
+      "lotes_novos": [],
+      "dados": {
+        "n_carteiras": 9816,
+        "duplicados_removidos": 25,
+        "n_treino": 5959,
+        "n_validacao": 1876,
+        "n_teste": 1981,
+        "taxa_fraude_treino": 0.2242
+      },
+      "n_features_eleitas": 7,
+      "vencedor": {
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "28a26a93eee963e1a24bcd124fa1aec6",
+        "f1_val": 0.9429
+      },
+      "vigente_anterior": {
+        "cycle_id": "20261117-0900-r15",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "34cc2ff1c68a26be0c83867728a5c1b0",
+        "f1_val": 0.9429
+      },
+      "decisao": "mantido",
+      "motivo": "F1_val 0,9429 < vigente 0,9429 + 0,01 (ganho de 0,0000); vigente mantido.",
+      "vigente_apos": {
+        "cycle_id": "20261117-0900-r15",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "34cc2ff1c68a26be0c83867728a5c1b0"
+      }
+    }
+  ]
+}

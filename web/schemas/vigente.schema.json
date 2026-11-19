@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.painel/schemas/vigente.schema.json",
+  "title": "vigente.json — modelo vigente e última decisão (tela Visão geral)",
+  "type": "object",
+  "allOf": [{ "$ref": "comum.schema.json#/$defs/envelope" }],
+  "properties": {
+    "regra_promocao": {
+      "description": "Cópia de config.yaml → metrica.principal e promocao.",
+      "type": "object",
+      "properties": {
+        "metrica": { "const": "f1" },
+        "margem_minima": { "$ref": "comum.schema.json#/$defs/fracao" },
+        "f1_minimo": { "$ref": "comum.schema.json#/$defs/fracao" }
+      },
+      "required": ["metrica", "margem_minima", "f1_minimo"],
+      "additionalProperties": false
+    },
+    "vigente": {
+      "description": "Lido de models/modelo_vigente.json. null antes do 1º ciclo ou se nenhum modelo atingiu o F1 mínimo.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "allOf": [{ "$ref": "comum.schema.json#/$defs/ref_modelo" }],
+          "properties": {
+            "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+            "features": { "$ref": "comum.schema.json#/$defs/features" },
+            "f1_val": { "$ref": "comum.schema.json#/$defs/fracao" },
+            "f1_teste": {
+              "description": "F1 no teste (só informativo; nunca usado em decisões).",
+              "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/fracao" }]
+            },
+            "promovido_em": { "$ref": "comum.schema.json#/$defs/datahora" }
+          },
+          "required": ["data_version", "features", "f1_val", "f1_teste", "promovido_em"],
+          "unevaluatedProperties": false
+        }
+      ]
+    },
+    "ultimo_ciclo": {
+      "description": "Resumo do ciclo mais recente. null antes do 1º ciclo.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "properties": {
+            "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+            "executado_em": { "$ref": "comum.schema.json#/$defs/datahora" },
+            "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+            "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
+            "motivo": { "type": "string", "minLength": 1 },
+            "vencedor": {
+              "type": "object",
+              "properties": {
+                "modelo": { "$ref": "comum.schema.json#/$defs/papel" },
+                "algoritmo": { "$ref": "comum.schema.json#/$defs/algoritmo" },
+                "run_id": { "$ref": "comum.schema.json#/$defs/run_id" },
+                "f1_val": { "$ref": "comum.schema.json#/$defs/fracao" }
+              },
+              "required": ["modelo", "algoritmo", "run_id", "f1_val"],
+              "additionalProperties": false
+            },
+            "f1_vigente_anterior": {
+              "description": "F1 do vigente anterior reavaliado na validação deste ciclo; null se não havia vigente.",
+              "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/fracao" }]
+            }
+          },
+          "required": ["cycle_id", "executado_em", "data_version", "decisao", "motivo", "vencedor", "f1_vigente_anterior"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "modelo_mudou": {
+      "description": "true se o último ciclo promoveu um modelo (controla o banner da Visão geral).",
+      "type": "boolean"
+    },
+    "anterior": {
+      "description": "Vigente substituído no último ciclo; null se não houve troca ou se era o 1º modelo.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "allOf": [{ "$ref": "comum.schema.json#/$defs/ref_modelo" }],
+          "properties": { "f1_val": { "$ref": "comum.schema.json#/$defs/fracao" } },
+          "required": ["f1_val"],
+          "unevaluatedProperties": false
+        }
+      ]
+    }
+  },
+  "required": ["regra_promocao", "vigente", "ultimo_ciclo", "modelo_mudou", "anterior"],
+  "unevaluatedProperties": false
+}

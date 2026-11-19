@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.painel/schemas/votacao.schema.json",
+  "title": "votacao.json — tabela de votos feature × método por ciclo (tela Votação)",
+  "type": "object",
+  "allOf": [{ "$ref": "comum.schema.json#/$defs/envelope" }],
+  "properties": {
+    "regra": {
+      "description": "Cópia de config.yaml → votacao (fixada antes do ciclo 1).",
+      "type": "object",
+      "properties": {
+        "top_k": { "type": "integer", "minimum": 1 },
+        "votos_minimos": { "type": "integer", "minimum": 1 },
+        "desempate": { "type": "string" },
+        "minimo_features": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["top_k", "votos_minimos", "desempate", "minimo_features"],
+      "additionalProperties": false
+    },
+    "metodos": {
+      "description": "Métodos na ordem das colunas. id = chave usada em votos/ranks.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "nome": { "type": "string", "minLength": 1 }
+        },
+        "required": ["id", "nome"],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "ciclos": {
+      "description": "Um item por ciclo, em ordem cronológica.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/ciclo" }
+    }
+  },
+  "required": ["regra", "metodos", "ciclos"],
+  "unevaluatedProperties": false,
+  "$defs": {
+    "por_metodo": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[a-z0-9_]+$" },
+      "minProperties": 1
+    },
+    "ciclo": {
+      "type": "object",
+      "properties": {
+        "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+        "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+        "mlflow_run_id": {
+          "description": "Run da etapa votacao_features; null se não encontrado.",
+          "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/run_id" }]
+        },
+        "n_treino": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+        "resumo": {
+          "description": "Mesmo conteúdo de artifacts/<cycle_id>/resumo_votacao.json, sem a regra.",
+          "type": "object",
+          "properties": {
+            "n_features_avaliadas": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_eleitas": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_eleitas_por_votos": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_completadas_pelo_minimo": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_com_3_votos": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_com_2_votos": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_com_1_voto": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+            "n_sem_votos": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" }
+          },
+          "required": [
+            "n_features_avaliadas", "n_eleitas", "n_eleitas_por_votos", "n_completadas_pelo_minimo",
+            "n_com_3_votos", "n_com_2_votos", "n_com_1_voto", "n_sem_votos"
+          ],
+          "additionalProperties": false
+        },
+        "eleitas": { "$ref": "comum.schema.json#/$defs/features" },
+        "tabela": {
+          "description": "TODAS as features avaliadas (inclusive sem voto), na ordem de tabela_votos.csv: eleitas primeiro, depois votos desc., rank médio asc.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/linha" },
+          "minItems": 1
+        }
+      },
+      "required": ["cycle_id", "data_version", "mlflow_run_id", "n_treino", "resumo", "eleitas", "tabela"],
+      "additionalProperties": false
+    },
+    "linha": {
+      "type": "object",
+      "properties": {
+        "feature": { "type": "string", "minLength": 1 },
+        "votos": {
+          "description": "{metodo: 0 | 1} — 1 se a feature está no top-k do método.",
+          "allOf": [{ "$ref": "#/$defs/por_metodo" }],
+          "additionalProperties": { "enum": [0, 1] }
+        },
+        "ranks": {
+          "description": "{metodo: rank} — 1 = melhor; ranking completo do método.",
+          "allOf": [{ "$ref": "#/$defs/por_metodo" }],
+          "additionalProperties": { "type": "integer", "minimum": 1 }
+        },
+        "total_votos": { "$ref": "comum.schema.json#/$defs/inteiro_nao_negativo" },
+        "rank_medio": { "type": "number", "minimum": 1 },
+        "eleita": { "type": "boolean" },
+        "motivo": {
+          "description": "Por que foi eleita; null se não foi.",
+          "enum": ["votos_suficientes", "completou_minimo", null]
+        }
+      },
+      "required": ["feature", "votos", "ranks", "total_votos", "rank_medio", "eleita", "motivo"],
+      "additionalProperties": false
+    }
+  }
+}
