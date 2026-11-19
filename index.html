@@ -1,13 +1,927 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ml_ops_eth</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/web/main.tsx"></script>
-  </body>
+<!--
+  Painel de acompanhamento do pipeline MLOps (Dev 5 · critério 10).
+
+  Página principal do projeto Vite: `npm run dev` abre em http://localhost:5173/.
+  HTML único, sem dependências. Por enquanto lê só os JSONs mock de
+  web/mocks/<cenario>/ (o build copia essa pasta para dist/). Quando o
+  exportador existir, passa a ler `${BASE_URL}data/<nome>.json`
+  (public/data/, ver docs/painel_dados.md).
+
+  Precisa ser servido por HTTP (fetch não funciona em file://). Aberto como
+  arquivo, cai no estado de erro e oferece "Carregar JSONs" para escolher os 5
+  arquivos de uma pasta de cenário à mão.
+
+  Os design tokens (cores, tipografia, espaçamento, raios) estão todos no :root
+  abaixo, com nomes por papel; deles sai o tema do app React (tarefa 3).
+-->
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Painel MLOps · Fraude Ethereum</title>
+<meta name="description" content="Acompanhamento do pipeline MLOps de detecção de fraude em carteiras Ethereum: modelo vigente, ciclos, votação de features, competição A/B e previsões." />
+<meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1a1a19" media="(prefers-color-scheme: dark)" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Painel MLOps · Fraude Ethereum" />
+<meta property="og:description" content="Evolução dos ciclos do pipeline: modelo vigente, votação de features, competição A/B e previsões." />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<style>
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* Superfícies */
+  --color-bg:          #f4f3f0;
+  --color-surface:     #fcfcfb;
+  --color-surface-2:   #f0efec;
+  --color-border:      #e3e2dd;
+  --color-border-strong: #c9c8c1;
+
+  /* Texto */
+  --color-text:        #0b0b0b;
+  --color-text-2:      #52514e;
+  --color-text-3:      #75746e;
+  --color-accent:      #256abf;   /* links, item de navegação ativo */
+
+  /* Séries — a cor segue a entidade em todas as telas */
+  --color-modelo-a:       #2a78d6;  /* Modelo A · Regressão Logística */
+  --color-modelo-b:       #eb6834;  /* Modelo B · XGBoost */
+  --color-modelo-vigente: #1baf7a;  /* vigente reavaliado */
+
+  /* Status (sempre com ícone + rótulo) */
+  --color-status-good:     #0ca30c;
+  --color-status-good-bg:  #e6f4e6;
+  --color-status-neutral:  #75746e;
+  --color-status-neutral-bg: #ecebe7;
+  --color-status-critical: #d03b3b;
+  --color-status-critical-bg: #fbe9e9;
+
+  /* Destaques */
+  --color-eleita-bg:   #e7f0fb;
+  --color-eleita-bar:  #2a78d6;
+  --color-mock-bg:     #fff4d6;
+  --color-mock-border: #fab219;
+  --color-banner-bg:   #e7f0fb;
+  --color-banner-border: #86b6ef;
+  --color-grid:        #e3e2dd;
+
+  /* Tipografia */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 650;
+  --lh-tight: 1.2;
+  --lh-normal: 1.5;
+
+  /* Espaçamento (escala de 4px) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+
+  /* Forma */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(0,0,0,.05), 0 1px 1px rgba(0,0,0,.03);
+  --content-max: 1180px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #121211; --color-surface: #1a1a19; --color-surface-2: #242422;
+    --color-border: #2e2e2b; --color-border-strong: #45453f;
+    --color-text: #f0efec; --color-text-2: #c3c2b7; --color-text-3: #8f8e86; --color-accent: #6da7ec;
+    --color-modelo-a: #3987e5; --color-modelo-b: #d95926; --color-modelo-vigente: #199e70;
+    --color-status-good-bg: #15301a; --color-status-neutral: #a3a299; --color-status-neutral-bg: #2a2a27;
+    --color-status-critical-bg: #3a1b1b;
+    --color-eleita-bg: #17283d; --color-eleita-bar: #3987e5;
+    --color-mock-bg: #3a2f12; --color-mock-border: #c98500;
+    --color-banner-bg: #17283d; --color-banner-border: #256abf;
+    --color-grid: #2e2e2b;
+    --shadow-1: none;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #121211; --color-surface: #1a1a19; --color-surface-2: #242422;
+  --color-border: #2e2e2b; --color-border-strong: #45453f;
+  --color-text: #f0efec; --color-text-2: #c3c2b7; --color-text-3: #8f8e86; --color-accent: #6da7ec;
+  --color-modelo-a: #3987e5; --color-modelo-b: #d95926; --color-modelo-vigente: #199e70;
+  --color-status-good-bg: #15301a; --color-status-neutral: #a3a299; --color-status-neutral-bg: #2a2a27;
+  --color-status-critical-bg: #3a1b1b;
+  --color-eleita-bg: #17283d; --color-eleita-bar: #3987e5;
+  --color-mock-bg: #3a2f12; --color-mock-border: #c98500;
+  --color-banner-bg: #17283d; --color-banner-border: #256abf;
+  --color-grid: #2e2e2b;
+  --shadow-1: none;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--color-bg); color: var(--color-text);
+  font: var(--fw-regular) var(--fs-md)/var(--lh-normal) var(--font-sans);
+}
+a { color: var(--color-accent); }
+button, select, input { font: inherit; color: inherit; }
+.mono { font-family: var(--font-mono); font-size: 0.92em; }
+.num { font-variant-numeric: tabular-nums; }
+.muted { color: var(--color-text-3); }
+.sec { color: var(--color-text-2); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.wrap { max-width: var(--content-max); margin: 0 auto; padding: 0 var(--sp-4); }
+
+/* Cabeçalho e navegação */
+.topo { background: var(--color-surface); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 10; }
+.topo__linha { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) 0; flex-wrap: wrap; }
+.marca { display: flex; align-items: center; gap: var(--sp-3); margin-right: auto; color: inherit; text-decoration: none; min-width: 0; }
+.marca__icone { flex: none; }
+.marca__texto { display: flex; flex-direction: column; min-width: 0; }
+.marca b { font-size: var(--fs-lg); font-weight: var(--fw-bold); line-height: var(--lh-tight); }
+.marca__texto > span { font-size: var(--fs-xs); color: var(--color-text-3); }
+.grupo-mock { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; padding-left: var(--sp-3); border-left: 1px solid var(--color-border); }
+.grupo-mock__rotulo { font-size: var(--fs-xs); color: var(--color-text-3); text-transform: uppercase; letter-spacing: .04em; }
+@media (max-width: 600px) { .grupo-mock { border-left: 0; padding-left: 0; } .marca__texto > span { display: none; } }
+.controle { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--fs-sm); color: var(--color-text-2); }
+.controle select, .botao {
+  background: var(--color-surface); border: 1px solid var(--color-border-strong); border-radius: var(--radius-md);
+  padding: 6px 10px; font-size: var(--fs-sm); cursor: pointer;
+}
+.botao:hover, .controle select:hover { border-color: var(--color-text-3); }
+.nav { display: flex; gap: var(--sp-1); overflow-x: auto; scrollbar-width: none; margin-bottom: -1px; }
+.nav a {
+  padding: var(--sp-2) var(--sp-3); color: var(--color-text-2); text-decoration: none; white-space: nowrap;
+  border-bottom: 2px solid transparent; font-weight: var(--fw-medium);
+}
+.nav a:hover { color: var(--color-text); }
+.nav a[aria-current="page"] { color: var(--color-text); border-bottom-color: var(--color-accent); }
+
+main.wrap { padding-top: var(--sp-5); padding-bottom: var(--sp-7); }
+.titulo { display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3); flex-wrap: wrap; margin-bottom: var(--sp-4); }
+.titulo h1 { font-size: var(--fs-xl); margin: 0; font-weight: var(--fw-bold); }
+.titulo p { margin: 0; color: var(--color-text-2); font-size: var(--fs-sm); }
+
+/* Avisos */
+.aviso { border: 1px solid; border-radius: var(--radius-md); padding: var(--sp-3) var(--sp-4); margin-bottom: var(--sp-4); display: flex; gap: var(--sp-3); align-items: flex-start; }
+.aviso svg { flex: none; margin-top: 2px; }
+.aviso--mock { background: var(--color-mock-bg); border-color: var(--color-mock-border); font-size: var(--fs-sm); }
+.aviso--troca { background: var(--color-banner-bg); border-color: var(--color-banner-border); }
+.aviso--troca b { display: block; }
+
+/* Cartões e grades */
+.grade { display: grid; gap: var(--sp-4); }
+.grade--kpi { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-bottom: var(--sp-4); }
+.grade--2 { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+.grade--3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+@media (max-width: 820px) { .grade--2 { grid-template-columns: minmax(0, 1fr); } }
+.cartao { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--sp-4); box-shadow: var(--shadow-1); min-width: 0; }
+.cartao h2 { font-size: var(--fs-md); font-weight: var(--fw-bold); margin: 0 0 var(--sp-3); }
+.cartao h2 small { font-weight: var(--fw-regular); color: var(--color-text-3); margin-left: var(--sp-2); }
+.cartao + .cartao { margin-top: 0; }
+.pilha > * + * { margin-top: var(--sp-4); }
+
+.kpi { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--sp-3) var(--sp-4); box-shadow: var(--shadow-1); min-width: 0; }
+.kpi__rotulo { font-size: var(--fs-xs); color: var(--color-text-2); text-transform: uppercase; letter-spacing: .04em; }
+.kpi__valor { font-size: var(--fs-2xl); font-weight: var(--fw-bold); line-height: var(--lh-tight); margin-top: var(--sp-1); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.kpi__valor--md { font-size: var(--fs-xl); }
+.kpi__sub { font-size: var(--fs-xs); color: var(--color-text-3); margin-top: var(--sp-1); }
+
+/* Selo de status */
+.selo { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px 2px 6px; border-radius: var(--radius-pill); font-size: var(--fs-xs); font-weight: var(--fw-medium); white-space: nowrap; color: var(--color-text); }
+.selo--promovido { background: var(--color-status-good-bg); }
+.selo--promovido svg { color: var(--color-status-good); }
+.selo--mantido { background: var(--color-status-neutral-bg); }
+.selo--mantido svg { color: var(--color-status-neutral); }
+.selo--acerto { background: var(--color-status-good-bg); }
+.selo--acerto svg { color: var(--color-status-good); }
+.selo--erro { background: var(--color-status-critical-bg); }
+.selo--erro svg { color: var(--color-status-critical); }
+.etiqueta { display: inline-block; padding: 1px 6px; border-radius: var(--radius-sm); font-size: var(--fs-xs); background: var(--color-surface-2); color: var(--color-text-2); white-space: nowrap; }
+.etiqueta--novo { background: var(--color-banner-bg); color: var(--color-text); }
+.ponto { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
+.ponto--A { background: var(--color-modelo-a); }
+.ponto--B { background: var(--color-modelo-b); }
+.ponto--vigente { background: var(--color-modelo-vigente); }
+
+/* Chips de features */
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chip { font-family: var(--font-mono); font-size: var(--fs-xs); padding: 3px 8px; border-radius: var(--radius-sm); background: var(--color-surface-2); border: 1px solid var(--color-border); overflow-wrap: anywhere; }
+
+/* Seletor de ciclo / filtros (segmentado) */
+.segmentado { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--color-border-strong); border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface); }
+.segmentado button { border: 0; background: none; padding: 6px 12px; font-size: var(--fs-sm); cursor: pointer; color: var(--color-text-2); border-right: 1px solid var(--color-border); }
+.segmentado button:last-child { border-right: 0; }
+.segmentado button[aria-pressed="true"] { background: var(--color-text); color: var(--color-surface); }
+.barra-filtros { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); }
+
+/* Tabelas */
+.tabela-wrap { overflow-x: auto; margin: 0 calc(-1 * var(--sp-4)); padding: 0 var(--sp-4); }
+table { border-collapse: collapse; width: 100%; font-size: var(--fs-sm); }
+th { text-align: left; font-weight: var(--fw-medium); color: var(--color-text-2); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .03em; padding: var(--sp-2); border-bottom: 1px solid var(--color-border-strong); white-space: nowrap; vertical-align: bottom; }
+td { padding: var(--sp-2); border-bottom: 1px solid var(--color-border); vertical-align: top; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+td.c, th.c { text-align: center; }
+tr.eleita td { background: var(--color-eleita-bg); }
+tr.eleita td:first-child { box-shadow: inset 3px 0 0 var(--color-eleita-bar); }
+.motivo { font-size: var(--fs-xs); color: var(--color-text-2); margin-top: 4px; max-width: 340px; }
+
+/* Votação */
+.voto { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; padding: 1px 6px; border-radius: var(--radius-pill); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+.voto--sim { background: var(--color-text); color: var(--color-surface); font-weight: var(--fw-medium); }
+.voto--nao { color: var(--color-text-3); }
+.pips { display: inline-flex; gap: 3px; vertical-align: middle; }
+.pips i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--color-text-2); }
+.pips i.on { background: var(--color-text); border-color: var(--color-text); }
+.delta { font-size: var(--fs-xs); white-space: nowrap; }
+.delta--entrou { color: var(--color-text); font-weight: var(--fw-medium); }
+.resumo-votos { display: flex; flex-wrap: wrap; gap: var(--sp-5); margin-bottom: var(--sp-3); }
+.resumo-votos div { display: flex; flex-direction: column; }
+.resumo-votos b { font-size: var(--fs-xl); font-variant-numeric: tabular-nums; }
+.resumo-votos span { font-size: var(--fs-xs); color: var(--color-text-2); }
+
+/* Matriz de confusão */
+.matriz { display: grid; grid-template-columns: auto 1fr 1fr; gap: 2px; font-size: var(--fs-sm); max-width: 300px; }
+.matriz div { padding: 6px 8px; }
+.matriz .cab { font-size: var(--fs-xs); color: var(--color-text-3); text-align: center; }
+.matriz .cab--lin { text-align: right; }
+.matriz .cel { border-radius: var(--radius-sm); text-align: center; font-variant-numeric: tabular-nums; background: var(--color-surface-2); }
+.matriz .cel small { display: block; font-size: 10px; color: var(--color-text-3); }
+.matriz .cel--ok { background: var(--color-status-good-bg); }
+.matriz .cel--erro { background: var(--color-status-critical-bg); }
+
+/* Probabilidade */
+.prob { display: flex; align-items: center; gap: var(--sp-2); min-width: 150px; }
+.prob__trilho { position: relative; flex: 1; height: 8px; background: var(--color-surface-2); border-radius: var(--radius-pill); }
+.prob__fill { position: absolute; inset: 0 auto 0 0; background: var(--color-text-2); border-radius: var(--radius-pill); }
+.prob__limiar { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--color-text); }
+
+/* Gráficos */
+.grafico { width: 100%; height: auto; display: block; overflow: visible; }
+.grafico--regua { max-width: 520px; }
+.grafico text { fill: var(--color-text-2); font-size: 12px; font-family: var(--font-sans); }
+.grafico .eixo-forte { stroke: var(--color-border-strong); }
+.grafico .grade-linha { stroke: var(--color-grid); }
+.grafico .rotulo-valor { fill: var(--color-text); font-weight: var(--fw-medium); font-variant-numeric: tabular-nums; }
+.grafico [data-tip] { cursor: default; }
+.legenda { display: flex; flex-wrap: wrap; gap: var(--sp-4); font-size: var(--fs-sm); color: var(--color-text-2); margin-bottom: var(--sp-3); }
+.legenda .traco { display: inline-block; width: 16px; border-top: 2px dashed var(--color-text-2); vertical-align: middle; margin-right: 6px; }
+.tooltip {
+  position: fixed; pointer-events: none; z-index: 50; background: var(--color-text); color: var(--color-surface);
+  padding: 6px 10px; border-radius: var(--radius-md); font-size: var(--fs-xs); line-height: 1.4; max-width: 280px;
+  opacity: 0; transition: opacity .08s;
+}
+.tooltip.on { opacity: 1; }
+
+/* Estados vazio / carregando / erro */
+.estado { text-align: center; padding: var(--sp-7) var(--sp-4); }
+.estado h2 { font-size: var(--fs-lg); margin: var(--sp-3) 0 var(--sp-2); }
+.estado p { color: var(--color-text-2); max-width: 520px; margin: 0 auto var(--sp-3); }
+.estado svg { color: var(--color-text-3); }
+.esqueleto { background: linear-gradient(90deg, var(--color-surface-2) 0%, var(--color-border) 50%, var(--color-surface-2) 100%); background-size: 200% 100%; animation: brilho 1.2s linear infinite; border-radius: var(--radius-md); }
+@keyframes brilho { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .esqueleto { animation: none; } }
+pre.erro { text-align: left; display: inline-block; background: var(--color-surface-2); padding: var(--sp-3); border-radius: var(--radius-md); font-size: var(--fs-xs); max-width: 100%; overflow-x: auto; }
+
+.rodape { border-top: 1px solid var(--color-border); padding: var(--sp-4) 0; font-size: var(--fs-xs); color: var(--color-text-3); }
+.rodape .wrap + .wrap { margin-top: var(--sp-2); }
+.creditos a { color: inherit; }
+.rodape .wrap { display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; justify-content: space-between; }
+.dl { display: grid; grid-template-columns: auto 1fr; gap: 4px var(--sp-3); font-size: var(--fs-sm); margin: 0; }
+.dl dt { color: var(--color-text-2); }
+.dl dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.nota { font-size: var(--fs-xs); color: var(--color-text-3); margin: var(--sp-3) 0 0; }
+.lista-ciclos { list-style: none; margin: 0; padding: 0; }
+.lista-ciclos li { display: flex; justify-content: space-between; gap: var(--sp-3); padding: var(--sp-2) 0; border-bottom: 1px solid var(--color-border); font-size: var(--fs-sm); }
+.lista-ciclos li:last-child { border-bottom: 0; }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap">
+    <div class="topo__linha">
+      <a class="marca" href="#/visao-geral" aria-label="Painel MLOps · Fraude Ethereum: ir para a visão geral">
+        <svg class="marca__icone" width="28" height="28" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--color-text)"/><path d="M16 5l-6.5 11L16 20l6.5-4L16 5z" fill="var(--color-surface)"/><path d="M9.5 17.5L16 27l6.5-9.5L16 21.5l-6.5-4z" fill="var(--color-surface)" opacity=".65"/></svg>
+        <span class="marca__texto"><b>Painel MLOps · Fraude Ethereum</b>
+        <span>Ciclos do pipeline, votação de features, competição A/B e previsões</span></span>
+      </a>
+      <div class="grupo-mock" role="group" aria-label="Dados mock">
+      <span class="grupo-mock__rotulo">Mock</span>
+      <label class="controle">Cenário
+        <select id="sel-cenario">
+          <option value="padrao">padrão (2 ciclos, troca)</option>
+          <option value="mantido">mantido (3º ciclo sem troca)</option>
+          <option value="vazio">vazio (antes do 1º ciclo)</option>
+        </select>
+      </label>
+      <label class="controle">Estado
+        <select id="sel-estado" title="Ferramenta do protótipo: força os estados de carregamento e erro">
+          <option value="normal">normal</option>
+          <option value="carregando">carregando</option>
+          <option value="erro">erro</option>
+        </select>
+      </label>
+      </div>
+      <button class="botao" id="btn-tema" type="button" title="Alternar tema">Tema: auto</button>
+    </div>
+    <nav class="nav" id="nav" aria-label="Telas"></nav>
+  </div>
+</header>
+
+<main class="wrap" id="app" aria-live="polite"></main>
+
+<footer class="rodape">
+  <div class="wrap" id="rodape"></div>
+  <div class="wrap creditos">
+    <span>Trabalho N3 · MLOps · recurso adicional (critério 10)</span>
+    <span>Dados: <a href="https://www.kaggle.com/datasets/vagifa/ethereum-frauddetection-dataset" target="_blank" rel="noopener">Ethereum Fraud Detection Dataset</a> (Kaggle, ODbL)</span>
+    <span><a href="https://github.com/danielfercope/ml_ops_eth" target="_blank" rel="noopener">Código no GitHub</a></span>
+  </div>
+</footer>
+<div class="tooltip" id="tooltip" role="tooltip"></div>
+<input type="file" id="arquivos" accept=".json,application/json" multiple hidden />
+
+<script>
+'use strict';
+
+// ---------------------------------------------------------------------------
+// Configuração
+// ---------------------------------------------------------------------------
+const BASE_MOCKS = 'web/mocks/';           // depois do exportador: `${BASE_URL}data/`
+const ARQUIVOS = ['ciclos', 'votacao', 'competicao', 'vigente', 'previsoes'];
+const VERSAO_FORMATO = 1;
+const ROTAS = [
+  { id: 'visao-geral', nome: 'Visão geral' },
+  { id: 'ciclos',      nome: 'Ciclos' },
+  { id: 'votacao',     nome: 'Votação' },
+  { id: 'competicao',  nome: 'Competição' },
+  { id: 'previsoes',   nome: 'Previsões' },
+];
+const ALG = { logistic_regression: 'Regressão Logística', xgboost: 'XGBoost' };
+const METRICA = { precision: 'Precision', recall: 'Recall', f1: 'F1' };
+const PAPEL_NOME = { A: 'Modelo A', B: 'Modelo B', vigente: 'Vigente reavaliado' };
+
+const S = {
+  cenario: 'padrao',
+  simular: 'normal',
+  status: 'carregando',      // carregando | ok | erro
+  erro: null,
+  fonte: '',
+  d: null,                   // { ciclos, votacao, competicao, vigente, previsoes }
+  ciclo: {},                 // ciclo escolhido por tela
+  filtroPrev: 'todos',
+  ocultarSemVoto: false,
+};
+
+// ---------------------------------------------------------------------------
+// Utilidades
+// ---------------------------------------------------------------------------
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const f4 = (n) => n == null ? '—' : n.toLocaleString('pt-BR', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+const f2 = (n) => n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pct = (n, d = 1) => (n * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+const int = (n) => n.toLocaleString('pt-BR');
+const fmtData = (iso) => new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(iso));
+const fmtDataLonga = (iso) => new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }).format(new Date(iso));
+const curto = (run) => run ? run.slice(0, 8) : '—';
+const nomeModelo = (r) => `${ALG[r.algoritmo]} (${r.modelo ?? r.papel})`;
+
+const ICONE = {
+  check: '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  igual: '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6h10M3 10h10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  x: '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  info: '<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v4.5M8 4.6v.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  troca: '<svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 5h10l-3-3M14 11H4l3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  vazio: '<svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 9h18M8 14h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+  erro: '<svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 7.5v5.5M12 16.2v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+};
+
+function selo(decisao) {
+  return decisao === 'promovido'
+    ? `<span class="selo selo--promovido">${ICONE.check}Promovido</span>`
+    : `<span class="selo selo--mantido">${ICONE.igual}Mantido</span>`;
+}
+function seloResultado(tipo) {
+  const ok = tipo === 'VP' || tipo === 'VN';
+  return `<span class="selo selo--${ok ? 'acerto' : 'erro'}">${ok ? ICONE.check : ICONE.x}${tipo}</span>`;
+}
+const ciclosLista = () => S.d.ciclos.ciclos;
+const numCiclo = (id) => ciclosLista().findIndex((c) => c.cycle_id === id) + 1;
+const rotCiclo = (id) => `Ciclo ${numCiclo(id)}`;
+const cicloPorId = (id) => ciclosLista().find((c) => c.cycle_id === id);
+
+/** Ciclo escolhido numa tela (padrão: o último que existe naquela lista). */
+function cicloEscolhido(tela, lista) {
+  const ids = lista.map((c) => c.cycle_id);
+  if (!ids.includes(S.ciclo[tela])) S.ciclo[tela] = ids[ids.length - 1];
+  return lista.find((c) => c.cycle_id === S.ciclo[tela]);
+}
+function seletorCiclo(tela, lista) {
+  if (lista.length < 2) return '';
+  const atual = S.ciclo[tela];
+  return `<div class="segmentado" role="group" aria-label="Ciclo">${lista.map((c) =>
+    `<button type="button" data-acao="ciclo" data-tela="${tela}" data-id="${esc(c.cycle_id)}" aria-pressed="${c.cycle_id === atual}" title="${esc(c.cycle_id)}">${rotCiclo(c.cycle_id)}</button>`).join('')}</div>`;
+}
+function matriz(m) {
+  return `<div class="matriz" role="table" aria-label="Matriz de confusão">
+    <div></div><div class="cab">prev. legítima</div><div class="cab">prev. fraude</div>
+    <div class="cab cab--lin">real legítima</div><div class="cel cel--ok"><b>${int(m.vn)}</b><small>VN</small></div><div class="cel cel--erro"><b>${int(m.fp)}</b><small>FP</small></div>
+    <div class="cab cab--lin">real fraude</div><div class="cel cel--erro"><b>${int(m.fn)}</b><small>FN</small></div><div class="cel cel--ok"><b>${int(m.vp)}</b><small>VP</small></div>
+  </div>`;
+}
+function titulo(h, p, extra = '') {
+  return `<div class="titulo"><div><h1>${h}</h1>${p ? `<p>${p}</p>` : ''}</div>${extra}</div>`;
+}
+function estadoVazio(titulo, texto) {
+  return `<div class="cartao estado">${ICONE.vazio}<h2>${titulo}</h2><p>${texto}</p></div>`;
+}
+
+/** Largura interna de um cartão de largura total: o SVG é desenhado em 1:1, sem escalar o texto. */
+const larguraGrafico = () => Math.max(300, $('#app').clientWidth - 2 * 16 - 2 * 16 - 2);
+
+// ---------------------------------------------------------------------------
+// Carregamento
+// ---------------------------------------------------------------------------
+async function carregar() {
+  S.status = 'carregando'; S.erro = null; render();
+  if (S.simular === 'carregando') return;
+  try {
+    if (S.simular === 'erro') throw new Error('vigente.json: HTTP 404 (erro simulado pelo protótipo)');
+    const pares = await Promise.all(ARQUIVOS.map(async (nome) => {
+      const url = `${BASE_MOCKS}${S.cenario}/${nome}.json`;
+      let r;
+      try { r = await fetch(url, { cache: 'no-store' }); }
+      catch (e) { throw new Error(`${nome}.json: não foi possível buscar ${url} (${e.message}). Abra o protótipo por um servidor HTTP.`); }
+      if (!r.ok) throw new Error(`${nome}.json: HTTP ${r.status} em ${url}`);
+      return [nome, await r.json()];
+    }));
+    aceitar(Object.fromEntries(pares), `web/mocks/${S.cenario}/`);
+  } catch (e) {
+    S.status = 'erro'; S.erro = e.message;
+  }
+  render();
+}
+function aceitar(d, fonte) {
+  for (const n of ARQUIVOS) {
+    if (!d[n]) throw new Error(`falta ${n}.json`);
+    if (d[n].versao_formato !== VERSAO_FORMATO) throw new Error(`${n}.json: versao_formato ${d[n].versao_formato}, o painel entende ${VERSAO_FORMATO}`);
+  }
+  S.d = d; S.fonte = fonte; S.status = 'ok'; S.ciclo = {};
+}
+async function carregarArquivos(files) {
+  try {
+    const d = {};
+    for (const f of files) d[f.name.replace(/\.json$/, '')] = JSON.parse(await f.text());
+    aceitar(d, `arquivos locais (${[...files].map((f) => f.name).join(', ')})`);
+  } catch (e) { S.status = 'erro'; S.erro = e.message; }
+  render();
+}
+
+// ---------------------------------------------------------------------------
+// Tela: Visão geral
+// ---------------------------------------------------------------------------
+function telaVisaoGeral() {
+  const vg = S.d.vigente;
+  const regra = vg.regra_promocao;
+  if (!vg.vigente) {
+    return titulo('Visão geral') + estadoVazio('Nenhum ciclo executado ainda',
+      `O primeiro ciclo agendado vai treinar os modelos A (Regressão Logística) e B (XGBoost) e promover o vencedor se o F1 de validação for ≥ ${f2(regra.f1_minimo)}.`) +
+      `<div class="cartao" style="margin-top:var(--sp-4)"><h2>Regra de promoção</h2>${textoRegra(regra)}</div>`;
+  }
+  const v = vg.vigente, u = vg.ultimo_ciclo, ant = vg.anterior;
+  let banner = '';
+  if (vg.modelo_mudou) {
+    banner = `<div class="aviso aviso--troca" role="status">${ICONE.troca}<div>
+      <b>${ant ? 'O modelo vigente mudou no último ciclo' : 'Primeiro modelo vigente promovido'}</b>
+      ${ant ? `${esc(nomeModelo(ant))} · ${rotCiclo(ant.cycle_id)} (F1 ${f4(ant.f1_val)}) → ` : ''}<b style="display:inline">${esc(nomeModelo(v))} · ${rotCiclo(v.cycle_id)}</b> (F1 ${f4(v.f1_val)})
+    </div></div>`;
+  }
+  const kpis = `<div class="grade grade--kpi">
+    <div class="kpi"><div class="kpi__rotulo">Modelo vigente</div><div class="kpi__valor kpi__valor--md"><span class="ponto ponto--${v.modelo}"></span>${ALG[v.algoritmo]}</div><div class="kpi__sub">Modelo ${v.modelo} · run <span class="mono">${curto(v.run_id)}</span></div></div>
+    <div class="kpi"><div class="kpi__rotulo">F1 validação</div><div class="kpi__valor">${f4(v.f1_val)}</div><div class="kpi__sub">no ciclo em que foi treinado</div></div>
+    <div class="kpi"><div class="kpi__rotulo">F1 teste</div><div class="kpi__valor">${f4(v.f1_teste)}</div><div class="kpi__sub">notebook 05 · teste inteiro</div></div>
+    <div class="kpi"><div class="kpi__rotulo">Treinado no</div><div class="kpi__valor kpi__valor--md">${rotCiclo(v.cycle_id)}</div><div class="kpi__sub mono">${esc(v.cycle_id)}</div></div>
+    <div class="kpi"><div class="kpi__rotulo">data_version</div><div class="kpi__valor kpi__valor--md mono">${esc(v.data_version)}</div><div class="kpi__sub">promovido em ${fmtData(v.promovido_em)}</div></div>
+  </div>`;
+  const ultimo = cicloPorId(u.cycle_id);
+  const decisao = `<div class="cartao">
+    <h2>Última decisão <small>${rotCiclo(u.cycle_id)} · ${fmtDataLonga(u.executado_em)}</small></h2>
+    <p style="margin:0 0 var(--sp-2)">${selo(u.decisao)} <span class="sec" style="margin-left:6px">vencedor: <span class="ponto ponto--${u.vencedor.modelo}"></span>${esc(nomeModelo(u.vencedor))}</span></p>
+    <p class="sec" style="margin:0 0 var(--sp-3);font-size:var(--fs-sm)">${esc(u.motivo)}</p>
+    ${graficoDecisao(u.vencedor, u.f1_vigente_anterior, regra)}
+    <dl class="dl" style="margin-top:var(--sp-3)">
+      <dt>Lotes</dt><dd>${ultimo.lotes.map((l) => `<span class="etiqueta ${ultimo.lotes_novos.includes(l) ? 'etiqueta--novo' : ''}">${l}${ultimo.lotes_novos.includes(l) ? ' · novo' : ''}</span>`).join(' ')}${ultimo.lotes_novos.length ? '' : ' <span class="muted">sem dados novos</span>'}</dd>
+      <dt>Execução</dt><dd>${ultimo.execucao_url ? `<a href="${esc(ultimo.execucao_url)}" target="_blank" rel="noopener">GitHub Actions</a>` : '—'} <span class="muted">(${esc(ultimo.gatilho ?? 'gatilho desconhecido')})</span></dd>
+    </dl>
+  </div>`;
+  const lateral = `<div class="pilha">
+    <div class="cartao"><h2>Features do vigente <small>${v.features.length}</small></h2><div class="chips">${v.features.map((f) => `<span class="chip">${esc(f)}</span>`).join('')}</div></div>
+    <div class="cartao"><h2>Histórico <small><a href="#/ciclos">ver ciclos</a></small></h2><ul class="lista-ciclos">${ciclosLista().slice().reverse().map((c) =>
+      `<li><span><b>${rotCiclo(c.cycle_id)}</b> <span class="muted">${fmtData(c.executado_em)}</span></span><span>${selo(c.decisao)}</span></li>`).join('')}</ul></div>
+    <div class="cartao"><h2>Regra de promoção</h2>${textoRegra(regra)}</div>
+  </div>`;
+  return titulo('Visão geral', 'Modelo em produção e o que aconteceu no último ciclo.') + banner + kpis +
+    `<div class="grade grade--2">${decisao}${lateral}</div>`;
+}
+function textoRegra(r) {
+  return `<p style="margin:0;font-size:var(--fs-sm)">O vencedor do ciclo substitui o vigente só se
+    <span class="mono">F1_val ≥ F1_vigente + ${f2(r.margem_minima)}</span> e <span class="mono">F1_val ≥ ${f2(r.f1_minimo)}</span>.
+    O F1 do vigente é reavaliado na validação do ciclo atual.</p>`;
+}
+
+/** Régua horizontal: vigente reavaliado, limiar exigido e vencedor. */
+function graficoDecisao(venc, f1Vig, regra) {
+  const exigido = f1Vig == null ? regra.f1_minimo : Math.max(f1Vig + regra.margem_minima, regra.f1_minimo);
+  const vals = [venc.f1_val, exigido].concat(f1Vig == null ? [] : [f1Vig]);
+  let lo = Math.floor((Math.min(...vals) - 0.02) * 100) / 100, hi = Math.min(1, Math.ceil((Math.max(...vals) + 0.01) * 100) / 100);
+  const W = Math.min(520, larguraGrafico()), H = 92, mx = 12, y = 40;
+  const x = (v) => mx + (v - lo) / (hi - lo) * (W - 2 * mx);
+  const ticks = []; const passo = (hi - lo) > 0.2 ? 0.1 : (hi - lo) > 0.06 ? 0.02 : 0.01;
+  for (let t = Math.ceil(lo / passo) * passo; t <= hi + 1e-9; t += passo) ticks.push(+t.toFixed(2));
+  const passou = venc.f1_val >= exigido - 1e-9;
+  const junto = f1Vig != null && Math.abs(x(f1Vig) - x(venc.f1_val)) < 14;   // pontos iguais: separa na vertical
+  const yVig = junto ? y - 8 : y, yVenc = junto ? y + 8 : y;
+  const corVenc = `var(--color-modelo-${venc.modelo.toLowerCase()})`;
+  return `<div class="legenda" style="margin-bottom:var(--sp-1)">
+      <span><span class="ponto ponto--${venc.modelo}"></span>Vencedor (${venc.modelo})</span>
+      ${f1Vig == null ? '' : '<span><span class="ponto ponto--vigente"></span>Vigente reavaliado</span>'}
+      <span><span class="traco"></span>F1 exigido</span></div>
+    <svg class="grafico grafico--regua" viewBox="0 0 ${W} ${H}" role="img" aria-label="F1 do vencedor ${f4(venc.f1_val)} contra F1 exigido ${f4(exigido)}">
+    <line class="eixo-forte" x1="${mx}" x2="${W - mx}" y1="${y}" y2="${y}" stroke-width="2"/>
+    ${ticks.map((t) => `<line class="grade-linha" x1="${x(t)}" x2="${x(t)}" y1="${y - 4}" y2="${y + 4}"/><text x="${x(t)}" y="${y + 20}" text-anchor="middle">${f2(t)}</text>`).join('')}
+    <rect x="${x(exigido)}" y="${y - 10}" width="${Math.max(0, x(hi) - x(exigido))}" height="20" fill="var(--color-status-good)" opacity=".12"/>
+    <line x1="${x(exigido)}" x2="${x(exigido)}" y1="${y - 18}" y2="${y + 10}" stroke="var(--color-text-2)" stroke-width="2" stroke-dasharray="4 3" data-tip="F1 exigido: ${f4(exigido)}"/>
+    <text x="${x(exigido)}" y="${y - 22}" text-anchor="middle">exigido ${f4(exigido)}</text>
+    ${f1Vig == null ? '' : `<circle cx="${x(f1Vig)}" cy="${yVig}" r="7" fill="var(--color-modelo-vigente)" stroke="var(--color-surface)" stroke-width="2" data-tip="Vigente reavaliado: F1 ${f4(f1Vig)}"/>`}
+    <circle cx="${x(venc.f1_val)}" cy="${yVenc}" r="7" fill="${corVenc}" stroke="var(--color-surface)" stroke-width="2" data-tip="Vencedor ${esc(nomeModelo(venc))}: F1 ${f4(venc.f1_val)} · ${passou ? 'atinge' : 'não atinge'} o exigido"/>
+    <text class="rotulo-valor" x="${x(venc.f1_val)}" y="${y + 40}" text-anchor="middle">${f4(venc.f1_val)}</text>
+  </svg>`;
+}
+
+// ---------------------------------------------------------------------------
+// Tela: Ciclos
+// ---------------------------------------------------------------------------
+function telaCiclos() {
+  const ciclos = ciclosLista();
+  if (!ciclos.length) return titulo('Ciclos') + estadoVazio('Nenhum ciclo ainda', 'Cada execução do workflow agendado aparece aqui com os dados usados, o vencedor e a decisão.');
+  const linhas = ciclos.slice().reverse().map((c) => {
+    const novos = c.lotes_novos;
+    return `<tr>
+      <td><b>${rotCiclo(c.cycle_id)}</b><div class="mono muted" style="font-size:var(--fs-xs)">${esc(c.cycle_id)}</div></td>
+      <td class="num">${fmtData(c.executado_em)}<div class="muted" style="font-size:var(--fs-xs)">${c.execucao_url ? `<a href="${esc(c.execucao_url)}" target="_blank" rel="noopener">${esc(c.gatilho ?? 'execução')}</a>` : esc(c.gatilho ?? '—')}</div></td>
+      <td><span class="mono">${esc(c.data_version)}</span><div style="margin-top:4px">${c.lotes.map((l) => `<span class="etiqueta ${novos.includes(l) ? 'etiqueta--novo' : ''}">${l}${novos.includes(l) ? ' · novo' : ''}</span>`).join(' ')}</div>${novos.length ? '' : '<div class="muted" style="font-size:var(--fs-xs)">sem dados novos</div>'}</td>
+      <td class="n">${int(c.dados.n_carteiras)}<div class="muted" style="font-size:var(--fs-xs)">${int(c.dados.n_treino)} / ${int(c.dados.n_validacao)} / ${int(c.dados.n_teste)}</div></td>
+      <td class="n">${pct(c.dados.taxa_fraude_treino)}</td>
+      <td class="n">${c.n_features_eleitas}</td>
+      <td><span class="ponto ponto--${c.vencedor.modelo}"></span>${esc(nomeModelo(c.vencedor))}<div class="mono muted" style="font-size:var(--fs-xs)">run ${curto(c.vencedor.run_id)}</div></td>
+      <td class="n"><b>${f4(c.vencedor.f1_val)}</b></td>
+      <td class="n">${c.vigente_anterior ? f4(c.vigente_anterior.f1_val) : '<span class="muted">—</span>'}</td>
+      <td>${selo(c.decisao)}<div class="motivo">${esc(c.motivo)}</div></td>
+    </tr>`;
+  }).join('');
+  return titulo('Ciclos', `${ciclos.length} ${ciclos.length === 1 ? 'execução' : 'execuções'} do pipeline, do mais recente para o mais antigo.`) +
+    `<div class="cartao" style="margin-bottom:var(--sp-4)"><h2>F1 de validação por ciclo <small>vencedor × vigente reavaliado × exigido</small></h2>${graficoCiclos(ciclos, S.d.vigente.regra_promocao)}
+      <p class="nota">A validação cresce quando entra um lote novo, por isso o vigente é reavaliado a cada ciclo: só os pontos de um mesmo ciclo são comparáveis entre si.</p></div>
+    <div class="cartao"><div class="tabela-wrap"><table>
+      <thead><tr><th>Ciclo</th><th>Executado</th><th>Dados</th><th class="n">Carteiras<br><span style="text-transform:none">treino / val / teste</span></th><th class="n">Fraude<br>treino</th><th class="n">Features</th><th>Vencedor</th><th class="n">F1 val</th><th class="n">F1 vigente<br>reavaliado</th><th>Decisão</th></tr></thead>
+      <tbody>${linhas}</tbody></table></div>
+      <p class="nota">Carteiras = total após remover endereços duplicados (acumulado: ${ciclos.map((c) => `${rotCiclo(c.cycle_id)} ${c.dados.duplicados_removidos}`).join(', ')}).</p>
+    </div>`;
+}
+
+function graficoCiclos(ciclos, regra) {
+  const pts = ciclos.map((c) => {
+    const ant = c.vigente_anterior;
+    const exigido = ant ? Math.max(ant.f1_val + regra.margem_minima, regra.f1_minimo) : regra.f1_minimo;
+    return { c, venc: c.vencedor.f1_val, vig: ant ? ant.f1_val : null, exigido };
+  });
+  const vals = pts.flatMap((p) => [p.venc, p.vig, p.vig != null ? p.exigido : null]).filter((v) => v != null);
+  const lo = Math.floor((Math.min(...vals) - 0.015) * 100) / 100, hi = Math.min(1, Math.ceil((Math.max(...vals) + 0.01) * 100) / 100);
+  const W = larguraGrafico(), H = 230, ml = 48, mr = 16, mt = 12, mb = 46;
+  const banda = (W - ml - mr) / pts.length;
+  const xc = (i) => ml + banda * (i + 0.5);
+  const y = (v) => mt + (hi - v) / (hi - lo) * (H - mt - mb);
+  const passo = (hi - lo) > 0.08 ? 0.02 : 0.01;
+  const ticks = []; for (let t = Math.ceil(lo / passo) * passo; t <= hi + 1e-9; t += passo) ticks.push(+t.toFixed(2));
+  const temA = pts.some((p) => p.c.vencedor.modelo === 'A'), temB = pts.some((p) => p.c.vencedor.modelo === 'B');
+  const legenda = `<div class="legenda">
+    ${temA ? '<span><span class="ponto ponto--A"></span>Vencedor: Modelo A</span>' : ''}
+    ${temB ? '<span><span class="ponto ponto--B"></span>Vencedor: Modelo B</span>' : ''}
+    <span><span class="ponto ponto--vigente"></span>Vigente reavaliado</span>
+    <span><span class="traco"></span>F1 exigido para promover</span></div>`;
+  const svg = `<svg class="grafico" viewBox="0 0 ${W} ${H}" role="img" aria-label="F1 de validação do vencedor e do vigente por ciclo">
+    ${ticks.map((t) => `<line class="grade-linha" x1="${ml}" x2="${W - mr}" y1="${y(t)}" y2="${y(t)}"/><text x="${ml - 8}" y="${y(t) + 4}" text-anchor="end">${f2(t)}</text>`).join('')}
+    <line class="eixo-forte" x1="${ml}" x2="${W - mr}" y1="${H - mb}" y2="${H - mb}"/>
+    ${pts.map((p, i) => {
+      const sobrepoe = p.vig != null && Math.abs(y(p.vig) - y(p.venc)) < 14;
+      const cx = xc(i) + (sobrepoe ? 8 : 0), cxv = xc(i) - (sobrepoe ? 8 : 0), cor = `var(--color-modelo-${p.c.vencedor.modelo.toLowerCase()})`;
+      const partes = [];
+      if (p.vig != null) {
+        partes.push(`<line x1="${cxv}" x2="${cx}" y1="${y(p.vig)}" y2="${y(p.venc)}" stroke="var(--color-border-strong)" stroke-width="2"/>`);
+        partes.push(`<line x1="${cx - 22}" x2="${cx + 22}" y1="${y(p.exigido)}" y2="${y(p.exigido)}" stroke="var(--color-text-2)" stroke-width="2" stroke-dasharray="4 3"/>`);
+        partes.push(`<rect x="${cx - 26}" y="${y(p.exigido) - 8}" width="52" height="16" fill="transparent" data-tip="${rotCiclo(p.c.cycle_id)} · F1 exigido ${f4(p.exigido)}"/>`);
+        partes.push(`<circle cx="${cxv}" cy="${y(p.vig)}" r="6" fill="var(--color-modelo-vigente)" stroke="var(--color-surface)" stroke-width="2"/>`);
+        partes.push(`<circle cx="${cxv}" cy="${y(p.vig)}" r="13" fill="transparent" data-tip="${rotCiclo(p.c.cycle_id)} · vigente reavaliado (${esc(nomeModelo(p.c.vigente_anterior))}, ${rotCiclo(p.c.vigente_anterior.cycle_id)}): F1 ${f4(p.vig)}"/>`);
+      } else {
+        partes.push(`<text x="${cx}" y="${mt + 10}" text-anchor="middle" class="muted">sem vigente · exigido ${f2(p.exigido)}</text>`);
+      }
+      partes.push(`<circle cx="${cx}" cy="${y(p.venc)}" r="6" fill="${cor}" stroke="var(--color-surface)" stroke-width="2"/>`);
+      partes.push(`<circle cx="${cx}" cy="${y(p.venc)}" r="13" fill="transparent" data-tip="${rotCiclo(p.c.cycle_id)} · vencedor ${esc(nomeModelo(p.c.vencedor))}: F1 ${f4(p.venc)} → ${p.c.decisao}"/>`);
+      partes.push(`<text class="rotulo-valor" x="${cx + 12}" y="${y(p.venc) + 4}">${f4(p.venc)}</text>`);
+      partes.push(`<text x="${xc(i)}" y="${H - mb + 18}" text-anchor="middle" style="fill:var(--color-text);font-weight:600">${rotCiclo(p.c.cycle_id)}</text>`);
+      partes.push(`<text x="${xc(i)}" y="${H - mb + 34}" text-anchor="middle">${p.c.decisao}</text>`);
+      return partes.join('');
+    }).join('')}
+  </svg>`;
+  return legenda + svg;
+}
+
+// ---------------------------------------------------------------------------
+// Tela: Votação
+// ---------------------------------------------------------------------------
+function telaVotacao() {
+  const vot = S.d.votacao;
+  if (!vot.ciclos.length) return titulo('Votação de features') + estadoVazio('Nenhuma votação ainda',
+    `A cada ciclo, ${vot.metodos.map((m) => m.nome).join(', ')} votam nas top-${vot.regra.top_k} features; entra quem tiver ≥ ${vot.regra.votos_minimos} votos.`);
+  const c = cicloEscolhido('votacao', vot.ciclos);
+  const idx = vot.ciclos.indexOf(c), anterior = idx > 0 ? vot.ciclos[idx - 1] : null;
+  const antMap = anterior ? Object.fromEntries(anterior.tabela.map((l) => [l.feature, l])) : null;
+  const entraram = anterior ? c.eleitas.filter((f) => !anterior.eleitas.includes(f)) : [];
+  const sairam = anterior ? anterior.eleitas.filter((f) => !c.eleitas.includes(f)) : [];
+  const r = c.resumo, regra = vot.regra;
+  const linhas = c.tabela.filter((l) => !S.ocultarSemVoto || l.total_votos > 0).map((l) => {
+    let delta = '<span class="muted">—</span>';
+    if (antMap) {
+      const a = antMap[l.feature];
+      if (a && a.eleita !== l.eleita) delta = `<span class="delta delta--entrou">${l.eleita ? '▲ entrou' : '▼ saiu'}</span>`;
+      else if (a && a.total_votos !== l.total_votos) delta = `<span class="delta">${l.total_votos > a.total_votos ? '+' : '−'}${Math.abs(l.total_votos - a.total_votos)} voto</span>`;
+    }
+    return `<tr class="${l.eleita ? 'eleita' : ''}">
+      <td class="mono" style="overflow-wrap:anywhere;min-width:220px">${esc(l.feature)}</td>
+      ${vot.metodos.map((m) => `<td class="c"><span class="voto voto--${l.votos[m.id] ? 'sim' : 'nao'}" title="${esc(m.nome)}: rank ${l.ranks[m.id]}${l.votos[m.id] ? ' (no top-' + regra.top_k + ')' : ''}">${l.votos[m.id] ? '✓ ' : ''}${l.ranks[m.id]}</span></td>`).join('')}
+      <td class="c"><span class="pips" aria-label="${l.total_votos} votos">${vot.metodos.map((_, i) => `<i class="${i < l.total_votos ? 'on' : ''}"></i>`).join('')}</span> <span class="num">${l.total_votos}</span></td>
+      <td class="n">${f2(l.rank_medio)}</td>
+      <td>${l.eleita ? (l.motivo === 'completou_minimo' ? '<span class="etiqueta">completou mínimo</span>' : '<b>Eleita</b>') : ''}</td>
+      ${anterior ? `<td>${delta}</td>` : ''}
+    </tr>`;
+  }).join('');
+  const mudancas = anterior ? `<p style="margin:var(--sp-3) 0 0;font-size:var(--fs-sm)"><b>Em relação ao ${rotCiclo(anterior.cycle_id)}:</b>
+      ${entraram.length || sairam.length
+        ? `${entraram.length ? `entrou ${entraram.map((f) => `<span class="chip">${esc(f)}</span>`).join(' ')}` : ''} ${sairam.length ? `saiu ${sairam.map((f) => `<span class="chip">${esc(f)}</span>`).join(' ')}` : ''}`
+        : '<span class="sec">mesmo conjunto de features eleitas.</span>'}</p>` : '';
+  return titulo('Votação de features', `Três métodos votam nas top-${regra.top_k}; eleita com ≥ ${regra.votos_minimos} de ${vot.metodos.length} votos, desempate por rank médio, mínimo de ${regra.minimo_features}.`, seletorCiclo('votacao', vot.ciclos)) +
+    `<div class="cartao" style="margin-bottom:var(--sp-4)">
+      <h2>${rotCiclo(c.cycle_id)} <small><span class="mono">${esc(c.data_version)}</span> · treino ${int(c.n_treino)} carteiras${c.mlflow_run_id ? ` · run <span class="mono">${curto(c.mlflow_run_id)}</span>` : ''}</small></h2>
+      <div class="resumo-votos">
+        <div><b>${r.n_eleitas}</b><span>eleitas de ${r.n_features_avaliadas}</span></div>
+        <div><b>${r.n_com_3_votos}</b><span>com 3 votos</span></div>
+        <div><b>${r.n_com_2_votos}</b><span>com 2 votos</span></div>
+        <div><b>${r.n_com_1_voto}</b><span>com 1 voto</span></div>
+        <div><b>${r.n_sem_votos}</b><span>sem voto</span></div>
+        <div><b>${r.n_completadas_pelo_minimo}</b><span>completadas pelo mínimo</span></div>
+      </div>
+      <div class="chips">${c.eleitas.map((f) => `<span class="chip">${esc(f)}</span>`).join('')}</div>
+      ${mudancas}
+    </div>
+    <div class="cartao">
+      <div class="barra-filtros" style="justify-content:space-between">
+        <h2 style="margin:0">Tabela de votos <small>célula = rank no método; ✓ = voto (top-${regra.top_k})</small></h2>
+        <label class="controle"><input type="checkbox" data-acao="ocultar-sem-voto" ${S.ocultarSemVoto ? 'checked' : ''}/> ocultar features sem voto</label>
+      </div>
+      <div class="tabela-wrap"><table>
+        <thead><tr><th>Feature</th>${vot.metodos.map((m) => `<th class="c">${esc(m.nome)}</th>`).join('')}<th class="c">Votos</th><th class="n">Rank médio</th><th>Eleita</th>${anterior ? `<th>vs ${rotCiclo(anterior.cycle_id)}</th>` : ''}</tr></thead>
+        <tbody>${linhas}</tbody>
+      </table></div>
+    </div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Tela: Competição
+// ---------------------------------------------------------------------------
+function telaCompeticao() {
+  const comp = S.d.competicao;
+  if (!comp.ciclos.length) return titulo('Competição') + estadoVazio('Nenhuma competição ainda', 'A cada ciclo, A (Regressão Logística) e B (XGBoost) são treinados com as mesmas features eleitas e avaliados na mesma validação.');
+  const c = cicloEscolhido('competicao', comp.ciclos);
+  const ciclo = cicloPorId(c.cycle_id);
+  const tabela = `<div class="tabela-wrap"><table>
+    <thead><tr><th>Modelo</th>${comp.metricas.map((m) => `<th class="n">${METRICA[m]}</th>`).join('')}<th>Treinado no</th><th class="n">Features</th></tr></thead>
+    <tbody>${c.modelos.map((m) => `<tr>
+      <td><span class="ponto ponto--${m.papel}"></span>${PAPEL_NOME[m.papel]}<div class="muted" style="font-size:var(--fs-xs)">${ALG[m.algoritmo]} · run <span class="mono">${curto(m.run_id)}</span></div></td>
+      ${comp.metricas.map((k) => `<td class="n">${m.papel === c.vencedor && k === 'f1' ? `<b>${f4(m.metricas[k])}</b>` : f4(m.metricas[k])}</td>`).join('')}
+      <td>${rotCiclo(m.cycle_id_treino)}</td><td class="n">${m.features.length}</td></tr>`).join('')}</tbody></table></div>`;
+  const vig = c.modelos.find((m) => m.papel === 'vigente');
+  const eleitas = c.modelos.find((m) => m.papel === 'A').features;
+  const difFeat = vig ? { faltam: eleitas.filter((f) => !vig.features.includes(f)), extras: vig.features.filter((f) => !eleitas.includes(f)) } : null;
+  const cartoes = c.modelos.map((m) => `<div class="cartao">
+    <h2><span class="ponto ponto--${m.papel}"></span>${PAPEL_NOME[m.papel]} <small>${ALG[m.algoritmo]}${m.papel === c.vencedor ? ' · vencedor' : ''}</small></h2>
+    ${matriz(m.matriz_confusao)}
+    <p class="nota">${m.papel === 'vigente' ? `Treinado no ${rotCiclo(m.cycle_id_treino)} com ${m.features.length} features${difFeat && (difFeat.faltam.length || difFeat.extras.length) ? ` — sem ${difFeat.faltam.map(esc).join(', ')}` : ', as mesmas eleitas'}.` : `${m.features.length} features eleitas do ${rotCiclo(c.cycle_id)}.`}</p>
+  </div>`).join('');
+  return titulo('Competição', `Validação do ${rotCiclo(c.cycle_id)}: ${int(c.n_validacao)} carteiras. Vencedor = maior F1 entre A e B.`, seletorCiclo('competicao', comp.ciclos)) +
+    `<div class="cartao" style="margin-bottom:var(--sp-4)">
+      <div class="barra-filtros" style="justify-content:space-between;margin-bottom:var(--sp-2)">
+        <h2 style="margin:0">Métricas da classe fraude na validação</h2>
+        <span>${selo(c.decisao)} <span class="sec" style="font-size:var(--fs-sm)">vencedor: Modelo ${c.vencedor}</span></span>
+      </div>
+      ${graficoBarras(c, comp.metricas)}
+      <p class="motivo" style="max-width:none">${esc(ciclo.motivo)}</p>
+      ${tabela}
+    </div>
+    <div class="grade grade--3">${cartoes}</div>`;
+}
+
+function graficoBarras(c, metricas) {
+  const W = larguraGrafico(), H = 260, ml = 40, mr = 8, mt = 16, mb = 28;
+  const n = c.modelos.length, grupo = (W - ml - mr) / metricas.length;
+  const bw = Math.min(56, (grupo * 0.7 - (n - 1) * 2) / n);
+  const y = (v) => mt + (1 - v) * (H - mt - mb);
+  const barra = (x, v) => { const top = y(v), base = y(0), r = Math.min(4, bw / 2, base - top); return `M${x},${base}V${top + r}Q${x},${top} ${x + r},${top}H${x + bw - r}Q${x + bw},${top} ${x + bw},${top + r}V${base}Z`; };
+  const legenda = `<div class="legenda">${c.modelos.map((m) => `<span><span class="ponto ponto--${m.papel}"></span>${PAPEL_NOME[m.papel]} · ${ALG[m.algoritmo]}</span>`).join('')}</div>`;
+  const svg = `<svg class="grafico" viewBox="0 0 ${W} ${H}" role="img" aria-label="Barras agrupadas de precision, recall e F1 por modelo">
+    ${[0, 0.25, 0.5, 0.75, 1].map((t) => `<line class="grade-linha" x1="${ml}" x2="${W - mr}" y1="${y(t)}" y2="${y(t)}"/><text x="${ml - 6}" y="${y(t) + 4}" text-anchor="end">${f2(t)}</text>`).join('')}
+    ${metricas.map((k, gi) => {
+      const x0 = ml + gi * grupo + (grupo - (n * bw + (n - 1) * 2)) / 2;
+      return c.modelos.map((m, i) => {
+        const x = x0 + i * (bw + 2), v = m.metricas[k];
+        const rotulo = k === 'f1' && bw >= 36 ? `<text class="rotulo-valor" x="${x + bw / 2}" y="${y(v) - 6}" text-anchor="middle" style="font-size:11px">${f4(v).replace(/^0/, '')}</text>` : '';
+        return `<path d="${barra(x, v)}" fill="var(--color-modelo-${m.papel.toLowerCase()})" data-tip="${PAPEL_NOME[m.papel]} (${ALG[m.algoritmo]}) · ${METRICA[k]} ${f4(v)}"/>${rotulo}`;
+      }).join('') + `<text x="${ml + gi * grupo + grupo / 2}" y="${H - 8}" text-anchor="middle" style="fill:var(--color-text);font-weight:600">${METRICA[k]}</text>`;
+    }).join('')}
+    <line class="eixo-forte" x1="${ml}" x2="${W - mr}" y1="${y(0)}" y2="${y(0)}"/>
+  </svg>`;
+  return legenda + svg;
+}
+
+// ---------------------------------------------------------------------------
+// Tela: Previsões
+// ---------------------------------------------------------------------------
+const tipoPrev = (l) => l.previsao ? (l.rotulo_real ? 'VP' : 'FP') : (l.rotulo_real ? 'FN' : 'VN');
+function telaPrevisoes() {
+  const prev = S.d.previsoes;
+  if (!prev.ciclos.length) return titulo('Previsões') + estadoVazio('Sem previsões ainda', 'Depois que um modelo for promovido, o notebook 05 prevê o conjunto de teste com ele e uma amostra aparece aqui.');
+  const c = cicloEscolhido('previsoes', prev.ciclos);
+  const contagem = { todos: c.amostra.length, VP: 0, VN: 0, FP: 0, FN: 0 };
+  c.amostra.forEach((l) => contagem[tipoPrev(l)]++);
+  const linhas = c.amostra.filter((l) => S.filtroPrev === 'todos' || tipoPrev(l) === S.filtroPrev).map((l) => `<tr>
+    <td class="mono" title="${esc(l.address)}">${esc(l.address.slice(0, 10))}…${esc(l.address.slice(-6))}</td>
+    <td><span class="etiqueta">${esc(l.lote)}</span></td>
+    <td><div class="prob"><div class="prob__trilho"><div class="prob__fill" style="width:${l.probabilidade * 100}%"></div><div class="prob__limiar" style="left:${c.limiar * 100}%" title="limiar ${f2(c.limiar)}"></div></div><span class="num" style="width:52px;text-align:right">${f4(l.probabilidade)}</span></div></td>
+    <td>${l.previsao ? '<b>Fraude</b>' : 'Legítima'}</td>
+    <td>${l.rotulo_real ? '<b>Fraude</b>' : 'Legítima'}</td>
+    <td>${seloResultado(tipoPrev(l))}</td>
+  </tr>`).join('');
+  const filtros = ['todos', 'VP', 'VN', 'FP', 'FN'].map((k) =>
+    `<button type="button" data-acao="filtro-prev" data-v="${k}" aria-pressed="${S.filtroPrev === k}">${k === 'todos' ? 'Todos' : k} <span class="muted">${contagem[k]}</span></button>`).join('');
+  const m = c.modelo;
+  return titulo('Previsões', `Notebook 05: o modelo vigente do ciclo prevê o conjunto de teste, que nunca é usado nas escolhas.`, seletorCiclo('previsoes', prev.ciclos)) +
+    `<div class="grade grade--kpi">
+      <div class="kpi"><div class="kpi__rotulo">Modelo usado</div><div class="kpi__valor kpi__valor--md"><span class="ponto ponto--${m.modelo}"></span>${ALG[m.algoritmo]}</div><div class="kpi__sub">Modelo ${m.modelo} · treinado no ${rotCiclo(m.cycle_id)}</div></div>
+      <div class="kpi"><div class="kpi__rotulo">Carteiras no teste</div><div class="kpi__valor">${int(c.n_total)}</div><div class="kpi__sub mono">${esc(c.data_version)}</div></div>
+      ${['precision', 'recall', 'f1'].map((k) => `<div class="kpi"><div class="kpi__rotulo">${METRICA[k]} teste</div><div class="kpi__valor">${f4(c.metricas[k])}</div><div class="kpi__sub">limiar ${f2(c.limiar)}</div></div>`).join('')}
+    </div>
+    <div class="grade grade--2">
+      <div class="cartao">
+        <div class="barra-filtros" style="justify-content:space-between">
+          <h2 style="margin:0">Amostra <small>${c.amostra.length} de ${int(c.n_total)}</small></h2>
+          <div class="segmentado" role="group" aria-label="Filtrar por resultado">${filtros}</div>
+        </div>
+        <div class="tabela-wrap"><table>
+          <thead><tr><th>Address</th><th>Lote</th><th>Probabilidade de fraude</th><th>Previsão</th><th>Real</th><th>Resultado</th></tr></thead>
+          <tbody>${linhas || `<tr><td colspan="6" class="muted">Nenhuma linha com esse resultado na amostra.</td></tr>`}</tbody>
+        </table></div>
+        <p class="nota">Amostra: ${esc(c.criterio_amostra)}. A barra vertical na probabilidade marca o limiar.</p>
+      </div>
+      <div class="pilha">
+        <div class="cartao"><h2>Matriz de confusão <small>teste inteiro</small></h2>${matriz(c.matriz_confusao)}</div>
+        <div class="cartao"><h2>Modelo</h2><dl class="dl">
+          <dt>Algoritmo</dt><dd>${ALG[m.algoritmo]} (Modelo ${m.modelo})</dd>
+          <dt>Treinado no</dt><dd>${rotCiclo(m.cycle_id)} <span class="mono muted">${esc(m.cycle_id)}</span></dd>
+          <dt>run_id</dt><dd class="mono">${esc(m.run_id)}</dd>
+        </dl>
+        <p class="nota">O teste cresce quando entra um lote novo; métricas de ciclos diferentes não são sobre o mesmo conjunto.</p></div>
+      </div>
+    </div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Estados de carregamento / erro
+// ---------------------------------------------------------------------------
+function telaCarregando() {
+  const bloco = (h) => `<div class="esqueleto" style="height:${h}px"></div>`;
+  return `<div aria-busy="true"><span class="sr-only">Carregando dados do painel…</span>
+    <div class="esqueleto" style="height:28px;width:220px;margin-bottom:var(--sp-4)"></div>
+    <div class="grade grade--kpi">${bloco(96).repeat(4)}</div>
+    <div class="grade grade--2">${bloco(280)}${bloco(280)}</div></div>`;
+}
+function telaErro() {
+  return `<div class="cartao estado" role="alert">${ICONE.erro}
+    <h2>Não foi possível carregar os dados do painel</h2>
+    <pre class="erro">${esc(S.erro)}</pre>
+    <p>Sirva o repositório por HTTP (<span class="mono">npm run dev</span>) ou escolha à mão os 5 JSONs de uma pasta de cenário.</p>
+    <p><button class="botao" type="button" data-acao="tentar">Tentar de novo</button>
+       <button class="botao" type="button" data-acao="arquivos">Carregar JSONs…</button></p></div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Render e eventos
+// ---------------------------------------------------------------------------
+function rotaAtual() {
+  const id = (location.hash.match(/^#\/([\w-]+)/) || [])[1];
+  return ROTAS.some((r) => r.id === id) ? id : 'visao-geral';
+}
+function render() {
+  const rota = rotaAtual();
+  $('#nav').innerHTML = ROTAS.map((r) => `<a href="#/${r.id}" ${r.id === rota ? 'aria-current="page"' : ''}>${r.nome}</a>`).join('');
+  document.title = `${ROTAS.find((r) => r.id === rota).nome} · Painel MLOps · Fraude Ethereum`;
+  const app = $('#app');
+  if (S.status === 'carregando') { app.innerHTML = telaCarregando(); $('#rodape').innerHTML = ''; return; }
+  if (S.status === 'erro') { app.innerHTML = telaErro(); $('#rodape').innerHTML = ''; return; }
+  const mock = ARQUIVOS.some((n) => S.d[n].origem === 'mock');
+  const aviso = mock ? `<div class="aviso aviso--mock" role="note">${ICONE.info}<div><b>Dados fictícios.</b> Cenário mock “${esc(S.cenario)}”: <span class="mono">cycle_id</span>, datas, <span class="mono">run_id</span>, links e endereços são inventados; as métricas oficiais virão do pipeline.</div></div>` : '';
+  const telas = { 'visao-geral': telaVisaoGeral, ciclos: telaCiclos, votacao: telaVotacao, competicao: telaCompeticao, previsoes: telaPrevisoes };
+  app.innerHTML = aviso + telas[rota]();
+  const g = S.d.ciclos;
+  $('#rodape').innerHTML = `<span>Fonte: <span class="mono">${esc(S.fonte)}</span></span><span>gerado em ${fmtDataLonga(g.gerado_em)} · versao_formato ${g.versao_formato} · origem ${esc(g.origem)}</span>`;
+}
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-acao]');
+  if (!el) return;
+  const a = el.dataset.acao;
+  if (a === 'ciclo') { S.ciclo[el.dataset.tela] = el.dataset.id; render(); }
+  else if (a === 'filtro-prev') { S.filtroPrev = el.dataset.v; render(); }
+  else if (a === 'tentar') { S.simular = 'normal'; $('#sel-estado').value = 'normal'; carregar(); }
+  else if (a === 'arquivos') $('#arquivos').click();
+});
+document.addEventListener('change', (e) => {
+  if (e.target.dataset.acao === 'ocultar-sem-voto') { S.ocultarSemVoto = e.target.checked; render(); }
+});
+$('#arquivos').addEventListener('change', (e) => { if (e.target.files.length) carregarArquivos(e.target.files); e.target.value = ''; });
+$('#sel-cenario').addEventListener('change', (e) => {
+  S.cenario = e.target.value;
+  const u = new URL(location.href); u.searchParams.set('cenario', S.cenario); history.replaceState(null, '', u);
+  carregar();
+});
+$('#sel-estado').addEventListener('change', (e) => { S.simular = e.target.value; carregar(); });
+window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
+let ultimaLargura = 0, timerResize;
+window.addEventListener('resize', () => {
+  clearTimeout(timerResize);
+  timerResize = setTimeout(() => { const w = $('#app').clientWidth; if (w !== ultimaLargura && S.status === 'ok') { ultimaLargura = w; render(); } }, 120);
+});
+
+// Tooltip dos gráficos
+const tip = $('#tooltip');
+document.addEventListener('mousemove', (e) => {
+  const alvo = e.target.closest && e.target.closest('[data-tip]');
+  if (!alvo) { tip.classList.remove('on'); return; }
+  tip.textContent = alvo.getAttribute('data-tip');
+  const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8);
+  tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+  tip.classList.add('on');
+});
+
+// Tema: auto → claro → escuro
+const TEMAS = ['auto', 'light', 'dark'], NOME_TEMA = { auto: 'auto', light: 'claro', dark: 'escuro' };
+function aplicarTema(t) {
+  if (t === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t);
+  $('#btn-tema').textContent = `Tema: ${NOME_TEMA[t]}`;
+  try { localStorage.setItem('painel-tema', t); } catch (_) { /* sem storage */ }
+}
+let tema = 'auto';
+try { tema = localStorage.getItem('painel-tema') || 'auto'; } catch (_) { /* sem storage */ }
+const temaUrl = new URL(location.href).searchParams.get('tema');   // ?tema=dark para prints do relatório
+if (temaUrl) tema = temaUrl;
+if (!TEMAS.includes(tema)) tema = 'auto';
+aplicarTema(tema);
+$('#btn-tema').addEventListener('click', () => { tema = TEMAS[(TEMAS.indexOf(tema) + 1) % 3]; aplicarTema(tema); });
+
+// Início
+const pedido = new URL(location.href).searchParams.get('cenario');
+if (['padrao', 'mantido', 'vazio'].includes(pedido)) S.cenario = pedido;
+$('#sel-cenario').value = S.cenario;
+carregar();
+</script>
+</body>
 </html>
