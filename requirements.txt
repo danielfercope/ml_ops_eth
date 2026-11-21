@@ -1,13 +1,23 @@
-# Dependências do pipeline principal (Dev 4 consolida a versão final)
-pandas>=2.2
-numpy>=1.26
-scikit-learn>=1.5
-pyarrow>=16
-pyyaml>=6
-mlflow>=2.14
-kagglehub>=0.3
-matplotlib>=3.8
-xgboost>=2.0
-jupyter
-nbconvert
-ipykernel
+# Dependências do pipeline principal (consolidadas pelo Dev 4).
+# Versões EXATAS: os modelos são serializados com cloudpickle no MLflow e só
+# carregam de volta com as mesmas versões de scikit-learn / xgboost / numpy.
+# Testado com Python 3.12 (a mesma versão do workflow).
+pandas==3.1.1
+numpy==2.5.5
+scikit-learn==1.9.1
+xgboost==3.4.1
+pyarrow==26.0.1
+pyyaml==6.0.3
+mlflow==3.18.0
+cloudpickle==3.1.2
+kagglehub==1.0.3
+matplotlib==3.11.2
+
+# execução dos notebooks (run_pipeline.sh)
+nbconvert==7.17.2
+nbformat==5.11.1
+ipykernel==7.4.0
+jupyter==1.1.1
+
+# testes
+pytest==9.2.0

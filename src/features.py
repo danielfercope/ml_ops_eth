@@ -337,15 +337,10 @@ def tracking_uri(cfg: dict | None = None) -> str:
 
 def configurar_mlflow(cfg: dict | None = None):
     """Aponta o MLflow para o tracking do projeto e garante o experimento."""
-    import mlflow
+    # convenção única do Dev 4: artefatos em mlartifacts/ ao lado do mlflow.db em uso
+    from src.rastreio import configurar_mlflow as _configurar
 
-    cfg = cfg or carregar_config()
-    mlflow.set_tracking_uri(tracking_uri(cfg))
-    nome = cfg["projeto"]["experimento_mlflow"]
-    if mlflow.get_experiment_by_name(nome) is None:
-        mlflow.create_experiment(nome, artifact_location=(RAIZ / "mlartifacts").resolve().as_uri())
-    mlflow.set_experiment(nome)
-    return mlflow
+    return _configurar(cfg)
 
 
 def registrar_votacao(resultados: dict[str, dict], tabela: pd.DataFrame, eleitas: list[str],
