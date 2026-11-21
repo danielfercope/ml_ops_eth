@@ -1,0 +1,2 @@
+# Lotes de dados: bytes idênticos em qualquer SO (o data_version é o hash do arquivo)
+data/**/*.csv -text

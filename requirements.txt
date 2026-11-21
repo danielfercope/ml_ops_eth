@@ -1,0 +1,13 @@
+# Dependências do pipeline principal (Dev 4 consolida a versão final)
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.5
+pyarrow>=16
+pyyaml>=6
+mlflow>=2.14
+kagglehub>=0.3
+matplotlib>=3.8
+xgboost>=2.0
+jupyter
+nbconvert
+ipykernel
