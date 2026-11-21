@@ -63,7 +63,26 @@ votacao:                      # Dev 2
 modelos:                      # Dev 3
   A: logistic_regression
   B: xgboost
+  hiperparametros:            # fixos (sem busca): a competição é entre algoritmos, não entre ajustes
+    logistic_regression:
+      C: 1.0
+      max_iter: 2000
+      class_weight: balanced
+    xgboost:
+      n_estimators: 300
+      max_depth: 4
+      learning_rate: 0.05
+      subsample: 0.9
+      colsample_bytree: 0.9
+      min_child_weight: 1
+      # scale_pos_weight = legítimas / fraudes, calculado NO TREINO de cada ciclo
+  limiar_classificacao: 0.5   # probabilidade >= 0.5 -> fraude (F1 medido neste limiar)
 
 promocao:                     # Dev 3
+  criterio_vencedor: f1_validacao
+  desempate_vencedor: A       # F1 de validação empatado -> modelo mais simples (Regressão Logística)
   margem_minima: 0.01         # F1_val >= F1_vigente + 0.01
   f1_minimo: 0.60             # F1_val >= 0.60
+  manifesto: models/modelo_vigente.json
+  historico: models/historico_decisoes.csv
+  registry_nome: fraude_ethereum   # Model Registry do MLflow; alias "vigente" aponta para o promovido
