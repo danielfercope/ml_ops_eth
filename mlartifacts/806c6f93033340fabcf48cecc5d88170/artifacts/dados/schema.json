@@ -1,0 +1,82 @@
+{
+  "data_version": "v1-65ada979",
+  "id": "address",
+  "alvo": "flag",
+  "features": [
+    "avg_min_between_sent_tnx",
+    "avg_min_between_received_tnx",
+    "time_diff_between_first_and_last_mins",
+    "sent_tnx",
+    "received_tnx",
+    "number_of_created_contracts",
+    "unique_received_from_addresses",
+    "unique_sent_to_addresses",
+    "min_value_received",
+    "max_value_received",
+    "avg_val_received",
+    "min_val_sent",
+    "max_val_sent",
+    "avg_val_sent",
+    "min_value_sent_to_contract",
+    "max_val_sent_to_contract",
+    "avg_value_sent_to_contract",
+    "total_transactions_including_tnx_to_create_contract",
+    "total_ether_sent",
+    "total_ether_received",
+    "total_ether_sent_contracts",
+    "total_ether_balance",
+    "total_erc20_tnxs",
+    "erc20_total_ether_received",
+    "erc20_total_ether_sent",
+    "erc20_total_ether_sent_contract",
+    "erc20_uniq_sent_addr",
+    "erc20_uniq_rec_addr",
+    "erc20_uniq_sent_addr_1",
+    "erc20_uniq_rec_contract_addr",
+    "erc20_min_val_rec",
+    "erc20_max_val_rec",
+    "erc20_avg_val_rec",
+    "erc20_min_val_sent",
+    "erc20_max_val_sent",
+    "erc20_avg_val_sent",
+    "erc20_uniq_sent_token_name",
+    "erc20_uniq_rec_token_name"
+  ],
+  "n_features": 38,
+  "descartadas": {
+    "Unnamed: 0": "identificador/índice",
+    "Index": "identificador/índice",
+    "Address": "identificador/índice",
+    "ERC20 most sent token type": "categórica de alta cardinalidade",
+    "ERC20_most_rec_token_type": "categórica de alta cardinalidade",
+    "erc20_avg_time_between_sent_tnx": "constante no treino",
+    "erc20_avg_time_between_rec_tnx": "constante no treino",
+    "erc20_avg_time_between_rec_2_tnx": "constante no treino",
+    "erc20_avg_time_between_contract_tnx": "constante no treino",
+    "erc20_min_val_sent_contract": "constante no treino",
+    "erc20_max_val_sent_contract": "constante no treino",
+    "erc20_avg_val_sent_contract": "constante no treino"
+  },
+  "particoes": {
+    "treino": "data/processed/treino.parquet",
+    "validacao": "data/processed/validacao.parquet",
+    "teste": "data/processed/teste.parquet"
+  },
+  "resumo_particoes": {
+    "treino": {
+      "linhas": 4205,
+      "fraudes": 946,
+      "taxa_fraude": 0.225
+    },
+    "validacao": {
+      "linhas": 1306,
+      "fraudes": 271,
+      "taxa_fraude": 0.2075
+    },
+    "teste": {
+      "linhas": 1367,
+      "fraudes": 308,
+      "taxa_fraude": 0.2253
+    }
+  }
+}

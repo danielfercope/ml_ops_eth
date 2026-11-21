@@ -1,0 +1,82 @@
+{
+  "cycle_id": "20261121-1311-r1",
+  "data_version": "v1-65ada979",
+  "decisao": "promovido",
+  "motivo": "n\u00e3o h\u00e1 modelo vigente; o vencedor tem F1_val=0.9159 >= m\u00ednimo 0.60",
+  "decidido_em": "2026-11-21T13:12:00+00:00",
+  "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+  "model_uri": "runs:/bbbb69a8d43847d095fe702b2d9485d4/modelo",
+  "modelo": "B",
+  "algoritmo": "xgboost",
+  "features": [
+    "total_transactions_including_tnx_to_create_contract",
+    "avg_val_received",
+    "total_ether_received",
+    "erc20_uniq_rec_token_name",
+    "total_erc20_tnxs",
+    "unique_received_from_addresses"
+  ],
+  "n_features": 6,
+  "f1_validacao": 0.9159212880143113,
+  "f1_teste": 0.9158878504672897,
+  "metricas_validacao": {
+    "f1": 0.9159212880143113,
+    "precision": 0.8888888888888888,
+    "recall": 0.9446494464944649,
+    "roc_auc": 0.9938249817280782,
+    "average_precision": 0.9790672840633681,
+    "tn": 1003,
+    "fp": 32,
+    "fn": 15,
+    "tp": 256,
+    "n": 1306
+  },
+  "metricas_teste": {
+    "f1": 0.9158878504672897,
+    "precision": 0.8802395209580839,
+    "recall": 0.9545454545454546,
+    "roc_auc": 0.9925438112406951,
+    "average_precision": 0.9751359069866289,
+    "tn": 1019,
+    "fp": 40,
+    "fn": 14,
+    "tp": 294,
+    "n": 1367
+  },
+  "treinado_no_ciclo": "20261121-1311-r1",
+  "treinado_com_data_version": "v1-65ada979",
+  "promovido_no_ciclo": "20261121-1311-r1",
+  "promovido_em": "2026-11-21T13:12:00+00:00",
+  "registry": {
+    "nome": "fraude_ethereum",
+    "versao": "1",
+    "alias": "vigente"
+  },
+  "desafiante": {
+    "modelo": "B",
+    "algoritmo": "xgboost",
+    "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+    "f1_validacao": 0.9159212880143113
+  },
+  "candidatos": {
+    "A": {
+      "algoritmo": "logistic_regression",
+      "run_id": "48e8703978d840f9a23fc6e11966b84a",
+      "f1_validacao": 0.7036496350364964
+    },
+    "B": {
+      "algoritmo": "xgboost",
+      "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+      "f1_validacao": 0.9159212880143113
+    }
+  },
+  "vigente_anterior": null,
+  "f1_necessario": 0.6,
+  "regra": {
+    "criterio_vencedor": "f1_validacao",
+    "desempate_vencedor": "A",
+    "margem_minima": 0.01,
+    "f1_minimo": 0.6
+  },
+  "decisao_run_id": "f8e5a3188450438db85e6b55ec4a57f8"
+}

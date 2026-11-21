@@ -1,0 +1,62 @@
+artifact_path: file:///home/runner/work/ml_ops_eth/ml_ops_eth/mlartifacts/models/m-0f5df5db04244170ba581212da65ed0a/artifacts
+flavors:
+  python_function:
+    code: code
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.16
+  sklearn:
+    code: code
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.9.1
+    skops_trusted_types: null
+is_signature_from_type_hint: false
+mlflow_version: 3.18.0
+model_id: m-0f5df5db04244170ba581212da65ed0a
+model_size_bytes: 103075
+model_uuid: m-0f5df5db04244170ba581212da65ed0a
+prompts: null
+run_id: 48e8703978d840f9a23fc6e11966b84a
+signature:
+  inputs: '[{"type": "double", "name": "avg_min_between_sent_tnx", "required": true},
+    {"type": "double", "name": "avg_min_between_received_tnx", "required": true},
+    {"type": "double", "name": "time_diff_between_first_and_last_mins", "required":
+    true}, {"type": "double", "name": "sent_tnx", "required": true}, {"type": "double",
+    "name": "received_tnx", "required": true}, {"type": "double", "name": "number_of_created_contracts",
+    "required": true}, {"type": "double", "name": "unique_received_from_addresses",
+    "required": true}, {"type": "double", "name": "unique_sent_to_addresses", "required":
+    true}, {"type": "double", "name": "min_value_received", "required": true}, {"type":
+    "double", "name": "max_value_received", "required": true}, {"type": "double",
+    "name": "avg_val_received", "required": true}, {"type": "double", "name": "min_val_sent",
+    "required": true}, {"type": "double", "name": "max_val_sent", "required": true},
+    {"type": "double", "name": "avg_val_sent", "required": true}, {"type": "double",
+    "name": "min_value_sent_to_contract", "required": true}, {"type": "double", "name":
+    "max_val_sent_to_contract", "required": true}, {"type": "double", "name": "avg_value_sent_to_contract",
+    "required": true}, {"type": "double", "name": "total_transactions_including_tnx_to_create_contract",
+    "required": true}, {"type": "double", "name": "total_ether_sent", "required":
+    true}, {"type": "double", "name": "total_ether_received", "required": true}, {"type":
+    "double", "name": "total_ether_sent_contracts", "required": true}, {"type": "double",
+    "name": "total_ether_balance", "required": true}, {"type": "double", "name": "total_erc20_tnxs",
+    "required": true}, {"type": "double", "name": "erc20_total_ether_received", "required":
+    true}, {"type": "double", "name": "erc20_total_ether_sent", "required": true},
+    {"type": "double", "name": "erc20_total_ether_sent_contract", "required": true},
+    {"type": "double", "name": "erc20_uniq_sent_addr", "required": true}, {"type":
+    "double", "name": "erc20_uniq_rec_addr", "required": true}, {"type": "double",
+    "name": "erc20_uniq_sent_addr_1", "required": true}, {"type": "double", "name":
+    "erc20_uniq_rec_contract_addr", "required": true}, {"type": "double", "name":
+    "erc20_min_val_rec", "required": true}, {"type": "double", "name": "erc20_max_val_rec",
+    "required": true}, {"type": "double", "name": "erc20_avg_val_rec", "required":
+    true}, {"type": "double", "name": "erc20_min_val_sent", "required": true}, {"type":
+    "double", "name": "erc20_max_val_sent", "required": true}, {"type": "double",
+    "name": "erc20_avg_val_sent", "required": true}, {"type": "double", "name": "erc20_uniq_sent_token_name",
+    "required": true}, {"type": "double", "name": "erc20_uniq_rec_token_name", "required":
+    true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-11-21 13:11:51.196230'
