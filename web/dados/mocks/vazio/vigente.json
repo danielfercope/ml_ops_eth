@@ -1,0 +1,14 @@
+{
+  "versao_formato": 1,
+  "gerado_em": "2026-11-09T12:00:00Z",
+  "origem": "mock",
+  "regra_promocao": {
+    "metrica": "f1",
+    "margem_minima": 0.01,
+    "f1_minimo": 0.6
+  },
+  "vigente": null,
+  "ultimo_ciclo": null,
+  "modelo_mudou": false,
+  "anterior": null
+}
