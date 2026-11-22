@@ -4,7 +4,7 @@
 
   Página principal do projeto Vite: `npm run dev` abre em http://localhost:5173/.
   HTML único, sem dependências. Por enquanto lê só os JSONs mock de
-  web/mocks/<cenario>/ (o build copia essa pasta para dist/). Quando o
+  web/dados/mocks/<cenario>/ (o build copia essa pasta para dist/). Quando o
   exportador existir, passa a ler `${BASE_URL}data/<nome>.json`
   (public/data/, ver docs/painel_dados.md).
 
@@ -367,7 +367,7 @@ pre.erro { text-align: left; display: inline-block; background: var(--color-surf
 // ---------------------------------------------------------------------------
 // Configuração
 // ---------------------------------------------------------------------------
-const BASE_MOCKS = 'web/mocks/';           // depois do exportador: `${BASE_URL}data/`
+const BASE_MOCKS = 'web/dados/mocks/';           // depois do exportador: `${BASE_URL}data/`
 const ARQUIVOS = ['ciclos', 'votacao', 'competicao', 'vigente', 'previsoes'];
 const VERSAO_FORMATO = 1;
 const ROTAS = [
@@ -476,7 +476,7 @@ async function carregar() {
       if (!r.ok) throw new Error(`${nome}.json: HTTP ${r.status} em ${url}`);
       return [nome, await r.json()];
     }));
-    aceitar(Object.fromEntries(pares), `web/mocks/${S.cenario}/`);
+    aceitar(Object.fromEntries(pares), `web/dados/mocks/${S.cenario}/`);
   } catch (e) {
     S.status = 'erro'; S.erro = e.message;
   }
