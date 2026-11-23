@@ -4,7 +4,7 @@
 
 Católica de Santa Catarina · Análise Preditiva · Engenharia de Software e Engenharia de IA
 
-**Integrantes:** _preencher com os nomes do grupo_
+**Integrantes:** Breno, Daniel, Eduarda, Eduardo, Laura.
 
 **Repositório:** <https://github.com/danielfercope/ml_ops_eth> · **Painel:** <https://danielfercope.github.io/ml_ops_eth/>
 
