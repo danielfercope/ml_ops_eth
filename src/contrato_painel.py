@@ -172,10 +172,14 @@ def validar_coerencia(d: dict[str, dict]) -> list[str]:
                                        or abs(mod["vigente"]["metricas"]["f1"] - ant["f1_val"]) > TOL):
                 err(f"{cid}: modelo 'vigente' da competição diverge de vigente_anterior")
         f1v = c["vencedor"]["f1_val"]
+        q = c["qualidade"]
         deveria = f1v >= regra["f1_minimo"] - TOL and (
-            ant is None or f1v >= ant["f1_val"] + regra["margem_minima"] - TOL)
+            ant is None or f1v >= ant["f1_val"] + regra["margem_minima"] - TOL) and (
+            q is None or q["aprovada"])
         if (c["decisao"] == "promovido") != deveria:
             err(f"{cid}: decisão '{c['decisao']}' contradiz a regra de promoção")
+        if q is not None and q["aprovada"] == bool(q["falhas"]):
+            err(f"{cid}: qualidade.aprovada deve ser true sse não há falhas")
         if c["decisao"] == "promovido":
             if c["vigente_apos"] is None or c["vigente_apos"]["run_id"] != c["vencedor"]["run_id"]:
                 err(f"{cid}: promovido, mas vigente_apos não é o vencedor")

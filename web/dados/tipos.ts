@@ -80,6 +80,8 @@ export interface Ciclo {
   vencedor: RefVencedor
   /** Vigente no início do ciclo, F1 reavaliado na validação deste ciclo. null no 1º ciclo. */
   vigente_anterior: (RefModelo & { f1_val: number }) | null
+  /** Verificações de qualidade do vencedor; reprovada = não promove. null em ciclos anteriores a elas. */
+  qualidade: { aprovada: boolean; falhas: string[] } | null
   decisao: Decisao
   motivo: string
   /** Vigente ao fim do ciclo. */

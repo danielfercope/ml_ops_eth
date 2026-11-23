@@ -109,3 +109,18 @@ def test_detecta_vigente_desatualizado(dados):
 def test_detecta_origens_misturadas(dados):
     dados["previsoes"]["origem"] = "pipeline"
     assert any("origens" in e for e in _erros(dados))
+
+
+def test_detecta_promocao_com_qualidade_reprovada(dados):
+    dados["ciclos"]["ciclos"][0]["qualidade"] = {"aprovada": False, "falhas": ["recall 0.30 < mínimo 0.50"]}
+    assert any("regra de promoção" in e for e in _erros(dados))
+
+
+def test_qualidade_incoerente(dados):
+    dados["ciclos"]["ciclos"][0]["qualidade"] = {"aprovada": True, "falhas": ["x"]}
+    assert any("qualidade.aprovada" in e for e in _erros(dados))
+
+
+def test_qualidade_null_e_aceita_em_ciclos_antigos(dados):
+    dados["ciclos"]["ciclos"][0]["qualidade"] = None
+    assert _erros(dados) == []

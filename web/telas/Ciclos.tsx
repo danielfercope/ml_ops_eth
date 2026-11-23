@@ -68,7 +68,11 @@ export default function Ciclos() {
               </td>
               <td className="n"><b>{f4(c.vencedor.f1_val)}</b></td>
               <td className="n">{c.vigente_anterior ? f4(c.vigente_anterior.f1_val) : <span className="muted">—</span>}</td>
-              <td><Selo decisao={c.decisao} /><div className="motivo">{c.motivo}</div></td>
+              <td>
+                <Selo decisao={c.decisao} />
+                {c.qualidade && !c.qualidade.aprovada && <> <span className="etiqueta">qualidade reprovada</span></>}
+                <div className="motivo">{c.motivo}</div>
+              </td>
             </tr>
           ))}
         </Tabela>

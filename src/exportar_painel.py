@@ -92,10 +92,13 @@ def _ref(cycle_id: str, modelo: str, algoritmo: str, run_id: str) -> dict:
     return {"cycle_id": cycle_id, "modelo": modelo, "algoritmo": algoritmo, "run_id": run_id}
 
 
+SEM_LOTES = "nenhum"   # o notebook 01 registra lotes_novos="nenhum" num ciclo sem dados novos
+
+
 def _lista(valor) -> list[str]:
     if valor is None or (isinstance(valor, float) and math.isnan(valor)):
         return []
-    return [x for x in str(valor).split(",") if x]
+    return [x for x in str(valor).split(",") if x and x != SEM_LOTES]
 
 
 # --------------------------------------------------------------------------- #
@@ -201,6 +204,10 @@ def _ciclo(f: Fontes, cid: str, dec: dict, vig_antes: dict | None) -> dict:
             **_ref(ant.get("treinado_no_ciclo") or (vig_antes or {}).get("cycle_id"),
                    ant.get("modelo"), ant.get("algoritmo"), ant["run_id"]),
             "f1_val": _r4(ant["f1_validacao"]),
+        },
+        "qualidade": None if not dec.get("qualidade") else {
+            "aprovada": bool(dec["qualidade"]["aprovada"]),
+            "falhas": list(dec["qualidade"].get("falhas") or []),
         },
         "decisao": dec["decisao"],
         "motivo": dec["motivo"],

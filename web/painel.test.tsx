@@ -89,6 +89,12 @@ describe('Visão geral', () => {
     expect(principal().getAllByText('Promovido').length).toBeGreaterThan(0)
   })
 
+  it('mostra o resultado das verificações de qualidade', async () => {
+    renderizar('/visao-geral')
+    await titulo('Visão geral')
+    expect(principal().getByText('vencedor aprovado nas verificações')).toBeTruthy()
+  })
+
   it('mantido: sem banner e com "sem dados novos"', async () => {
     renderizar('/visao-geral', 'mantido')
     await titulo('Visão geral')

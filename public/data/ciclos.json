@@ -1,6 +1,6 @@
 {
   "versao_formato": 1,
-  "gerado_em": "2026-11-23T22:37:15Z",
+  "gerado_em": "2026-11-23T23:03:41Z",
   "origem": "pipeline",
   "ciclos": [
     {
@@ -31,6 +31,7 @@
         "f1_val": 0.9159
       },
       "vigente_anterior": null,
+      "qualidade": null,
       "decisao": "promovido",
       "motivo": "não há modelo vigente; o vencedor tem F1_val=0.9159 >= mínimo 0.60",
       "vigente_apos": {

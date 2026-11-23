@@ -15,7 +15,8 @@
       "items": {
         "type": "object",
         "required": ["cycle_id", "executado_em", "gatilho", "execucao_url", "data_version", "lotes", "lotes_novos",
-                     "dados", "n_features_eleitas", "vencedor", "vigente_anterior", "decisao", "motivo", "vigente_apos"],
+                     "dados", "n_features_eleitas", "vencedor", "vigente_anterior", "qualidade", "decisao", "motivo",
+                     "vigente_apos"],
         "additionalProperties": false,
         "properties": {
           "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
@@ -43,6 +44,21 @@
           "vigente_anterior": {
             "description": "Vigente no início do ciclo, com F1 reavaliado na validação deste ciclo. null no 1º ciclo.",
             "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/ref_modelo_f1" }]
+          },
+          "qualidade": {
+            "description": "Verificações de qualidade do vencedor (além do limiar de F1). null em ciclos anteriores a elas.",
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": ["aprovada", "falhas"],
+                "additionalProperties": false,
+                "properties": {
+                  "aprovada": { "type": "boolean" },
+                  "falhas": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            ]
           },
           "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
           "motivo": { "type": "string", "minLength": 1 },

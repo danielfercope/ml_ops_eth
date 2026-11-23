@@ -41,3 +41,6 @@ evidencias/*-local/
 venv/
 mlruns/
 !evidencias/*/pipeline.log
+
+# relatório: o HTML é intermediário; o PDF é a entrega (reports/gerar_relatorio.py)
+reports/relatorio_n3.html

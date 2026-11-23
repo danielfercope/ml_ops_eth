@@ -181,6 +181,7 @@ ml_ops_eth/
 ├── prototipo.html                         # protótipo aprovado do painel (HTML único)
 ├── public/data/                           # JSONs do painel gerados por exportar_painel.py
 ├── docs/                                  # seções do relatório por frente
+├── reports/                               # relatorio_n3.pdf (python reports/gerar_relatorio.py)
 ├── tests/
 └── legado/                                # Airflow + Docker + Streamlit (versão anterior, fora do fluxo)
 ```

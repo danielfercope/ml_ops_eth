@@ -80,6 +80,16 @@ export default function VisaoGeral() {
                 <Lotes lotes={ultimo.lotes} novos={ultimo.lotes_novos} />
                 {!ultimo.lotes_novos.length && <span className="muted"> sem dados novos</span>}
               </dd>
+              <dt>Qualidade</dt>
+              <dd>
+                {ultimo.qualidade == null ? (
+                  <span className="muted">ciclo anterior às verificações de qualidade</span>
+                ) : ultimo.qualidade.aprovada ? (
+                  'vencedor aprovado nas verificações'
+                ) : (
+                  <>reprovado: {ultimo.qualidade.falhas.join('; ')}</>
+                )}
+              </dd>
               <dt>Execução</dt>
               <dd>
                 {ultimo.execucao_url ? <a href={ultimo.execucao_url} target="_blank" rel="noopener">GitHub Actions</a> : '—'}{' '}

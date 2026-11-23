@@ -7,13 +7,18 @@ Fluxo do notebook 04, a cada ciclo:
     2. ``carregar_manifesto`` -- lê ``models/modelo_vigente.json``; o vigente é
        carregado do MLflow pelo ``run_id`` e reavaliado na MESMA validação do
        ciclo atual (os dados mudam entre ciclos, a régua tem de ser a mesma).
-    3. ``decidir``            -- aplica a regra fixada no config:
+    3. ``verificar_qualidade`` -- verificações do vencedor além do limiar
+       (``promocao.verificacoes_qualidade``): precision e recall mínimos, modelo
+       não degenerado (taxa prevista de fraude dentro de uma faixa), métricas
+       finitas e recarga do MLflow reproduzindo o F1 de validação.
+    4. ``decidir``            -- aplica a regra fixada no config:
            promove  se  F1_val >= F1_vigente + margem_minima  e  F1_val >= f1_minimo
            sem vigente (ciclo 1): promove se F1_val >= f1_minimo
+           e, em ambos os casos, se o vencedor passou nas verificações de qualidade
        senão o vigente é mantido.
-    4. Só DEPOIS da decisão o vigente resultante é medido no teste (número do
+    5. Só DEPOIS da decisão o vigente resultante é medido no teste (número do
        relatório); o teste nunca participa da escolha.
-    5. ``gravar_decisao``     -- escreve o manifesto e o histórico. É o último
+    6. ``gravar_decisao``     -- escreve o manifesto e o histórico. É o último
        passo do notebook: se algo falhar antes, nada muda no disco.
 
 Modelos anteriores nunca são apagados: os runs ficam no MLflow e o manifesto
@@ -22,6 +27,7 @@ só troca o ponteiro (``run_id``).
 from __future__ import annotations
 
 import json
+import math
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -45,6 +51,7 @@ COLUNAS_HISTORICO = [
     "f1_necessario", "decisao", "motivo",
     "vigente_run_id", "vigente_modelo", "vigente_algoritmo", "vigente_treinado_no_ciclo",
     "f1_val_vigente", "f1_teste_vigente", "decisao_run_id",
+    "qualidade_aprovada", "qualidade_falhas",
 ]
 
 
@@ -70,6 +77,30 @@ def carregar_regra_promocao(cfg: dict | None = None) -> dict:
     if not 0 <= regra["f1_minimo"] <= 1 or regra["margem_minima"] < 0:
         raise ValueError("f1_minimo deve estar em [0, 1] e margem_minima >= 0")
     return regra
+
+
+def carregar_verificacoes_qualidade(cfg: dict | None = None) -> dict:
+    """Limites das verificações de qualidade (``promocao.verificacoes_qualidade``)."""
+    cfg = cfg or carregar_config()
+    p = cfg.get("promocao", {}).get("verificacoes_qualidade")
+    if not isinstance(p, dict):
+        raise ValueError("config.yaml sem 'promocao.verificacoes_qualidade'")
+    v = {
+        "precision_minima": float(p.get("precision_minima", 0.0)),
+        "recall_minimo": float(p.get("recall_minimo", 0.0)),
+        "taxa_prevista_min": float(p.get("taxa_prevista_min", 0.0)),
+        "taxa_prevista_max": float(p.get("taxa_prevista_max", 1.0)),
+        "recarregar_do_mlflow": bool(p.get("recarregar_do_mlflow", True)),
+        "tolerancia_recarga": float(p.get("tolerancia_recarga", 1e-6)),
+    }
+    for k in ("precision_minima", "recall_minimo", "taxa_prevista_min", "taxa_prevista_max"):
+        if not 0 <= v[k] <= 1:
+            raise ValueError(f"verificacoes_qualidade.{k} deve estar em [0, 1]")
+    if v["taxa_prevista_min"] > v["taxa_prevista_max"]:
+        raise ValueError("taxa_prevista_min > taxa_prevista_max")
+    if v["tolerancia_recarga"] < 0:
+        raise ValueError("tolerancia_recarga deve ser >= 0")
+    return v
 
 
 def _caminho_cfg(cfg: dict, chave: str, padrao: str) -> Path:
@@ -105,11 +136,88 @@ def escolher_vencedor(candidatos: dict[str, dict], regra: dict | None = None) ->
 
 
 # --------------------------------------------------------------------------- #
-# 2. Decisão
+# 2. Verificações de qualidade do vencedor
 # --------------------------------------------------------------------------- #
-def decidir(f1_desafiante: float, f1_vigente: float | None, regra: dict | None = None) -> dict:
-    """Aplica a regra de promoção e devolve ``{decisao, motivo, f1_necessario}``."""
-    regra = regra or carregar_regra_promocao()
+def _checagem(nome: str, ok: bool, valor, limite, descricao: str) -> dict:
+    return {"nome": nome, "ok": bool(ok), "valor": valor, "limite": limite, "descricao": descricao}
+
+
+def checar_metricas(met: dict, verif: dict) -> list[dict]:
+    """Verificações sobre as métricas de validação do candidato (sem I/O)."""
+    out = []
+    nao_finitas = [k for k in ("f1", "precision", "recall")
+                   if not isinstance(met.get(k), (int, float)) or not math.isfinite(met[k])]
+    out.append(_checagem("metricas_finitas", not nao_finitas, nao_finitas or None, None,
+                         f"métricas não finitas: {', '.join(nao_finitas)}"))
+    if nao_finitas:
+        return out
+    p, r = float(met["precision"]), float(met["recall"])
+    out.append(_checagem("precision_minima", p + EPS >= verif["precision_minima"], p, verif["precision_minima"],
+                         f"precision {p:.4f} < mínima {verif['precision_minima']:.2f}"))
+    out.append(_checagem("recall_minimo", r + EPS >= verif["recall_minimo"], r, verif["recall_minimo"],
+                         f"recall {r:.4f} < mínimo {verif['recall_minimo']:.2f}"))
+    n = int(met.get("n") or 0)
+    if n > 0 and "tp" in met and "fp" in met:
+        taxa = (int(met["tp"]) + int(met["fp"])) / n
+        lo, hi = verif["taxa_prevista_min"], verif["taxa_prevista_max"]
+        out.append(_checagem("taxa_prevista", lo - EPS <= taxa <= hi + EPS, taxa, [lo, hi],
+                             f"taxa prevista de fraude {taxa:.4f} fora de [{lo:.2f}, {hi:.2f}] "
+                             "(modelo degenerado)"))
+    else:
+        out.append(_checagem("taxa_prevista", False, None, None,
+                             "matriz de confusão ausente: não dá para checar a taxa prevista"))
+    return out
+
+
+def checar_recarga(run_id: str, validacao: pd.DataFrame, f1_esperado: float, verif: dict,
+                   cfg: dict | None = None) -> dict:
+    """Recarrega o candidato do MLflow e confere se reproduz o F1 de validação."""
+    try:
+        f1 = float(avaliar(carregar_modelo(run_id, cfg), validacao, cfg)["f1"])
+    except Exception as e:  # noqa: BLE001 — qualquer falha de carga reprova a promoção
+        return _checagem("recarga_mlflow", False, None, verif["tolerancia_recarga"],
+                         f"não foi possível recarregar o run {run_id} do MLflow: {e}")
+    dif = abs(f1 - float(f1_esperado))
+    return _checagem("recarga_mlflow", dif <= verif["tolerancia_recarga"], f1, f1_esperado,
+                     f"modelo recarregado do MLflow tem F1_val {f1:.6f} != {float(f1_esperado):.6f}")
+
+
+def verificar_qualidade(candidato: dict, validacao: pd.DataFrame | None = None, cfg: dict | None = None,
+                        verif: dict | None = None) -> dict:
+    """``{aprovada, checagens, falhas}`` do candidato vencedor.
+
+    ``candidato`` no formato do ``competicao.json`` (``run_id`` + ``metricas_validacao``).
+    A recarga do MLflow só roda se ``recarregar_do_mlflow`` e ``validacao`` for dada.
+    """
+    verif = verif or carregar_verificacoes_qualidade(cfg)
+    met = candidato["metricas_validacao"]
+    checagens = checar_metricas(met, verif)
+    if verif["recarregar_do_mlflow"] and validacao is not None:
+        checagens.append(checar_recarga(candidato["run_id"], validacao, met["f1"], verif, cfg))
+    falhas = [c["descricao"] for c in checagens if not c["ok"]]
+    return {"aprovada": not falhas, "checagens": checagens, "falhas": falhas, "limites": verif}
+
+
+# --------------------------------------------------------------------------- #
+# 3. Decisão
+# --------------------------------------------------------------------------- #
+def decidir(f1_desafiante: float, f1_vigente: float | None, regra: dict | None = None,
+            qualidade: dict | None = None) -> dict:
+    """Aplica a regra de promoção e devolve ``{decisao, motivo, f1_necessario}``.
+
+    ``qualidade`` (de ``verificar_qualidade``): se reprovada, nada é promovido,
+    mesmo que o F1 atinja o limiar.
+    """
+    d = _decidir_limiar(f1_desafiante, f1_vigente, regra or carregar_regra_promocao())
+    if d["decisao"] == PROMOVIDO and qualidade is not None and not qualidade["aprovada"]:
+        fim = "o vigente foi mantido" if f1_vigente is not None else "nada foi promovido"
+        d = {**d, "decisao": MANTIDO,
+             "motivo": (f"o vencedor atinge o limiar de F1 ({f1_desafiante:.4f} >= {d['f1_necessario']:.4f}), "
+                        f"mas reprovou nas verificações de qualidade: {'; '.join(qualidade['falhas'])}; {fim}")}
+    return d
+
+
+def _decidir_limiar(f1_desafiante: float, f1_vigente: float | None, regra: dict) -> dict:
     minimo, margem = regra["f1_minimo"], regra["margem_minima"]
     atinge_minimo = f1_desafiante + EPS >= minimo
 
@@ -164,7 +272,7 @@ def avaliar_vigente(manifesto: dict, df: pd.DataFrame, cfg: dict | None = None) 
 
 
 # --------------------------------------------------------------------------- #
-# 3. Ciclo completo de promoção (sem efeitos colaterais em disco)
+# 4. Ciclo completo de promoção (sem efeitos colaterais em disco)
 # --------------------------------------------------------------------------- #
 def executar_promocao(competicao: dict, validacao: pd.DataFrame, teste: pd.DataFrame,
                       cfg: dict | None = None, manifesto: dict | None = ...) -> dict:
@@ -187,7 +295,8 @@ def executar_promocao(competicao: dict, validacao: pd.DataFrame, teste: pd.DataF
     met_val_anterior = avaliar_vigente(anterior, validacao, cfg) if anterior else None
     f1_anterior = met_val_anterior["f1"] if met_val_anterior else None
 
-    dec = decidir(f1_venc, f1_anterior, regra)
+    qualidade = verificar_qualidade(venc, validacao, cfg)
+    dec = decidir(f1_venc, f1_anterior, regra, qualidade)
     promovido = dec["decisao"] == PROMOVIDO
     agora = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
@@ -251,6 +360,7 @@ def executar_promocao(competicao: dict, validacao: pd.DataFrame, teste: pd.DataF
                              if anterior else None),
         "f1_necessario": dec["f1_necessario"],
         "regra": regra,
+        "qualidade": qualidade,
         "decisao_run_id": None,
     }
     return {"vencedor": nome_venc, "decisao": dec, "manifesto": manifesto_novo,
@@ -277,11 +387,13 @@ def linha_historico(m: dict) -> dict:
         "vigente_algoritmo": m["algoritmo"], "vigente_treinado_no_ciclo": m["treinado_no_ciclo"],
         "f1_val_vigente": m["f1_validacao"], "f1_teste_vigente": m["f1_teste"],
         "decisao_run_id": m["decisao_run_id"],
+        "qualidade_aprovada": (m.get("qualidade") or {}).get("aprovada"),
+        "qualidade_falhas": "; ".join((m.get("qualidade") or {}).get("falhas") or []),
     }
 
 
 # --------------------------------------------------------------------------- #
-# 4. MLflow: run da decisão (+ Model Registry quando promove)
+# 5. MLflow: run da decisão (+ Model Registry quando promove)
 # --------------------------------------------------------------------------- #
 def registrar_decisao_mlflow(resultado: dict, cfg: dict | None = None,
                              figuras: dict | None = None, usar_registry: bool = True) -> str:
@@ -294,13 +406,15 @@ def registrar_decisao_mlflow(resultado: dict, cfg: dict | None = None,
     mlflow = configurar_mlflow(cfg)
     m = resultado["manifesto"]
     ant = m["vigente_anterior"] or {}
+    q = m.get("qualidade")
     with mlflow.start_run(run_name=f"{ETAPA}_{m['cycle_id']}") as run:
         mlflow.set_tags({"cycle_id": m["cycle_id"], "data_version": m["data_version"],
                          "etapa": ETAPA, "decisao": m["decisao"],
                          "vencedor_run_id": m["desafiante"]["run_id"],
                          "vigente_run_id": m["run_id"] or "",
                          "vigente_anterior_run_id": ant.get("run_id") or "",
-                         "algoritmo": m["algoritmo"] or ""})
+                         "algoritmo": m["algoritmo"] or ""}
+                        | ({"qualidade_aprovada": str(q["aprovada"]).lower()} if q else {}))
         mlflow.log_params({f"regra.{k}": v for k, v in m["regra"].items()}
                           | {"vencedor": m["desafiante"]["modelo"],
                              "vencedor_algoritmo": m["desafiante"]["algoritmo"]})
@@ -311,6 +425,11 @@ def registrar_decisao_mlflow(resultado: dict, cfg: dict | None = None,
             metricas[f"f1_val_{n}"] = c["f1_validacao"]
         if ant.get("f1_validacao") is not None:
             metricas["f1_val_vigente_anterior"] = ant["f1_validacao"]
+        if q:
+            mlflow.log_params({f"qualidade.{k}": v for k, v in q["limites"].items()})
+            metricas["qualidade_aprovada"] = int(q["aprovada"])
+            for c in q["checagens"]:
+                metricas[f"qualidade.{c['nome']}"] = int(c["ok"])
         if m["f1_validacao"] is not None:
             metricas["f1_val_vigente"] = m["f1_validacao"]
             metricas["f1_teste_vigente"] = m["f1_teste"]
@@ -343,7 +462,7 @@ def _registrar_no_registry(mlflow, m: dict, cfg: dict) -> dict | None:
 
 
 # --------------------------------------------------------------------------- #
-# 5. Gravação (último passo do notebook 04)
+# 6. Gravação (último passo do notebook 04)
 # --------------------------------------------------------------------------- #
 def gravar_decisao(resultado: dict, cfg: dict | None = None, caminho_man: Path | None = None,
                    caminho_hist: Path | None = None, dir_ciclo: Path | None = None) -> dict:
