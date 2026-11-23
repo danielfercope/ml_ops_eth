@@ -92,10 +92,13 @@ def _ref(cycle_id: str, modelo: str, algoritmo: str, run_id: str) -> dict:
     return {"cycle_id": cycle_id, "modelo": modelo, "algoritmo": algoritmo, "run_id": run_id}
 
 
+SEM_LOTES = "nenhum"   # o notebook 01 registra lotes_novos="nenhum" num ciclo sem dados novos
+
+
 def _lista(valor) -> list[str]:
     if valor is None or (isinstance(valor, float) and math.isnan(valor)):
         return []
-    return [x for x in str(valor).split(",") if x]
+    return [x for x in str(valor).split(",") if x and x != SEM_LOTES]
 
 
 # --------------------------------------------------------------------------- #

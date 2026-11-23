@@ -77,7 +77,9 @@ def repo_dois_ciclos(tmp_path):
 
     f = Fontes(raiz=tmp_path)
     etl_c1 = f.run_etl(c1)
-    f.run_etl = lambda cid: etl_c1          # mesmo ETL (ciclo sem dados novos)
+    etl_c2 = copy.deepcopy(etl_c1)          # mesmo ETL, sem dados novos: o notebook 01
+    etl_c2["params"]["lotes_novos"] = "nenhum"   # grava lotes_novos="nenhum"
+    f.run_etl = lambda cid: etl_c1 if cid == c1 else etl_c2
     return f, c1, c2
 
 
@@ -89,6 +91,7 @@ def test_segundo_ciclo_mantido_passa_no_contrato(repo_dois_ciclos, tmp_path):
     d = montar(f)
     ult = d["ciclos"]["ciclos"][-1]
     assert ult["decisao"] == "mantido" and ult["vigente_anterior"]["cycle_id"] == c1
+    assert ult["lotes_novos"] == []
     assert [m["papel"] for m in d["competicao"]["ciclos"][-1]["modelos"]] == ["A", "B", "vigente"]
     assert d["vigente"]["modelo_mudou"] is False and d["vigente"]["anterior"] is None
     assert d["vigente"]["vigente"]["cycle_id"] == c1
