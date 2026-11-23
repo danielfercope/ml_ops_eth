@@ -1,6 +1,6 @@
 {
   "versao_formato": 1,
-  "gerado_em": "2026-11-23T23:03:41Z",
+  "gerado_em": "2026-11-23T23:16:02Z",
   "origem": "pipeline",
   "metricas": [
     "precision",
@@ -42,6 +42,174 @@
         },
         {
           "papel": "B",
+          "algoritmo": "xgboost",
+          "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+          "cycle_id_treino": "20261121-1311-r1",
+          "features": [
+            "total_transactions_including_tnx_to_create_contract",
+            "avg_val_received",
+            "total_ether_received",
+            "erc20_uniq_rec_token_name",
+            "total_erc20_tnxs",
+            "unique_received_from_addresses"
+          ],
+          "metricas": {
+            "precision": 0.8889,
+            "recall": 0.9446,
+            "f1": 0.9159
+          },
+          "matriz_confusao": {
+            "vn": 1003,
+            "fp": 32,
+            "fn": 15,
+            "vp": 256
+          }
+        }
+      ]
+    },
+    {
+      "cycle_id": "20261123-2300-r3",
+      "data_version": "v1-65ada979",
+      "n_validacao": 1306,
+      "vencedor": "B",
+      "decisao": "mantido",
+      "modelos": [
+        {
+          "papel": "A",
+          "algoritmo": "logistic_regression",
+          "run_id": "b3b53720d1f8450184405f8ea355779e",
+          "cycle_id_treino": "20261123-2300-r3",
+          "features": [
+            "total_transactions_including_tnx_to_create_contract",
+            "avg_val_received",
+            "total_ether_received",
+            "erc20_uniq_rec_token_name",
+            "total_erc20_tnxs",
+            "unique_received_from_addresses"
+          ],
+          "metricas": {
+            "precision": 0.5821,
+            "recall": 0.8893,
+            "f1": 0.7036
+          },
+          "matriz_confusao": {
+            "vn": 862,
+            "fp": 173,
+            "fn": 30,
+            "vp": 241
+          }
+        },
+        {
+          "papel": "B",
+          "algoritmo": "xgboost",
+          "run_id": "d9087eda1d854466a8af33cd6340083d",
+          "cycle_id_treino": "20261123-2300-r3",
+          "features": [
+            "total_transactions_including_tnx_to_create_contract",
+            "avg_val_received",
+            "total_ether_received",
+            "erc20_uniq_rec_token_name",
+            "total_erc20_tnxs",
+            "unique_received_from_addresses"
+          ],
+          "metricas": {
+            "precision": 0.8889,
+            "recall": 0.9446,
+            "f1": 0.9159
+          },
+          "matriz_confusao": {
+            "vn": 1003,
+            "fp": 32,
+            "fn": 15,
+            "vp": 256
+          }
+        },
+        {
+          "papel": "vigente",
+          "algoritmo": "xgboost",
+          "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+          "cycle_id_treino": "20261121-1311-r1",
+          "features": [
+            "total_transactions_including_tnx_to_create_contract",
+            "avg_val_received",
+            "total_ether_received",
+            "erc20_uniq_rec_token_name",
+            "total_erc20_tnxs",
+            "unique_received_from_addresses"
+          ],
+          "metricas": {
+            "precision": 0.8889,
+            "recall": 0.9446,
+            "f1": 0.9159
+          },
+          "matriz_confusao": {
+            "vn": 1003,
+            "fp": 32,
+            "fn": 15,
+            "vp": 256
+          }
+        }
+      ]
+    },
+    {
+      "cycle_id": "20261123-2315-r4",
+      "data_version": "v1-65ada979",
+      "n_validacao": 1306,
+      "vencedor": "B",
+      "decisao": "mantido",
+      "modelos": [
+        {
+          "papel": "A",
+          "algoritmo": "logistic_regression",
+          "run_id": "56f841feabf1425f955e5fc1126987d8",
+          "cycle_id_treino": "20261123-2315-r4",
+          "features": [
+            "total_transactions_including_tnx_to_create_contract",
+            "avg_val_received",
+            "total_ether_received",
+            "erc20_uniq_rec_token_name",
+            "total_erc20_tnxs",
+            "unique_received_from_addresses"
+          ],
+          "metricas": {
+            "precision": 0.5821,
+            "recall": 0.8893,
+            "f1": 0.7036
+          },
+          "matriz_confusao": {
+            "vn": 862,
+            "fp": 173,
+            "fn": 30,
+            "vp": 241
+          }
+        },
+        {
+          "papel": "B",
+          "algoritmo": "xgboost",
+          "run_id": "e66b3fa6f0064b6d807528d54f3fc22d",
+          "cycle_id_treino": "20261123-2315-r4",
+          "features": [
+            "total_transactions_including_tnx_to_create_contract",
+            "avg_val_received",
+            "total_ether_received",
+            "erc20_uniq_rec_token_name",
+            "total_erc20_tnxs",
+            "unique_received_from_addresses"
+          ],
+          "metricas": {
+            "precision": 0.8889,
+            "recall": 0.9446,
+            "f1": 0.9159
+          },
+          "matriz_confusao": {
+            "vn": 1003,
+            "fp": 32,
+            "fn": 15,
+            "vp": 256
+          }
+        },
+        {
+          "papel": "vigente",
           "algoritmo": "xgboost",
           "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
           "cycle_id_treino": "20261121-1311-r1",

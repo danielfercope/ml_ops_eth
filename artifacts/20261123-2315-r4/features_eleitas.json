@@ -1,0 +1,74 @@
+{
+  "cycle_id": "20261123-2315-r4",
+  "data_version": "v1-65ada979",
+  "etapa": "votacao_features",
+  "mlflow_run_id": "271f290865b641ca882b762d518c9aac",
+  "gerado_em": "2026-11-23T23:15:23+00:00",
+  "regra": {
+    "metodos": [
+      "selectkbest_f_classif",
+      "random_forest",
+      "rfe_logistic"
+    ],
+    "top_k": 10,
+    "votos_minimos": 2,
+    "desempate": "rank_medio",
+    "minimo_features": 5
+  },
+  "n_features_avaliadas": 38,
+  "n_eleitas": 6,
+  "features": [
+    "total_transactions_including_tnx_to_create_contract",
+    "avg_val_received",
+    "total_ether_received",
+    "erc20_uniq_rec_token_name",
+    "total_erc20_tnxs",
+    "unique_received_from_addresses"
+  ],
+  "motivo": {
+    "total_transactions_including_tnx_to_create_contract": "votos_suficientes",
+    "avg_val_received": "votos_suficientes",
+    "total_ether_received": "votos_suficientes",
+    "erc20_uniq_rec_token_name": "votos_suficientes",
+    "total_erc20_tnxs": "votos_suficientes",
+    "unique_received_from_addresses": "votos_suficientes"
+  },
+  "top_k_por_metodo": {
+    "selectkbest_f_classif": [
+      "total_ether_received",
+      "avg_val_received",
+      "max_value_received",
+      "total_ether_sent",
+      "max_val_sent",
+      "sent_tnx",
+      "total_transactions_including_tnx_to_create_contract",
+      "min_value_received",
+      "avg_val_sent",
+      "erc20_min_val_rec"
+    ],
+    "random_forest": [
+      "total_erc20_tnxs",
+      "erc20_uniq_rec_contract_addr",
+      "erc20_uniq_rec_addr",
+      "time_diff_between_first_and_last_mins",
+      "erc20_uniq_rec_token_name",
+      "avg_min_between_received_tnx",
+      "total_ether_received",
+      "total_transactions_including_tnx_to_create_contract",
+      "avg_val_received",
+      "unique_received_from_addresses"
+    ],
+    "rfe_logistic": [
+      "erc20_total_ether_received",
+      "erc20_avg_val_rec",
+      "erc20_uniq_rec_token_name",
+      "erc20_max_val_rec",
+      "total_transactions_including_tnx_to_create_contract",
+      "unique_received_from_addresses",
+      "total_erc20_tnxs",
+      "erc20_uniq_sent_addr",
+      "erc20_max_val_sent",
+      "erc20_avg_val_sent"
+    ]
+  }
+}

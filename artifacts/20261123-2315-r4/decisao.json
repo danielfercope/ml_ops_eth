@@ -1,0 +1,152 @@
+{
+  "cycle_id": "20261123-2315-r4",
+  "data_version": "v1-65ada979",
+  "decisao": "mantido",
+  "motivo": "F1_val do vencedor 0.9159 < F1_val do vigente 0.9159 + margem 0.01 (precisava de 0.9259); o vigente foi mantido",
+  "decidido_em": "2026-11-23T23:15:46+00:00",
+  "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+  "model_uri": "runs:/bbbb69a8d43847d095fe702b2d9485d4/modelo",
+  "modelo": "B",
+  "algoritmo": "xgboost",
+  "features": [
+    "total_transactions_including_tnx_to_create_contract",
+    "avg_val_received",
+    "total_ether_received",
+    "erc20_uniq_rec_token_name",
+    "total_erc20_tnxs",
+    "unique_received_from_addresses"
+  ],
+  "n_features": 6,
+  "f1_validacao": 0.9159212880143113,
+  "f1_teste": 0.9158878504672897,
+  "metricas_validacao": {
+    "f1": 0.9159212880143113,
+    "precision": 0.8888888888888888,
+    "recall": 0.9446494464944649,
+    "roc_auc": 0.9938249817280782,
+    "average_precision": 0.9790672840633681,
+    "tn": 1003,
+    "fp": 32,
+    "fn": 15,
+    "tp": 256,
+    "n": 1306
+  },
+  "metricas_teste": {
+    "f1": 0.9158878504672897,
+    "precision": 0.8802395209580839,
+    "recall": 0.9545454545454546,
+    "roc_auc": 0.9925438112406951,
+    "average_precision": 0.9751359069866289,
+    "tn": 1019,
+    "fp": 40,
+    "fn": 14,
+    "tp": 294,
+    "n": 1367
+  },
+  "treinado_no_ciclo": "20261121-1311-r1",
+  "treinado_com_data_version": "v1-65ada979",
+  "promovido_no_ciclo": "20261121-1311-r1",
+  "promovido_em": "2026-11-21T13:12:00+00:00",
+  "registry": {
+    "nome": "fraude_ethereum",
+    "versao": "1",
+    "alias": "vigente"
+  },
+  "desafiante": {
+    "modelo": "B",
+    "algoritmo": "xgboost",
+    "run_id": "e66b3fa6f0064b6d807528d54f3fc22d",
+    "f1_validacao": 0.9159212880143113
+  },
+  "candidatos": {
+    "A": {
+      "algoritmo": "logistic_regression",
+      "run_id": "56f841feabf1425f955e5fc1126987d8",
+      "f1_validacao": 0.7036496350364964
+    },
+    "B": {
+      "algoritmo": "xgboost",
+      "run_id": "e66b3fa6f0064b6d807528d54f3fc22d",
+      "f1_validacao": 0.9159212880143113
+    }
+  },
+  "vigente_anterior": {
+    "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+    "modelo": "B",
+    "algoritmo": "xgboost",
+    "treinado_no_ciclo": "20261121-1311-r1",
+    "f1_validacao": 0.9159212880143113,
+    "metricas_validacao": {
+      "f1": 0.9159212880143113,
+      "precision": 0.8888888888888888,
+      "recall": 0.9446494464944649,
+      "roc_auc": 0.9938249817280782,
+      "average_precision": 0.9790672840633681,
+      "tn": 1003,
+      "fp": 32,
+      "fn": 15,
+      "tp": 256,
+      "n": 1306
+    }
+  },
+  "f1_necessario": 0.9259212880143113,
+  "regra": {
+    "criterio_vencedor": "f1_validacao",
+    "desempate_vencedor": "A",
+    "margem_minima": 0.01,
+    "f1_minimo": 0.6
+  },
+  "qualidade": {
+    "aprovada": true,
+    "checagens": [
+      {
+        "nome": "metricas_finitas",
+        "ok": true,
+        "valor": null,
+        "limite": null,
+        "descricao": "métricas não finitas: "
+      },
+      {
+        "nome": "precision_minima",
+        "ok": true,
+        "valor": 0.8888888888888888,
+        "limite": 0.5,
+        "descricao": "precision 0.8889 < mínima 0.50"
+      },
+      {
+        "nome": "recall_minimo",
+        "ok": true,
+        "valor": 0.9446494464944649,
+        "limite": 0.5,
+        "descricao": "recall 0.9446 < mínimo 0.50"
+      },
+      {
+        "nome": "taxa_prevista",
+        "ok": true,
+        "valor": 0.22052067381316998,
+        "limite": [
+          0.01,
+          0.99
+        ],
+        "descricao": "taxa prevista de fraude 0.2205 fora de [0.01, 0.99] (modelo degenerado)"
+      },
+      {
+        "nome": "recarga_mlflow",
+        "ok": true,
+        "valor": 0.9159212880143113,
+        "limite": 0.9159212880143113,
+        "descricao": "modelo recarregado do MLflow tem F1_val 0.915921 != 0.915921"
+      }
+    ],
+    "falhas": [],
+    "limites": {
+      "precision_minima": 0.5,
+      "recall_minimo": 0.5,
+      "taxa_prevista_min": 0.01,
+      "taxa_prevista_max": 0.99,
+      "recarregar_do_mlflow": true,
+      "tolerancia_recarga": 1e-06
+    }
+  },
+  "decisao_run_id": "ffc2e1559c5e4f0ba762887c00a5b0e2"
+}

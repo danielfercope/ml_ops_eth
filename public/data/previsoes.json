@@ -1,10 +1,400 @@
 {
   "versao_formato": 1,
-  "gerado_em": "2026-11-23T23:03:41Z",
+  "gerado_em": "2026-11-23T23:16:02Z",
   "origem": "pipeline",
   "ciclos": [
     {
       "cycle_id": "20261121-1311-r1",
+      "data_version": "v1-65ada979",
+      "modelo": {
+        "cycle_id": "20261121-1311-r1",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "bbbb69a8d43847d095fe702b2d9485d4"
+      },
+      "particao": "teste",
+      "limiar": 0.5,
+      "n_total": 1367,
+      "metricas": {
+        "precision": 0.8802,
+        "recall": 0.9545,
+        "f1": 0.9159
+      },
+      "matriz_confusao": {
+        "vn": 1019,
+        "fp": 40,
+        "fn": 14,
+        "vp": 294
+      },
+      "criterio_amostra": "até 8 VP, 8 VN, 4 FP, 4 FN sorteados com seed 42; ordenada pela probabilidade",
+      "amostra": [
+        {
+          "address": "0x5c5452d1a4fb7175812de3b4a4f1c34d5bc5a261",
+          "lote": "lote_01",
+          "probabilidade": 0.999233,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x08389b19ad52f0d983609ab785b3a43a0e90355f",
+          "lote": "lote_01",
+          "probabilidade": 0.993606,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0xe62adc2a7f08db6230e627bb5faf4f68bc13f88a",
+          "lote": "lote_01",
+          "probabilidade": 0.988154,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x6973c24fadd0bcab33ee5cb325c8a70e81c67c20",
+          "lote": "lote_01",
+          "probabilidade": 0.98408,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x1847b35a3444edbede05b52a378d45e13eea54c4",
+          "lote": "lote_01",
+          "probabilidade": 0.953178,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0xb0d46eb7e6aac501bcce47f05ace37527b8b329a",
+          "lote": "lote_01",
+          "probabilidade": 0.936643,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x7dc66f5b59b34df403b96fec7e749703c157ebf8",
+          "lote": "lote_01",
+          "probabilidade": 0.936195,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x7edcc2cf9497bbe98ac31766954b34cfcb767764",
+          "lote": "lote_01",
+          "probabilidade": 0.902368,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0xf6eb7d25dfb8cd1d8fcb8d1cccab9f6f3e594ea8",
+          "lote": "lote_01",
+          "probabilidade": 0.839581,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x994f4d4572369bbc9e223cd4cbcc6848c561ad8e",
+          "lote": "lote_01",
+          "probabilidade": 0.691655,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5eba7d21dcf3ec2f1593012dd2dba25217370de3",
+          "lote": "lote_01",
+          "probabilidade": 0.60833,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5daf10f443933643a8dc59cc14dab3708e4a4e3a",
+          "lote": "lote_01",
+          "probabilidade": 0.585445,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x763e6786079bd535833fffebbe9e6a2fb5e2ec06",
+          "lote": "lote_01",
+          "probabilidade": 0.485204,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0xf33068d5e798f6519349ce32669d1ec940db1193",
+          "lote": "lote_01",
+          "probabilidade": 0.468816,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x91219adc9f7cd79dd527111ece39fdc5b6f7b662",
+          "lote": "lote_01",
+          "probabilidade": 0.376006,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0xed2d26eed06ecfbfd796d1ec551d2a649a31e576",
+          "lote": "lote_01",
+          "probabilidade": 0.203675,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0xb64f875daa42173ccac0b01e502695b61a1a9a64",
+          "lote": "lote_01",
+          "probabilidade": 0.134538,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x0a5723d1bc889d8f755eb36fcd60483cc8bcf203",
+          "lote": "lote_01",
+          "probabilidade": 0.108698,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x5d9d10a5fec08eeb8338b5250e0366ece2743652",
+          "lote": "lote_01",
+          "probabilidade": 0.005802,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x04a3084aa73481e9cb04d0a7b0df3c896cb1b1e2",
+          "lote": "lote_01",
+          "probabilidade": 0.00241,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5b35db879a034d454a0c1ffcb5e4d5d9dee3a55c",
+          "lote": "lote_01",
+          "probabilidade": 0.000736,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x6cb723c78bf5c0813d1aec20b15772862a9dec33",
+          "lote": "lote_01",
+          "probabilidade": 0.000373,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x7bbfd62370d96465cbd0013be8ec21336f993889",
+          "lote": "lote_01",
+          "probabilidade": 0.000326,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5a78b5cdac2b445c8dab9048f084285a63163108",
+          "lote": "lote_01",
+          "probabilidade": 0.000205,
+          "previsao": 0,
+          "rotulo_real": 0
+        }
+      ]
+    },
+    {
+      "cycle_id": "20261123-2300-r3",
+      "data_version": "v1-65ada979",
+      "modelo": {
+        "cycle_id": "20261121-1311-r1",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "bbbb69a8d43847d095fe702b2d9485d4"
+      },
+      "particao": "teste",
+      "limiar": 0.5,
+      "n_total": 1367,
+      "metricas": {
+        "precision": 0.8802,
+        "recall": 0.9545,
+        "f1": 0.9159
+      },
+      "matriz_confusao": {
+        "vn": 1019,
+        "fp": 40,
+        "fn": 14,
+        "vp": 294
+      },
+      "criterio_amostra": "até 8 VP, 8 VN, 4 FP, 4 FN sorteados com seed 42; ordenada pela probabilidade",
+      "amostra": [
+        {
+          "address": "0x5c5452d1a4fb7175812de3b4a4f1c34d5bc5a261",
+          "lote": "lote_01",
+          "probabilidade": 0.999233,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x08389b19ad52f0d983609ab785b3a43a0e90355f",
+          "lote": "lote_01",
+          "probabilidade": 0.993606,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0xe62adc2a7f08db6230e627bb5faf4f68bc13f88a",
+          "lote": "lote_01",
+          "probabilidade": 0.988154,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x6973c24fadd0bcab33ee5cb325c8a70e81c67c20",
+          "lote": "lote_01",
+          "probabilidade": 0.98408,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x1847b35a3444edbede05b52a378d45e13eea54c4",
+          "lote": "lote_01",
+          "probabilidade": 0.953178,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0xb0d46eb7e6aac501bcce47f05ace37527b8b329a",
+          "lote": "lote_01",
+          "probabilidade": 0.936643,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x7dc66f5b59b34df403b96fec7e749703c157ebf8",
+          "lote": "lote_01",
+          "probabilidade": 0.936195,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x7edcc2cf9497bbe98ac31766954b34cfcb767764",
+          "lote": "lote_01",
+          "probabilidade": 0.902368,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0xf6eb7d25dfb8cd1d8fcb8d1cccab9f6f3e594ea8",
+          "lote": "lote_01",
+          "probabilidade": 0.839581,
+          "previsao": 1,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x994f4d4572369bbc9e223cd4cbcc6848c561ad8e",
+          "lote": "lote_01",
+          "probabilidade": 0.691655,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5eba7d21dcf3ec2f1593012dd2dba25217370de3",
+          "lote": "lote_01",
+          "probabilidade": 0.60833,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5daf10f443933643a8dc59cc14dab3708e4a4e3a",
+          "lote": "lote_01",
+          "probabilidade": 0.585445,
+          "previsao": 1,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x763e6786079bd535833fffebbe9e6a2fb5e2ec06",
+          "lote": "lote_01",
+          "probabilidade": 0.485204,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0xf33068d5e798f6519349ce32669d1ec940db1193",
+          "lote": "lote_01",
+          "probabilidade": 0.468816,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x91219adc9f7cd79dd527111ece39fdc5b6f7b662",
+          "lote": "lote_01",
+          "probabilidade": 0.376006,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0xed2d26eed06ecfbfd796d1ec551d2a649a31e576",
+          "lote": "lote_01",
+          "probabilidade": 0.203675,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0xb64f875daa42173ccac0b01e502695b61a1a9a64",
+          "lote": "lote_01",
+          "probabilidade": 0.134538,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x0a5723d1bc889d8f755eb36fcd60483cc8bcf203",
+          "lote": "lote_01",
+          "probabilidade": 0.108698,
+          "previsao": 0,
+          "rotulo_real": 1
+        },
+        {
+          "address": "0x5d9d10a5fec08eeb8338b5250e0366ece2743652",
+          "lote": "lote_01",
+          "probabilidade": 0.005802,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x04a3084aa73481e9cb04d0a7b0df3c896cb1b1e2",
+          "lote": "lote_01",
+          "probabilidade": 0.00241,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5b35db879a034d454a0c1ffcb5e4d5d9dee3a55c",
+          "lote": "lote_01",
+          "probabilidade": 0.000736,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x6cb723c78bf5c0813d1aec20b15772862a9dec33",
+          "lote": "lote_01",
+          "probabilidade": 0.000373,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x7bbfd62370d96465cbd0013be8ec21336f993889",
+          "lote": "lote_01",
+          "probabilidade": 0.000326,
+          "previsao": 0,
+          "rotulo_real": 0
+        },
+        {
+          "address": "0x5a78b5cdac2b445c8dab9048f084285a63163108",
+          "lote": "lote_01",
+          "probabilidade": 0.000205,
+          "previsao": 0,
+          "rotulo_real": 0
+        }
+      ]
+    },
+    {
+      "cycle_id": "20261123-2315-r4",
       "data_version": "v1-65ada979",
       "modelo": {
         "cycle_id": "20261121-1311-r1",

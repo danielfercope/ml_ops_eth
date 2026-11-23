@@ -1,9 +1,9 @@
 {
-  "cycle_id": "20261123-2300-r3",
+  "cycle_id": "20261123-2315-r4",
   "data_version": "v1-65ada979",
   "decisao": "mantido",
   "motivo": "F1_val do vencedor 0.9159 < F1_val do vigente 0.9159 + margem 0.01 (precisava de 0.9259); o vigente foi mantido",
-  "decidido_em": "2026-11-23T23:00:57+00:00",
+  "decidido_em": "2026-11-23T23:15:46+00:00",
   "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
   "model_uri": "runs:/bbbb69a8d43847d095fe702b2d9485d4/modelo",
   "modelo": "B",
@@ -55,18 +55,18 @@
   "desafiante": {
     "modelo": "B",
     "algoritmo": "xgboost",
-    "run_id": "d9087eda1d854466a8af33cd6340083d",
+    "run_id": "e66b3fa6f0064b6d807528d54f3fc22d",
     "f1_validacao": 0.9159212880143113
   },
   "candidatos": {
     "A": {
       "algoritmo": "logistic_regression",
-      "run_id": "b3b53720d1f8450184405f8ea355779e",
+      "run_id": "56f841feabf1425f955e5fc1126987d8",
       "f1_validacao": 0.7036496350364964
     },
     "B": {
       "algoritmo": "xgboost",
-      "run_id": "d9087eda1d854466a8af33cd6340083d",
+      "run_id": "e66b3fa6f0064b6d807528d54f3fc22d",
       "f1_validacao": 0.9159212880143113
     }
   },
@@ -96,5 +96,57 @@
     "margem_minima": 0.01,
     "f1_minimo": 0.6
   },
-  "decisao_run_id": "cc043cb6aa414d25b745d17c3ff3c421"
+  "qualidade": {
+    "aprovada": true,
+    "checagens": [
+      {
+        "nome": "metricas_finitas",
+        "ok": true,
+        "valor": null,
+        "limite": null,
+        "descricao": "métricas não finitas: "
+      },
+      {
+        "nome": "precision_minima",
+        "ok": true,
+        "valor": 0.8888888888888888,
+        "limite": 0.5,
+        "descricao": "precision 0.8889 < mínima 0.50"
+      },
+      {
+        "nome": "recall_minimo",
+        "ok": true,
+        "valor": 0.9446494464944649,
+        "limite": 0.5,
+        "descricao": "recall 0.9446 < mínimo 0.50"
+      },
+      {
+        "nome": "taxa_prevista",
+        "ok": true,
+        "valor": 0.22052067381316998,
+        "limite": [
+          0.01,
+          0.99
+        ],
+        "descricao": "taxa prevista de fraude 0.2205 fora de [0.01, 0.99] (modelo degenerado)"
+      },
+      {
+        "nome": "recarga_mlflow",
+        "ok": true,
+        "valor": 0.9159212880143113,
+        "limite": 0.9159212880143113,
+        "descricao": "modelo recarregado do MLflow tem F1_val 0.915921 != 0.915921"
+      }
+    ],
+    "falhas": [],
+    "limites": {
+      "precision_minima": 0.5,
+      "recall_minimo": 0.5,
+      "taxa_prevista_min": 0.01,
+      "taxa_prevista_max": 0.99,
+      "recarregar_do_mlflow": true,
+      "tolerancia_recarga": 1e-06
+    }
+  },
+  "decisao_run_id": "ffc2e1559c5e4f0ba762887c00a5b0e2"
 }
