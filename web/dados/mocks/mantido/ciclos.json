@@ -31,6 +31,10 @@
         "f1_val": 0.9253
       },
       "vigente_anterior": null,
+      "qualidade": {
+        "aprovada": true,
+        "falhas": []
+      },
       "decisao": "promovido",
       "motivo": "Sem modelo vigente; vencedor (XGBoost) com F1_val 0,9253 atende o mínimo de 0,60.",
       "vigente_apos": {
@@ -75,6 +79,10 @@
         "run_id": "0aeeec651be88b9478d1200d80fac978",
         "f1_val": 0.9166
       },
+      "qualidade": {
+        "aprovada": true,
+        "falhas": []
+      },
       "decisao": "promovido",
       "motivo": "F1_val 0,9429 ≥ vigente 0,9166 + 0,01 e ≥ 0,60 (ganho de 0,0263).",
       "vigente_apos": {
@@ -116,6 +124,10 @@
         "algoritmo": "xgboost",
         "run_id": "34cc2ff1c68a26be0c83867728a5c1b0",
         "f1_val": 0.9429
+      },
+      "qualidade": {
+        "aprovada": true,
+        "falhas": []
       },
       "decisao": "mantido",
       "motivo": "F1_val 0,9429 < vigente 0,9429 + 0,01 (ganho de 0,0000); vigente mantido.",

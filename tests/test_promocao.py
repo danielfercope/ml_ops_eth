@@ -145,3 +145,105 @@ def test_manifesto_sem_vigente_conta_como_ausente(tmp_path):
     assert carregar_manifesto(caminho=p) is None
     p.write_text(json.dumps({"run_id": None, "decisao": MANTIDO}), "utf-8")
     assert carregar_manifesto(caminho=p) is None
+
+
+# --------------------------------------------------------------------------- #
+# Verificações de qualidade do vencedor (além do limiar de F1)
+# --------------------------------------------------------------------------- #
+from src import promocao  # noqa: E402
+from src.promocao import (carregar_verificacoes_qualidade, checar_metricas,  # noqa: E402
+                          verificar_qualidade)
+
+VERIF = {"precision_minima": 0.50, "recall_minimo": 0.50, "taxa_prevista_min": 0.01,
+         "taxa_prevista_max": 0.99, "recarregar_do_mlflow": True, "tolerancia_recarga": 1e-6}
+
+
+def _met(precision=0.89, recall=0.94, f1=0.9159, tp=256, fp=32, fn=15, tn=1003):
+    return {"f1": f1, "precision": precision, "recall": recall,
+            "tp": tp, "fp": fp, "fn": fn, "tn": tn, "n": tp + fp + fn + tn}
+
+
+def _falhas(met):
+    return [c["nome"] for c in checar_metricas(met, VERIF) if not c["ok"]]
+
+
+def test_verificacoes_fixadas_no_config():
+    assert carregar_verificacoes_qualidade() == VERIF
+
+
+def test_verificacoes_invalidas_falham():
+    cfg = copy.deepcopy(carregar_config())
+    cfg["promocao"]["verificacoes_qualidade"]["recall_minimo"] = 1.2
+    with pytest.raises(ValueError):
+        carregar_verificacoes_qualidade(cfg)
+    cfg = copy.deepcopy(carregar_config())
+    cfg["promocao"]["verificacoes_qualidade"]["taxa_prevista_min"] = 0.995
+    with pytest.raises(ValueError):
+        carregar_verificacoes_qualidade(cfg)
+    cfg = copy.deepcopy(carregar_config())
+    del cfg["promocao"]["verificacoes_qualidade"]
+    with pytest.raises(ValueError):
+        carregar_verificacoes_qualidade(cfg)
+
+
+def test_modelo_saudavel_passa():
+    assert _falhas(_met()) == []
+
+
+def test_precision_ou_recall_abaixo_do_piso():
+    assert _falhas(_met(precision=0.40)) == ["precision_minima"]
+    assert _falhas(_met(recall=0.30)) == ["recall_minimo"]
+
+
+def test_modelo_degenerado_que_preve_uma_classe_so():
+    # tudo previsto como fraude: recall 1, precision = prevalência, taxa prevista 1.0
+    tudo_fraude = _met(precision=0.55, recall=1.0, tp=271, fp=222, fn=0, tn=0)
+    assert "taxa_prevista" in _falhas(tudo_fraude)
+
+
+def test_metricas_nao_finitas():
+    assert _falhas(_met(f1=float("nan"))) == ["metricas_finitas"]
+
+
+def test_recarga_do_mlflow(monkeypatch):
+    cand = {"run_id": "r1", "metricas_validacao": _met()}
+    monkeypatch.setattr(promocao, "carregar_modelo", lambda run_id, cfg=None: object())
+    monkeypatch.setattr(promocao, "avaliar", lambda modelo, df, cfg=None: {"f1": 0.9159})
+    assert verificar_qualidade(cand, pd.DataFrame(), verif=VERIF)["aprovada"]
+
+    monkeypatch.setattr(promocao, "avaliar", lambda modelo, df, cfg=None: {"f1": 0.80})
+    q = verificar_qualidade(cand, pd.DataFrame(), verif=VERIF)
+    assert not q["aprovada"] and "recarregado" in q["falhas"][0]
+
+    def falha(run_id, cfg=None):
+        raise OSError("artefato ausente")
+    monkeypatch.setattr(promocao, "carregar_modelo", falha)
+    q = verificar_qualidade(cand, pd.DataFrame(), verif=VERIF)
+    assert not q["aprovada"] and "artefato ausente" in q["falhas"][0]
+
+
+def test_sem_validacao_nao_recarrega():
+    q = verificar_qualidade({"run_id": "r1", "metricas_validacao": _met()}, None, verif=VERIF)
+    assert q["aprovada"] and "recarga_mlflow" not in [c["nome"] for c in q["checagens"]]
+
+
+@pytest.mark.parametrize("vigente", [None, 0.85])
+def test_qualidade_reprovada_impede_promocao(vigente):
+    reprovada = {"aprovada": False, "falhas": ["recall 0.3000 < mínimo 0.50"]}
+    d = decidir(0.90, vigente, REGRA, reprovada)
+    assert d["decisao"] == MANTIDO
+    assert "verificações de qualidade" in d["motivo"] and "recall" in d["motivo"]
+    # aprovada: segue a regra de F1 normalmente
+    assert decidir(0.90, vigente, REGRA, {"aprovada": True, "falhas": []})["decisao"] == PROMOVIDO
+
+
+def test_qualidade_nao_salva_quem_falha_no_limiar():
+    d = decidir(0.855, 0.85, REGRA, {"aprovada": True, "falhas": []})
+    assert d["decisao"] == MANTIDO and "margem" in d["motivo"]
+
+
+def test_historico_registra_a_qualidade():
+    m = _manifesto("c1", MANTIDO)
+    m["qualidade"] = {"aprovada": False, "falhas": ["a", "b"], "checagens": [], "limites": VERIF}
+    linha = linha_historico(m)
+    assert linha["qualidade_aprovada"] is False and linha["qualidade_falhas"] == "a; b"

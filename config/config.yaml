@@ -83,6 +83,13 @@ promocao:                     # Dev 3
   desempate_vencedor: A       # F1 de validação empatado -> modelo mais simples (Regressão Logística)
   margem_minima: 0.01         # F1_val >= F1_vigente + 0.01
   f1_minimo: 0.60             # F1_val >= 0.60
+  verificacoes_qualidade:     # além do limiar: o vencedor só é promovido se passar em TODAS
+    precision_minima: 0.50    # F1 alto não pode esconder um modelo que acusa fraude demais...
+    recall_minimo: 0.50       # ...ou que deixa passar a maioria das fraudes
+    taxa_prevista_min: 0.01   # fração da validação prevista como fraude: rejeita modelo que
+    taxa_prevista_max: 0.99   #   prevê uma classe só (degenerado)
+    recarregar_do_mlflow: true  # recarrega o candidato do MLflow e confere o F1 na validação
+    tolerancia_recarga: 1.0e-6  #   (prova que o modelo serializado é o que foi avaliado)
   manifesto: models/modelo_vigente.json
   historico: models/historico_decisoes.csv
   registry_nome: fraude_ethereum   # Model Registry do MLflow; alias "vigente" aponta para o promovido

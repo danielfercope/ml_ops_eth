@@ -202,6 +202,10 @@ def _ciclo(f: Fontes, cid: str, dec: dict, vig_antes: dict | None) -> dict:
                    ant.get("modelo"), ant.get("algoritmo"), ant["run_id"]),
             "f1_val": _r4(ant["f1_validacao"]),
         },
+        "qualidade": None if not dec.get("qualidade") else {
+            "aprovada": bool(dec["qualidade"]["aprovada"]),
+            "falhas": list(dec["qualidade"].get("falhas") or []),
+        },
         "decisao": dec["decisao"],
         "motivo": dec["motivo"],
         "vigente_apos": None if not dec.get("run_id") else _ref(

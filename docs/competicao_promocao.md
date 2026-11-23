@@ -60,7 +60,7 @@ Rastreio: um run MLflow por modelo (etapa `treino_competicao`) com tags `cycle_i
 ### Regra (fixada em `config.yaml` → `promocao` antes do ciclo 1)
 1. **Vencedor do ciclo:** maior F1 de **validação** entre A e B. Empate → modelo A (mais simples).
 2. **Vigente:** carregado do MLflow pelo `run_id` do manifesto e **reavaliado na validação do ciclo atual**, para que os dois sejam medidos com a mesma régua (a validação cresce com lotes novos).
-3. **Promove** se `F1_val(vencedor) ≥ F1_val(vigente) + 0,01` **e** `F1_val(vencedor) ≥ 0,60`. Sem vigente (ciclo 1): basta `≥ 0,60`. Caso contrário, **mantém** o vigente.
+3. **Promove** se `F1_val(vencedor) ≥ F1_val(vigente) + 0,01` **e** `F1_val(vencedor) ≥ 0,60`. Sem vigente (ciclo 1): basta `≥ 0,60`. Além disso, o vencedor precisa passar nas **verificações de qualidade** (abaixo). Caso contrário, **mantém** o vigente.
 4. **Teste:** só depois da decisão e só no modelo que ficou vigente, para o número do relatório. O teste nunca participa da escolha.
 
 | Parâmetro | Valor | Justificativa |
@@ -70,6 +70,22 @@ Rastreio: um run MLflow por modelo (etapa `treino_competicao`) com tags `cycle_i
 | `desempate_vencedor` | A | em empate, o modelo mais simples e interpretável |
 
 O teste `tests/test_promocao.py::test_regra_fixada_no_config` trava esses valores: mudar a regra depois de ver resultados quebra a suíte.
+
+### Verificações de qualidade (`config.yaml` → `promocao.verificacoes_qualidade`)
+
+O enunciado pede que o vencedor seja promovido "apenas se atender ao limiar **e às verificações de qualidade**". Atingir o F1 é necessário, mas não suficiente: o vencedor também precisa passar em **todas** as verificações abaixo (`src/promocao.py::verificar_qualidade`). Se uma reprovar, a decisão é **mantido** e o motivo lista as falhas.
+
+| Verificação | Limite | O que evita |
+|---|---|---|
+| `precision_minima` | 0,50 | F1 alto à custa de muitos falsos alarmes (carteiras legítimas bloqueadas) |
+| `recall_minimo` | 0,50 | F1 alto que ainda deixa passar a maioria das fraudes |
+| `taxa_prevista` | entre 0,01 e 0,99 | modelo degenerado que prevê uma classe só |
+| `metricas_finitas` | — | métricas `NaN`/infinitas por erro numérico |
+| `recarga_mlflow` | diferença ≤ 1e-6 | modelo serializado diferente do avaliado: o candidato é recarregado do MLflow pelo `run_id` e precisa reproduzir o F1 de validação. É esse artefato que o notebook 05 carrega |
+
+As verificações usam só a **validação**; o teste continua fora da decisão. O resultado vai para o manifesto (`qualidade`: `aprovada`, `checagens`, `falhas`, `limites`), para o histórico (`qualidade_aprovada`, `qualidade_falhas`), para o MLflow (tag `qualidade_aprovada`, métricas `qualidade.<verificação>` em 0/1 e parâmetros `qualidade.*`) e para o painel (`ciclos.json` → `qualidade`). `tests/test_promocao.py::test_verificacoes_fixadas_no_config` trava os limites.
+
+**Quando entraram.** As verificações foram adicionadas depois do ciclo 1 e antes dos ciclos agendados. O ciclo 1 foi decidido só pelo limiar de F1 e aparece com `qualidade = null`. Reaplicadas ao vencedor dele (XGBoost: precision 0,8889, recall 0,9446, taxa prevista 22%), todas passariam, então a decisão do ciclo 1 não mudaria. Os limites de qualidade são pisos de sanidade, bem abaixo dos valores observados, e não foram ajustados para favorecer nenhum resultado.
 
 ### Decisões dos ciclos (simulação local)
 
@@ -103,6 +119,7 @@ Motivos gravados automaticamente:
 | `treinado_no_ciclo`, `treinado_com_data_version`, `promovido_no_ciclo`, `promovido_em` | origem do vigente |
 | `desafiante`, `candidatos`, `vigente_anterior` | contexto da comparação (run_id e F1 de cada um) |
 | `regra`, `decisao_run_id`, `registry` | regra aplicada, run da decisão no MLflow, versão no Model Registry |
+| `qualidade` | verificações de qualidade do vencedor: `aprovada`, `checagens` (nome, ok, valor, limite), `falhas` e `limites` |
 
 **`models/historico_decisoes.csv`**: uma linha por ciclo (rodar o mesmo `cycle_id` de novo substitui a linha em vez de duplicar), com `f1_val_A`, `f1_val_B`, vencedor, vigente anterior, F1 necessário, decisão, motivo, vigente resultante, F1 de validação e de teste.
 
@@ -115,6 +132,7 @@ Motivos gravados automaticamente:
 - O notebook 03 só aceita features eleitas sobre o `data_version` atual (`resolver_ciclo`); o 04 confere o `data_version` da competição.
 - Se o vigente não puder ser avaliado nas partições atuais (por exemplo, se uma coluna dele sumir do schema), o notebook para com erro em vez de promover às cegas.
 - Nenhum run é apagado: o manifesto só troca o ponteiro, e versões antigas continuam no MLflow e no Registry.
+- O vencedor só é promovido se passar nas verificações de qualidade, incluindo a recarga do MLflow (o artefato que será usado em produção é o mesmo que foi avaliado).
 
 ## Limitações
 - Hiperparâmetros fixos: um XGBoost ajustado (ou a LR com interações) poderia mudar o placar, mas buscar hiperparâmetros na validação exigiria outra partição para a decisão de promoção.

@@ -59,6 +59,9 @@ merecem atenção:
   traz suas `features`.
 - **`vigente_anterior.f1_val`** (em `ciclos.json`) e **`f1_vigente_anterior`** (em `vigente.json`) são o F1 do
   vigente **reavaliado na validação do ciclo atual**, que é o número que a regra de promoção compara.
+- **`ciclos.json` → `qualidade`**: resultado das verificações de qualidade do vencedor (`aprovada`, `falhas`); `null` em
+  ciclos decididos antes delas existirem. O validador exige `promovido` ⇔ limiar de F1 atendido **e** qualidade aprovada
+  (ou `null`).
 - **`vigente.json` → `modelo_mudou`** é `true` sempre que o último ciclo promoveu (inclusive o 1º ciclo, em
   que `anterior` é `null`).
 - **`previsoes.json`**: as métricas usam todas as linhas do teste; a `amostra` é só para exibir (até 200
