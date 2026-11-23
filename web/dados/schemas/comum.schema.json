@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.local/painel/comum.schema.json",
+  "title": "Tipos comuns do painel",
+  "description": "Tipos compartilhados pelos cinco JSONs do painel. Espelhados em web/dados/tipos.ts.",
+  "$defs": {
+    "versao_formato": { "const": 1, "description": "Versão do formato. Sobe quando um campo é renomeado, removido ou muda de tipo." },
+    "data_hora": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "description": "ISO 8601 em UTC, sem frações. Ex.: 2026-11-17T09:06:12Z."
+    },
+    "origem": { "enum": ["mock", "pipeline"], "description": "mock = dados fictícios (a interface mostra um aviso)." },
+    "cycle_id": {
+      "type": "string",
+      "pattern": "^\\d{8}-\\d{4}-(r\\d+|local)$",
+      "description": "AAAAMMDD-HHMM-r<run_number> (workflow) ou AAAAMMDD-HHMM-local."
+    },
+    "data_version": { "type": "string", "pattern": "^v\\d+-[0-9a-f]{8}$", "description": "v<nº de lotes>-<hash8>." },
+    "run_id": { "type": "string", "pattern": "^[0-9a-f]{32}$", "description": "run_id do MLflow." },
+    "lote": { "type": "string", "pattern": "^lote_\\d{2}$" },
+    "papel": { "enum": ["A", "B"], "description": "A = Regressão Logística, B = XGBoost." },
+    "algoritmo": { "enum": ["logistic_regression", "xgboost"] },
+    "decisao": { "enum": ["promovido", "mantido"] },
+    "gatilho": { "enum": ["schedule", "workflow_dispatch", "local", null] },
+    "metrica": { "enum": ["precision", "recall", "f1"] },
+    "fracao": { "type": "number", "minimum": 0, "maximum": 1 },
+    "contagem": { "type": "integer", "minimum": 0 },
+    "metricas": {
+      "type": "object",
+      "description": "Métricas da classe fraude, arredondadas a 4 casas.",
+      "required": ["precision", "recall", "f1"],
+      "additionalProperties": false,
+      "properties": {
+        "precision": { "$ref": "#/$defs/fracao" },
+        "recall": { "$ref": "#/$defs/fracao" },
+        "f1": { "$ref": "#/$defs/fracao" }
+      }
+    },
+    "matriz_confusao": {
+      "type": "object",
+      "required": ["vn", "fp", "fn", "vp"],
+      "additionalProperties": false,
+      "properties": {
+        "vn": { "$ref": "#/$defs/contagem" },
+        "fp": { "$ref": "#/$defs/contagem" },
+        "fn": { "$ref": "#/$defs/contagem" },
+        "vp": { "$ref": "#/$defs/contagem" }
+      }
+    },
+    "ref_modelo": {
+      "type": "object",
+      "description": "Modelo treinado: ciclo em que foi treinado + papel + algoritmo + run do MLflow.",
+      "required": ["cycle_id", "modelo", "algoritmo", "run_id"],
+      "additionalProperties": false,
+      "properties": {
+        "cycle_id": { "$ref": "#/$defs/cycle_id" },
+        "modelo": { "$ref": "#/$defs/papel" },
+        "algoritmo": { "$ref": "#/$defs/algoritmo" },
+        "run_id": { "$ref": "#/$defs/run_id" }
+      }
+    },
+    "ref_modelo_f1": {
+      "type": "object",
+      "description": "ref_modelo + F1 reavaliado na validação do ciclo atual.",
+      "required": ["cycle_id", "modelo", "algoritmo", "run_id", "f1_val"],
+      "additionalProperties": false,
+      "properties": {
+        "cycle_id": { "$ref": "#/$defs/cycle_id" },
+        "modelo": { "$ref": "#/$defs/papel" },
+        "algoritmo": { "$ref": "#/$defs/algoritmo" },
+        "run_id": { "$ref": "#/$defs/run_id" },
+        "f1_val": { "$ref": "#/$defs/fracao" }
+      }
+    },
+    "ref_vencedor": {
+      "type": "object",
+      "required": ["modelo", "algoritmo", "run_id", "f1_val"],
+      "additionalProperties": false,
+      "properties": {
+        "modelo": { "$ref": "#/$defs/papel" },
+        "algoritmo": { "$ref": "#/$defs/algoritmo" },
+        "run_id": { "$ref": "#/$defs/run_id" },
+        "f1_val": { "$ref": "#/$defs/fracao" }
+      }
+    }
+  }
+}

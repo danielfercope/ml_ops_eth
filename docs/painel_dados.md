@@ -13,7 +13,9 @@
 | `web/dados/mocks/<cenario>/*.json` | Mocks versionados (ver [Cenários](#cenários-mock)). |
 | `src/contrato_painel.py` | Validador: schema + coerência entre os arquivos. O `exportar_painel.py` deve chamá-lo antes de publicar. |
 | `tests/test_contrato_painel.py` | Valida todos os mocks, testa se o validador pega quebras e valida `public/data/` se existir. |
-| `public/data/*.json` | O que o painel busca em tempo de execução (`${BASE_URL}data/<nome>.json`). **Gerado, fora do git.** |
+| `src/exportar_painel.py` | Gera os 5 JSONs a partir do estado do pipeline, valida com o `contrato_painel` e só então grava. |
+| `tests/test_exportar_painel.py` | Exporta o estado do repositório e um 2º ciclo sintético ("mantido") e confere o contrato. |
+| `public/data/*.json` | O que o painel busca em tempo de execução (`data/<nome>.json`, relativo à página). **Gerado pelo exportador e commitado pelo workflow** a cada ciclo. |
 
 **Caminho de saída:** o PDF fala em `web/public/data/`, mas o Vite deste repo roda na raiz (o `index.html` e o
 `public/` estão na raiz, e `web/` é só o código-fonte). Por isso a pasta servida é **`public/data/`**. O
@@ -88,9 +90,10 @@ métricas oficiais virão do Dev 3. O F1 alto (~0,93) é coerente com a limitaç
 ## Como usar
 
 ```bash
-npm run dados:mock               # copia o cenário padrao para public/data/
-npm run dados:mock -- mantido    # ou outro cenário
-npm run dev                      # o painel lê public/data/
+python -m src.exportar_painel    # gera public/data/ a partir do estado do pipeline
+npm run dev                      # o painel lê public/data/ (dados reais)
+# http://localhost:5173/?cenario=padrao   → força um mock (padrao | mantido | vazio)
+# sem public/data/, o painel cai sozinho no mock "padrao"
 
 python -m src.contrato_painel                 # valida todos os cenários mock
 python -m src.contrato_painel public/data     # valida o que o exportador gerou
@@ -108,4 +111,4 @@ Para `src/exportar_painel.py` preencher tudo sem inventar campo:
 | Dev 3 — MLflow | run do vigente reavaliado na validação do ciclo, ou as métricas dele no histórico, para a terceira barra da Competição |
 | Dev 4 — tags do MLflow | `gatilho` (`github.event_name`) e `execucao_url` (`$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID`); sem elas os campos saem `null` |
 | Dev 4 — notebook 05 | grava `evidencias/<cycle_id>/previsoes.csv` com `address`, `lote`, `probabilidade`, `previsao`, `rotulo_real` do teste inteiro |
-| Dev 4 — workflow | depois do notebook 05: `python -m src.exportar_painel` → `python -m src.contrato_painel public/data` → `npm ci && npm run build` → deploy no Pages (com `base: '/ml_ops_eth/'` no Vite) |
+| Dev 4 — workflow | depois do notebook 05: `python -m src.exportar_painel --saida public/data` (já valida o contrato) → commit de `public/data/` → `npm ci && npm run build -- --base=/ml_ops_eth/` → deploy no Pages |

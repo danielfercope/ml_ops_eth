@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.local/painel/previsoes.schema.json",
+  "title": "previsoes.json — tela Previsões",
+  "type": "object",
+  "required": ["versao_formato", "gerado_em", "origem", "ciclos"],
+  "additionalProperties": false,
+  "properties": {
+    "versao_formato": { "$ref": "comum.schema.json#/$defs/versao_formato" },
+    "gerado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+    "origem": { "$ref": "comum.schema.json#/$defs/origem" },
+    "ciclos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cycle_id", "data_version", "modelo", "particao", "limiar", "n_total", "metricas",
+                     "matriz_confusao", "criterio_amostra", "amostra"],
+        "additionalProperties": false,
+        "properties": {
+          "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+          "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+          "modelo": { "$ref": "comum.schema.json#/$defs/ref_modelo" },
+          "particao": { "const": "teste" },
+          "limiar": { "$ref": "comum.schema.json#/$defs/fracao" },
+          "n_total": { "$ref": "comum.schema.json#/$defs/contagem", "description": "Tamanho do teste; métricas e matriz usam todas as linhas." },
+          "metricas": { "$ref": "comum.schema.json#/$defs/metricas" },
+          "matriz_confusao": { "$ref": "comum.schema.json#/$defs/matriz_confusao" },
+          "criterio_amostra": { "type": "string" },
+          "amostra": {
+            "type": "array", "maxItems": 200,
+            "items": {
+              "type": "object",
+              "required": ["address", "lote", "probabilidade", "previsao", "rotulo_real"],
+              "additionalProperties": false,
+              "properties": {
+                "address": { "type": "string" },
+                "lote": { "$ref": "comum.schema.json#/$defs/lote" },
+                "probabilidade": { "$ref": "comum.schema.json#/$defs/fracao" },
+                "previsao": { "enum": [0, 1] },
+                "rotulo_real": { "enum": [0, 1] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

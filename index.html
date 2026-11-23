@@ -3,10 +3,11 @@
   Painel de acompanhamento do pipeline MLOps (Dev 5 · critério 10).
 
   Página principal do projeto Vite: `npm run dev` abre em http://localhost:5173/.
-  HTML único, sem dependências. Por enquanto lê só os JSONs mock de
-  web/dados/mocks/<cenario>/ (o build copia essa pasta para dist/). Quando o
-  exportador existir, passa a ler `${BASE_URL}data/<nome>.json`
-  (public/data/, ver docs/painel_dados.md).
+  HTML único, sem dependências. Por padrão lê os dados reais do pipeline em
+  data/<nome>.json (public/data/, gerado por src/exportar_painel.py; ver
+  docs/painel_dados.md). Se eles ainda não existem, cai nos JSONs mock de
+  web/dados/mocks/<cenario>/ (o build copia essa pasta para dist/).
+  ?cenario=padrao|mantido|vazio força um mock; ?cenario=pipeline, os dados reais.
 
   Precisa ser servido por HTTP (fetch não funciona em file://). Aberto como
   arquivo, cai no estado de erro e oferece "Carregar JSONs" para escolher os 5
@@ -325,10 +326,11 @@ pre.erro { text-align: left; display: inline-block; background: var(--color-surf
         <span class="marca__texto"><b>Painel MLOps · Fraude Ethereum</b>
         <span>Ciclos do pipeline, votação de features, competição A/B e previsões</span></span>
       </a>
-      <div class="grupo-mock" role="group" aria-label="Dados mock">
-      <span class="grupo-mock__rotulo">Mock</span>
+      <div class="grupo-mock" role="group" aria-label="Fonte dos dados">
+      <span class="grupo-mock__rotulo">Dados</span>
       <label class="controle">Cenário
         <select id="sel-cenario">
+          <option value="pipeline">pipeline (dados reais)</option>
           <option value="padrao">padrão (2 ciclos, troca)</option>
           <option value="mantido">mantido (3º ciclo sem troca)</option>
           <option value="vazio">vazio (antes do 1º ciclo)</option>
@@ -367,7 +369,9 @@ pre.erro { text-align: left; display: inline-block; background: var(--color-surf
 // ---------------------------------------------------------------------------
 // Configuração
 // ---------------------------------------------------------------------------
-const BASE_MOCKS = 'web/dados/mocks/';           // depois do exportador: `${BASE_URL}data/`
+const BASE_MOCKS = 'web/dados/mocks/';
+const BASE_PIPELINE = 'data/';                    // public/data/ (src/exportar_painel.py)
+const CENARIOS = ['pipeline', 'padrao', 'mantido', 'vazio'];
 const ARQUIVOS = ['ciclos', 'votacao', 'competicao', 'vigente', 'previsoes'];
 const VERSAO_FORMATO = 1;
 const ROTAS = [
@@ -382,7 +386,7 @@ const METRICA = { precision: 'Precision', recall: 'Recall', f1: 'F1' };
 const PAPEL_NOME = { A: 'Modelo A', B: 'Modelo B', vigente: 'Vigente reavaliado' };
 
 const S = {
-  cenario: 'padrao',
+  cenario: 'pipeline',
   simular: 'normal',
   status: 'carregando',      // carregando | ok | erro
   erro: null,
@@ -469,15 +473,20 @@ async function carregar() {
   try {
     if (S.simular === 'erro') throw new Error('vigente.json: HTTP 404 (erro simulado pelo protótipo)');
     const pares = await Promise.all(ARQUIVOS.map(async (nome) => {
-      const url = `${BASE_MOCKS}${S.cenario}/${nome}.json`;
+      const url = S.cenario === 'pipeline' ? `${BASE_PIPELINE}${nome}.json` : `${BASE_MOCKS}${S.cenario}/${nome}.json`;
       let r;
       try { r = await fetch(url, { cache: 'no-store' }); }
       catch (e) { throw new Error(`${nome}.json: não foi possível buscar ${url} (${e.message}). Abra o protótipo por um servidor HTTP.`); }
       if (!r.ok) throw new Error(`${nome}.json: HTTP ${r.status} em ${url}`);
       return [nome, await r.json()];
     }));
-    aceitar(Object.fromEntries(pares), `web/dados/mocks/${S.cenario}/`);
+    aceitar(Object.fromEntries(pares), S.cenario === 'pipeline' ? 'public/data/' : `web/dados/mocks/${S.cenario}/`);
   } catch (e) {
+    // sem dados reais ainda (antes do 1º export): mostra o mock padrão em vez do erro
+    if (S.cenario === 'pipeline' && !S.cenarioPedido && S.simular === 'normal') {
+      S.cenario = 'padrao'; $('#sel-cenario').value = 'padrao';
+      return carregar();
+    }
     S.status = 'erro'; S.erro = e.message;
   }
   render();
@@ -879,7 +888,7 @@ document.addEventListener('change', (e) => {
 });
 $('#arquivos').addEventListener('change', (e) => { if (e.target.files.length) carregarArquivos(e.target.files); e.target.value = ''; });
 $('#sel-cenario').addEventListener('change', (e) => {
-  S.cenario = e.target.value;
+  S.cenario = e.target.value; S.cenarioPedido = true;
   const u = new URL(location.href); u.searchParams.set('cenario', S.cenario); history.replaceState(null, '', u);
   carregar();
 });
@@ -919,7 +928,7 @@ $('#btn-tema').addEventListener('click', () => { tema = TEMAS[(TEMAS.indexOf(tem
 
 // Início
 const pedido = new URL(location.href).searchParams.get('cenario');
-if (['padrao', 'mantido', 'vazio'].includes(pedido)) S.cenario = pedido;
+if (CENARIOS.includes(pedido)) { S.cenario = pedido; S.cenarioPedido = true; }
 $('#sel-cenario').value = S.cenario;
 carregar();
 </script>
