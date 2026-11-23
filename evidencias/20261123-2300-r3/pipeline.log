@@ -1,0 +1,39 @@
+[23:00:10] ciclo 20261123-2300-r3 — raiz /home/runner/work/ml_ops_eth/ml_ops_eth
+[23:00:10] preparando o MLflow
+{
+  "tracking_uri": "sqlite:////home/runner/work/ml_ops_eth/ml_ops_eth/mlflow.db",
+  "experimento": "fraude_ethereum",
+  "experiment_id": "1",
+  "artifact_location": "file:///home/runner/work/ml_ops_eth/ml_ops_eth/mlartifacts",
+  "relocalizacao": {
+    "antigas": [],
+    "linhas": 0
+  }
+}
+[23:00:13] executando 01_etl.ipynb
+[NbConvertApp] Converting notebook notebooks/01_etl.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+[NbConvertApp] Writing 134681 bytes to evidencias/20261123-2300-r3/01_etl.ipynb
+[23:00:24] ok: 01_etl.ipynb (11s)
+[23:00:24] executando 02_votacao_features.ipynb
+[NbConvertApp] Converting notebook notebooks/02_votacao_features.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+[NbConvertApp] Writing 248498 bytes to evidencias/20261123-2300-r3/02_votacao_features.ipynb
+[23:00:35] ok: 02_votacao_features.ipynb (11s)
+[23:00:35] executando 03_treino_competicao.ipynb
+[NbConvertApp] Converting notebook notebooks/03_treino_competicao.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+[NbConvertApp] Writing 96972 bytes to evidencias/20261123-2300-r3/03_treino_competicao.ipynb
+[23:00:51] ok: 03_treino_competicao.ipynb (16s)
+[23:00:51] executando 04_selecao_promocao.ipynb
+[NbConvertApp] Converting notebook notebooks/04_selecao_promocao.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+[NbConvertApp] Writing 68956 bytes to evidencias/20261123-2300-r3/04_selecao_promocao.ipynb
+[23:00:59] ok: 04_selecao_promocao.ipynb (8s)
+[23:00:59] executando 05_previsoes.ipynb
+[NbConvertApp] Converting notebook notebooks/05_previsoes.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+[NbConvertApp] Writing 91490 bytes to evidencias/20261123-2300-r3/05_previsoes.ipynb
+[23:01:08] ok: 05_previsoes.ipynb (9s)
+decisão: mantido | vigente: xgboost (bbbb69a8d43847d095fe702b2d9485d4) | runs no MLflow: 6
+[23:01:11] ciclo 20261123-2300-r3 concluído

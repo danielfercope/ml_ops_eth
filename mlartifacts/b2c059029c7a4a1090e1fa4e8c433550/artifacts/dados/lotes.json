@@ -1,0 +1,14 @@
+{
+  "data_version": "v1-65ada979",
+  "lotes": [
+    {
+      "nome": "lote_01",
+      "arquivo": "data/raw/lote_01.csv",
+      "sha256": "8aa8dc46b83e8c36b0f4dba154d54e42ac4e5c5819019a454e5e555496b649f8",
+      "linhas": 6888,
+      "fraudes": 1525,
+      "ingerido_em": "2026-11-21T13:11:34+00:00",
+      "cycle_id": "20261121-1311-r1"
+    }
+  ]
+}
