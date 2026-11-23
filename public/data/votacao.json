@@ -1,6 +1,6 @@
 {
   "versao_formato": 1,
-  "gerado_em": "2026-11-23T23:16:02Z",
+  "gerado_em": "2026-11-23T23:20:00Z",
   "origem": "pipeline",
   "regra": {
     "top_k": 10,
@@ -1371,6 +1371,678 @@
       "cycle_id": "20261123-2315-r4",
       "data_version": "v1-65ada979",
       "mlflow_run_id": "271f290865b641ca882b762d518c9aac",
+      "n_treino": 4205,
+      "resumo": {
+        "n_features_avaliadas": 38,
+        "n_eleitas": 6,
+        "n_eleitas_por_votos": 6,
+        "n_completadas_pelo_minimo": 0,
+        "n_com_3_votos": 1,
+        "n_com_2_votos": 5,
+        "n_com_1_voto": 17,
+        "n_sem_votos": 15
+      },
+      "eleitas": [
+        "total_transactions_including_tnx_to_create_contract",
+        "avg_val_received",
+        "total_ether_received",
+        "erc20_uniq_rec_token_name",
+        "total_erc20_tnxs",
+        "unique_received_from_addresses"
+      ],
+      "tabela": [
+        {
+          "feature": "total_transactions_including_tnx_to_create_contract",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 1,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 7,
+            "random_forest": 8,
+            "rfe_logistic": 5
+          },
+          "total_votos": 3,
+          "rank_medio": 6.667,
+          "eleita": true,
+          "motivo": "votos_suficientes"
+        },
+        {
+          "feature": "avg_val_received",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 1,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 2,
+            "random_forest": 9,
+            "rfe_logistic": 12
+          },
+          "total_votos": 2,
+          "rank_medio": 7.667,
+          "eleita": true,
+          "motivo": "votos_suficientes"
+        },
+        {
+          "feature": "total_ether_received",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 1,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 7,
+            "rfe_logistic": 21
+          },
+          "total_votos": 2,
+          "rank_medio": 9.667,
+          "eleita": true,
+          "motivo": "votos_suficientes"
+        },
+        {
+          "feature": "erc20_uniq_rec_token_name",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 26,
+            "random_forest": 5,
+            "rfe_logistic": 3
+          },
+          "total_votos": 2,
+          "rank_medio": 11.333,
+          "eleita": true,
+          "motivo": "votos_suficientes"
+        },
+        {
+          "feature": "total_erc20_tnxs",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 38,
+            "random_forest": 1,
+            "rfe_logistic": 7
+          },
+          "total_votos": 2,
+          "rank_medio": 15.333,
+          "eleita": true,
+          "motivo": "votos_suficientes"
+        },
+        {
+          "feature": "unique_received_from_addresses",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 31,
+            "random_forest": 10,
+            "rfe_logistic": 6
+          },
+          "total_votos": 2,
+          "rank_medio": 15.667,
+          "eleita": true,
+          "motivo": "votos_suficientes"
+        },
+        {
+          "feature": "max_value_received",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 3,
+            "random_forest": 11,
+            "rfe_logistic": 17
+          },
+          "total_votos": 1,
+          "rank_medio": 10.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_total_ether_received",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 23,
+            "random_forest": 13,
+            "rfe_logistic": 1
+          },
+          "total_votos": 1,
+          "rank_medio": 12.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "time_diff_between_first_and_last_mins",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 11,
+            "random_forest": 4,
+            "rfe_logistic": 23
+          },
+          "total_votos": 1,
+          "rank_medio": 12.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "sent_tnx",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 6,
+            "random_forest": 17,
+            "rfe_logistic": 18
+          },
+          "total_votos": 1,
+          "rank_medio": 13.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_uniq_rec_contract_addr",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 27,
+            "random_forest": 2,
+            "rfe_logistic": 14
+          },
+          "total_votos": 1,
+          "rank_medio": 14.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_max_val_rec",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 25,
+            "random_forest": 15,
+            "rfe_logistic": 4
+          },
+          "total_votos": 1,
+          "rank_medio": 14.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "min_value_received",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 8,
+            "random_forest": 18,
+            "rfe_logistic": 22
+          },
+          "total_votos": 1,
+          "rank_medio": 16.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "total_ether_sent",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 4,
+            "random_forest": 16,
+            "rfe_logistic": 28
+          },
+          "total_votos": 1,
+          "rank_medio": 16.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_min_val_rec",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 10,
+            "random_forest": 19,
+            "rfe_logistic": 20
+          },
+          "total_votos": 1,
+          "rank_medio": 16.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_uniq_sent_addr",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 16,
+            "random_forest": 26,
+            "rfe_logistic": 8
+          },
+          "total_votos": 1,
+          "rank_medio": 16.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_avg_val_rec",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 29,
+            "random_forest": 21,
+            "rfe_logistic": 2
+          },
+          "total_votos": 1,
+          "rank_medio": 17.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_max_val_sent",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 18,
+            "random_forest": 28,
+            "rfe_logistic": 9
+          },
+          "total_votos": 1,
+          "rank_medio": 18.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_uniq_rec_addr",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 28,
+            "random_forest": 3,
+            "rfe_logistic": 24
+          },
+          "total_votos": 1,
+          "rank_medio": 18.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "avg_min_between_received_tnx",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 1,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 15,
+            "random_forest": 6,
+            "rfe_logistic": 38
+          },
+          "total_votos": 1,
+          "rank_medio": 19.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_avg_val_sent",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 1
+          },
+          "ranks": {
+            "selectkbest_f_classif": 20,
+            "random_forest": 30,
+            "rfe_logistic": 10
+          },
+          "total_votos": 1,
+          "rank_medio": 20.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "max_val_sent",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 5,
+            "random_forest": 23,
+            "rfe_logistic": 32
+          },
+          "total_votos": 1,
+          "rank_medio": 20.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "avg_val_sent",
+          "votos": {
+            "selectkbest_f_classif": 1,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 9,
+            "random_forest": 25,
+            "rfe_logistic": 27
+          },
+          "total_votos": 1,
+          "rank_medio": 20.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "received_tnx",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 13,
+            "random_forest": 12,
+            "rfe_logistic": 11
+          },
+          "total_votos": 0,
+          "rank_medio": 12.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "min_val_sent",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 21,
+            "random_forest": 20,
+            "rfe_logistic": 16
+          },
+          "total_votos": 0,
+          "rank_medio": 19.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_uniq_sent_token_name",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 19,
+            "random_forest": 24,
+            "rfe_logistic": 15
+          },
+          "total_votos": 0,
+          "rank_medio": 19.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_total_ether_sent",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 17,
+            "random_forest": 29,
+            "rfe_logistic": 13
+          },
+          "total_votos": 0,
+          "rank_medio": 19.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "avg_min_between_sent_tnx",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 14,
+            "random_forest": 22,
+            "rfe_logistic": 26
+          },
+          "total_votos": 0,
+          "rank_medio": 20.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "unique_sent_to_addresses",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 12,
+            "random_forest": 31,
+            "rfe_logistic": 19
+          },
+          "total_votos": 0,
+          "rank_medio": 20.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "total_ether_balance",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 24,
+            "random_forest": 14,
+            "rfe_logistic": 34
+          },
+          "total_votos": 0,
+          "rank_medio": 24.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "number_of_created_contracts",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 22,
+            "random_forest": 27,
+            "rfe_logistic": 25
+          },
+          "total_votos": 0,
+          "rank_medio": 24.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_min_val_sent",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 30,
+            "random_forest": 32,
+            "rfe_logistic": 31
+          },
+          "total_votos": 0,
+          "rank_medio": 31.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_total_ether_sent_contract",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 32,
+            "random_forest": 34,
+            "rfe_logistic": 30
+          },
+          "total_votos": 0,
+          "rank_medio": 32.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "erc20_uniq_sent_addr_1",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 37,
+            "random_forest": 33,
+            "rfe_logistic": 29
+          },
+          "total_votos": 0,
+          "rank_medio": 33.0,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "avg_value_sent_to_contract",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 33,
+            "random_forest": 35,
+            "rfe_logistic": 35
+          },
+          "total_votos": 0,
+          "rank_medio": 34.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "max_val_sent_to_contract",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 34,
+            "random_forest": 36,
+            "rfe_logistic": 36
+          },
+          "total_votos": 0,
+          "rank_medio": 35.333,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "total_ether_sent_contracts",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 36,
+            "random_forest": 38,
+            "rfe_logistic": 33
+          },
+          "total_votos": 0,
+          "rank_medio": 35.667,
+          "eleita": false,
+          "motivo": null
+        },
+        {
+          "feature": "min_value_sent_to_contract",
+          "votos": {
+            "selectkbest_f_classif": 0,
+            "random_forest": 0,
+            "rfe_logistic": 0
+          },
+          "ranks": {
+            "selectkbest_f_classif": 35,
+            "random_forest": 37,
+            "rfe_logistic": 37
+          },
+          "total_votos": 0,
+          "rank_medio": 36.333,
+          "eleita": false,
+          "motivo": null
+        }
+      ]
+    },
+    {
+      "cycle_id": "20261123-2318-r5",
+      "data_version": "v1-65ada979",
+      "mlflow_run_id": "30329542116d4df7804f46cb060a9b87",
       "n_treino": 4205,
       "resumo": {
         "n_features_avaliadas": 38,

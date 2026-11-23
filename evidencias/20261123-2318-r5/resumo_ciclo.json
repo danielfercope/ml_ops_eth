@@ -1,0 +1,56 @@
+{
+  "cycle_id": "20261123-2318-r5",
+  "data_version": "v1-65ada979",
+  "gatilho": "workflow_dispatch",
+  "github_run_id": "45286899952",
+  "github_run_url": "https://github.com/danielfercope/ml_ops_eth/actions/runs/45286899952",
+  "commit": "0348478da687f5f8f5bf1ecaf9325df91da6d168",
+  "decisao": "mantido",
+  "motivo": "F1_val do vencedor 0.9159 < F1_val do vigente 0.9159 + margem 0.01 (precisava de 0.9259); o vigente foi mantido",
+  "vigente": {
+    "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+    "modelo": "B",
+    "algoritmo": "xgboost",
+    "treinado_no_ciclo": "20261121-1311-r1",
+    "f1_validacao": 0.9159212880143113,
+    "f1_teste": 0.9158878504672897
+  },
+  "runs_mlflow": [
+    {
+      "etapa": "etl",
+      "modelo": null,
+      "run_id": "b4eac8d8e1574b05ad59113e4872917b",
+      "status": "FINISHED"
+    },
+    {
+      "etapa": "votacao_features",
+      "modelo": null,
+      "run_id": "30329542116d4df7804f46cb060a9b87",
+      "status": "FINISHED"
+    },
+    {
+      "etapa": "treino_competicao",
+      "modelo": "A",
+      "run_id": "958255580d6540fda55f44a8042529e7",
+      "status": "FINISHED"
+    },
+    {
+      "etapa": "treino_competicao",
+      "modelo": "B",
+      "run_id": "53d2e5c23870425e9228bdb76605b2a2",
+      "status": "FINISHED"
+    },
+    {
+      "etapa": "promocao",
+      "modelo": null,
+      "run_id": "272daae2a5dd41d9b2984964e62c7dfa",
+      "status": "FINISHED"
+    },
+    {
+      "etapa": "previsoes",
+      "modelo": null,
+      "run_id": "157777e5f7c8442087b2aa97a9cfb9e4",
+      "status": "FINISHED"
+    }
+  ]
+}

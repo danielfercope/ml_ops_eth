@@ -1,0 +1,46 @@
+,% fora 1.5×IQR,assimetria
+Avg min between sent tnx,20.9,7.9
+Avg min between received tnx,14.0,6.8
+Time Diff between first and last (Mins),9.8,1.8
+Sent tnx,17.1,10.3
+Received Tnx,17.0,8.7
+Number of Created Contracts,13.6,44.8
+Unique Received From Addresses,11.4,17.9
+Unique Sent To Addresses,15.7,16.9
+min value received,21.0,22.7
+max value received,9.2,38.9
+avg val received,14.8,81.3
+min val sent,14.5,71.3
+max val sent,9.4,49.7
+avg val sent,6.9,26.6
+min value sent to contract,0.0,66.8
+max val sent to contract,0.0,66.0
+avg value sent to contract,0.0,53.2
+total transactions (including tnx to create contract,15.7,6.7
+total Ether sent,14.5,41.0
+total ether received,16.3,44.5
+total ether sent contracts,0.0,66.0
+total ether balance,31.2,57.8
+Total ERC20 tnxs,15.1,18.2
+ERC20 total Ether received,20.6,43.4
+ERC20 total ether sent,15.9,79.3
+ERC20 total Ether sent contract,0.3,49.6
+ERC20 uniq sent addr,15.9,30.6
+ERC20 uniq rec addr,14.0,33.2
+ERC20 uniq sent addr.1,0.3,24.6
+ERC20 uniq rec contract addr,14.8,17.1
+ERC20 avg time between sent tnx,0.0,
+ERC20 avg time between rec tnx,0.0,
+ERC20 avg time between rec 2 tnx,0.0,
+ERC20 avg time between contract tnx,0.0,
+ERC20 min val rec,22.7,46.3
+ERC20 max val rec,20.3,57.3
+ERC20 avg val rec,19.9,76.3
+ERC20 min val sent,7.9,79.4
+ERC20 max val sent,15.0,79.4
+ERC20 avg val sent,14.9,79.4
+ERC20 min val sent contract,0.0,
+ERC20 max val sent contract,0.0,
+ERC20 avg val sent contract,0.0,
+ERC20 uniq sent token name,15.9,13.2
+ERC20 uniq rec token name,14.7,16.4

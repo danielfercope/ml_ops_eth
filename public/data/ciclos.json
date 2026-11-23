@@ -1,6 +1,6 @@
 {
   "versao_formato": 1,
-  "gerado_em": "2026-11-23T23:16:02Z",
+  "gerado_em": "2026-11-23T23:20:00Z",
   "origem": "pipeline",
   "ciclos": [
     {
@@ -106,6 +106,51 @@
         "modelo": "B",
         "algoritmo": "xgboost",
         "run_id": "e66b3fa6f0064b6d807528d54f3fc22d",
+        "f1_val": 0.9159
+      },
+      "vigente_anterior": {
+        "cycle_id": "20261121-1311-r1",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+        "f1_val": 0.9159
+      },
+      "qualidade": {
+        "aprovada": true,
+        "falhas": []
+      },
+      "decisao": "mantido",
+      "motivo": "F1_val do vencedor 0.9159 < F1_val do vigente 0.9159 + margem 0.01 (precisava de 0.9259); o vigente foi mantido",
+      "vigente_apos": {
+        "cycle_id": "20261121-1311-r1",
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "bbbb69a8d43847d095fe702b2d9485d4"
+      }
+    },
+    {
+      "cycle_id": "20261123-2318-r5",
+      "executado_em": "2026-11-23T23:19:44Z",
+      "gatilho": "workflow_dispatch",
+      "execucao_url": "https://github.com/danielfercope/ml_ops_eth/actions/runs/45286899952",
+      "data_version": "v1-65ada979",
+      "lotes": [
+        "lote_01"
+      ],
+      "lotes_novos": [],
+      "dados": {
+        "n_carteiras": 6878,
+        "duplicados_removidos": 10,
+        "n_treino": 4205,
+        "n_validacao": 1306,
+        "n_teste": 1367,
+        "taxa_fraude_treino": 0.225
+      },
+      "n_features_eleitas": 6,
+      "vencedor": {
+        "modelo": "B",
+        "algoritmo": "xgboost",
+        "run_id": "53d2e5c23870425e9228bdb76605b2a2",
         "f1_val": 0.9159
       },
       "vigente_anterior": {
