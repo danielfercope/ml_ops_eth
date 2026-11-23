@@ -1,5 +1,7 @@
 # MLOps Ethereum — detecção de fraude com ciclos agendados
 
+Grupo: Breno, Daniel, Eduarda, Eduardo e Laura.
+
 Pipeline MLOps do Trabalho N3. Um **único workflow agendado** no GitHub Actions incorpora lotes do
 [Ethereum Fraud Detection Dataset](https://www.kaggle.com/datasets/vagifa/ethereum-frauddetection-dataset)
 (Kaggle, ODbL; veja [`data/README.md`](data/README.md)). A cada ciclo ele elege as features por votação de
