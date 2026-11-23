@@ -97,6 +97,17 @@ Configuração única do repositório (*Settings*):
 2. *Pages → Source*: **GitHub Actions** (só para o painel).
 3. Se a branch padrão tiver proteção, permitir o push do `github-actions[bot]`.
 
+### Painel local
+
+```bash
+python -m src.exportar_painel   # gera public/data/ a partir do estado do pipeline (valida o contrato)
+npm ci
+npm run dev                     # http://localhost:5173/ (dados reais; ?cenario=padrao|mantido|vazio para os mocks)
+npm test                        # Vitest: as 5 telas renderizadas com os mocks
+```
+
+Contrato dos JSONs e cenários mock: [`docs/painel_dados.md`](docs/painel_dados.md).
+
 ### Demonstração dos ciclos
 
 | Ciclo | O que fazer antes | Resultado esperado |
@@ -166,7 +177,9 @@ ml_ops_eth/
 ├── models/                                # modelo_vigente.json e historico_decisoes.csv
 ├── mlflow.db, mlartifacts/                # tracking do MLflow (persistido pelo workflow)
 ├── evidencias/<cycle_id>/                 # notebooks executados, pipeline.log, resumo_ciclo.json
-├── web/, public/, index.html              # painel (Vite + React + TS, Dev 5)
+├── web/, index.html                       # painel: app Vite + React + TS (Dev 5)
+├── prototipo.html                         # protótipo aprovado do painel (HTML único)
+├── public/data/                           # JSONs do painel gerados por exportar_painel.py
 ├── docs/                                  # seções do relatório por frente
 ├── tests/
 └── legado/                                # Airflow + Docker + Streamlit (versão anterior, fora do fluxo)

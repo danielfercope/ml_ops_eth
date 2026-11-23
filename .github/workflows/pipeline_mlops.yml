@@ -160,9 +160,10 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Build do painel
+      - name: Testes e build do painel
         run: |
           npm ci
+          npm test                  # Vitest: renderização das 5 telas com os mocks
           npm run build -- --base=/${{ github.event.repository.name }}/
 
       - uses: actions/configure-pages@v5

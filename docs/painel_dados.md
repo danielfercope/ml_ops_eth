@@ -10,6 +10,8 @@
 | --- | --- |
 | `web/dados/schemas/*.schema.json` | **Fonte da verdade** do formato (JSON Schema 2020-12). `comum.schema.json` guarda os tipos compartilhados. |
 | `web/dados/tipos.ts` | Os mesmos tipos em TypeScript, para as telas. Mudou um schema → muda aqui. |
+| `web/` + `index.html` | App React (React Router, 5 telas). `web/dados/carregar.ts` busca os JSONs; `web/painel.test.tsx` testa as telas com os mocks (`npm test`). |
+| `prototipo.html` | Protótipo aprovado em HTML único; origem do layout e dos design tokens (`web/estilos.css`). |
 | `web/dados/mocks/<cenario>/*.json` | Mocks versionados (ver [Cenários](#cenários-mock)). |
 | `src/contrato_painel.py` | Validador: schema + coerência entre os arquivos. O `exportar_painel.py` deve chamá-lo antes de publicar. |
 | `tests/test_contrato_painel.py` | Valida todos os mocks, testa se o validador pega quebras e valida `public/data/` se existir. |
