@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.local/painel/ciclos.schema.json",
+  "title": "ciclos.json — tela Ciclos",
+  "type": "object",
+  "required": ["versao_formato", "gerado_em", "origem", "ciclos"],
+  "additionalProperties": false,
+  "properties": {
+    "versao_formato": { "$ref": "comum.schema.json#/$defs/versao_formato" },
+    "gerado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+    "origem": { "$ref": "comum.schema.json#/$defs/origem" },
+    "ciclos": {
+      "type": "array",
+      "description": "Ordem cronológica (mais antigo primeiro).",
+      "items": {
+        "type": "object",
+        "required": ["cycle_id", "executado_em", "gatilho", "execucao_url", "data_version", "lotes", "lotes_novos",
+                     "dados", "n_features_eleitas", "vencedor", "vigente_anterior", "decisao", "motivo", "vigente_apos"],
+        "additionalProperties": false,
+        "properties": {
+          "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+          "executado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+          "gatilho": { "$ref": "comum.schema.json#/$defs/gatilho" },
+          "execucao_url": { "type": ["string", "null"], "description": "Link da execução no GitHub Actions." },
+          "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+          "lotes": { "type": "array", "minItems": 1, "items": { "$ref": "comum.schema.json#/$defs/lote" } },
+          "lotes_novos": { "type": "array", "description": "Vazio = ciclo sem dados novos.", "items": { "$ref": "comum.schema.json#/$defs/lote" } },
+          "dados": {
+            "type": "object",
+            "required": ["n_carteiras", "duplicados_removidos", "n_treino", "n_validacao", "n_teste", "taxa_fraude_treino"],
+            "additionalProperties": false,
+            "properties": {
+              "n_carteiras": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "duplicados_removidos": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_treino": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_validacao": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_teste": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "taxa_fraude_treino": { "$ref": "comum.schema.json#/$defs/fracao" }
+            }
+          },
+          "n_features_eleitas": { "type": "integer", "minimum": 1 },
+          "vencedor": { "$ref": "comum.schema.json#/$defs/ref_vencedor" },
+          "vigente_anterior": {
+            "description": "Vigente no início do ciclo, com F1 reavaliado na validação deste ciclo. null no 1º ciclo.",
+            "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/ref_modelo_f1" }]
+          },
+          "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
+          "motivo": { "type": "string", "minLength": 1 },
+          "vigente_apos": {
+            "description": "Vigente ao fim do ciclo.",
+            "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/ref_modelo" }]
+          }
+        }
+      }
+    }
+  }
+}

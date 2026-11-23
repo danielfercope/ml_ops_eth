@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.local/painel/vigente.schema.json",
+  "title": "vigente.json — tela Visão geral",
+  "type": "object",
+  "required": ["versao_formato", "gerado_em", "origem", "regra_promocao", "vigente", "ultimo_ciclo", "modelo_mudou", "anterior"],
+  "additionalProperties": false,
+  "properties": {
+    "versao_formato": { "$ref": "comum.schema.json#/$defs/versao_formato" },
+    "gerado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+    "origem": { "$ref": "comum.schema.json#/$defs/origem" },
+    "regra_promocao": {
+      "type": "object",
+      "required": ["metrica", "margem_minima", "f1_minimo"],
+      "additionalProperties": false,
+      "properties": {
+        "metrica": { "const": "f1" },
+        "margem_minima": { "type": "number", "minimum": 0 },
+        "f1_minimo": { "$ref": "comum.schema.json#/$defs/fracao" }
+      }
+    },
+    "vigente": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["cycle_id", "modelo", "algoritmo", "run_id", "data_version", "features", "f1_val", "f1_teste", "promovido_em"],
+          "additionalProperties": false,
+          "properties": {
+            "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+            "modelo": { "$ref": "comum.schema.json#/$defs/papel" },
+            "algoritmo": { "$ref": "comum.schema.json#/$defs/algoritmo" },
+            "run_id": { "$ref": "comum.schema.json#/$defs/run_id" },
+            "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+            "features": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "f1_val": { "$ref": "comum.schema.json#/$defs/fracao" },
+            "f1_teste": { "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/fracao" }] },
+            "promovido_em": { "$ref": "comum.schema.json#/$defs/data_hora" }
+          }
+        }
+      ]
+    },
+    "ultimo_ciclo": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["cycle_id", "executado_em", "data_version", "decisao", "motivo", "vencedor", "f1_vigente_anterior"],
+          "additionalProperties": false,
+          "properties": {
+            "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+            "executado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+            "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+            "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
+            "motivo": { "type": "string", "minLength": 1 },
+            "vencedor": { "$ref": "comum.schema.json#/$defs/ref_vencedor" },
+            "f1_vigente_anterior": { "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/fracao" }] }
+          }
+        }
+      ]
+    },
+    "modelo_mudou": { "type": "boolean", "description": "true → banner de troca de modelo no último ciclo." },
+    "anterior": {
+      "description": "Vigente substituído no último ciclo (null se não houve troca ou era o 1º modelo).",
+      "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/ref_modelo_f1" }]
+    }
+  }
+}

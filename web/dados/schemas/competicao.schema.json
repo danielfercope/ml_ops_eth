@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.local/painel/competicao.schema.json",
+  "title": "competicao.json — tela Competição",
+  "type": "object",
+  "required": ["versao_formato", "gerado_em", "origem", "metricas", "ciclos"],
+  "additionalProperties": false,
+  "properties": {
+    "versao_formato": { "$ref": "comum.schema.json#/$defs/versao_formato" },
+    "gerado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+    "origem": { "$ref": "comum.schema.json#/$defs/origem" },
+    "metricas": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "description": "Métricas das barras agrupadas, nesta ordem.",
+      "items": { "$ref": "comum.schema.json#/$defs/metrica" }
+    },
+    "ciclos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cycle_id", "data_version", "n_validacao", "vencedor", "decisao", "modelos"],
+        "additionalProperties": false,
+        "properties": {
+          "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+          "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+          "n_validacao": { "$ref": "comum.schema.json#/$defs/contagem" },
+          "vencedor": { "$ref": "comum.schema.json#/$defs/papel" },
+          "decisao": { "$ref": "comum.schema.json#/$defs/decisao" },
+          "modelos": {
+            "type": "array", "minItems": 2, "maxItems": 3,
+            "description": "A, B e, a partir do 2º ciclo, vigente — nesta ordem.",
+            "items": {
+              "type": "object",
+              "required": ["papel", "algoritmo", "run_id", "cycle_id_treino", "features", "metricas", "matriz_confusao"],
+              "additionalProperties": false,
+              "properties": {
+                "papel": { "enum": ["A", "B", "vigente"] },
+                "algoritmo": { "$ref": "comum.schema.json#/$defs/algoritmo" },
+                "run_id": { "$ref": "comum.schema.json#/$defs/run_id" },
+                "cycle_id_treino": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+                "features": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+                "metricas": { "$ref": "comum.schema.json#/$defs/metricas" },
+                "matriz_confusao": { "$ref": "comum.schema.json#/$defs/matriz_confusao" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

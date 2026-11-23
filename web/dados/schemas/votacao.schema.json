@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ml-ops-eth.local/painel/votacao.schema.json",
+  "title": "votacao.json — tela Votação",
+  "type": "object",
+  "required": ["versao_formato", "gerado_em", "origem", "regra", "metodos", "ciclos"],
+  "additionalProperties": false,
+  "properties": {
+    "versao_formato": { "$ref": "comum.schema.json#/$defs/versao_formato" },
+    "gerado_em": { "$ref": "comum.schema.json#/$defs/data_hora" },
+    "origem": { "$ref": "comum.schema.json#/$defs/origem" },
+    "regra": {
+      "type": "object",
+      "required": ["top_k", "votos_minimos", "desempate", "minimo_features"],
+      "additionalProperties": false,
+      "properties": {
+        "top_k": { "type": "integer", "minimum": 1 },
+        "votos_minimos": { "type": "integer", "minimum": 1 },
+        "desempate": { "type": "string" },
+        "minimo_features": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "metodos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "nome"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9_]+$", "description": "Chave usada em votos e ranks." },
+          "nome": { "type": "string", "description": "Rótulo da coluna." }
+        }
+      }
+    },
+    "ciclos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["cycle_id", "data_version", "mlflow_run_id", "n_treino", "resumo", "eleitas", "tabela"],
+        "additionalProperties": false,
+        "properties": {
+          "cycle_id": { "$ref": "comum.schema.json#/$defs/cycle_id" },
+          "data_version": { "$ref": "comum.schema.json#/$defs/data_version" },
+          "mlflow_run_id": { "oneOf": [{ "type": "null" }, { "$ref": "comum.schema.json#/$defs/run_id" }] },
+          "n_treino": { "$ref": "comum.schema.json#/$defs/contagem" },
+          "resumo": {
+            "type": "object",
+            "required": ["n_features_avaliadas", "n_eleitas", "n_eleitas_por_votos", "n_completadas_pelo_minimo",
+                         "n_com_3_votos", "n_com_2_votos", "n_com_1_voto", "n_sem_votos"],
+            "additionalProperties": false,
+            "properties": {
+              "n_features_avaliadas": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_eleitas": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_eleitas_por_votos": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_completadas_pelo_minimo": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_com_3_votos": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_com_2_votos": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_com_1_voto": { "$ref": "comum.schema.json#/$defs/contagem" },
+              "n_sem_votos": { "$ref": "comum.schema.json#/$defs/contagem" }
+            }
+          },
+          "eleitas": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+          "tabela": {
+            "type": "array",
+            "description": "Todas as features avaliadas; eleitas primeiro.",
+            "items": {
+              "type": "object",
+              "required": ["feature", "votos", "ranks", "total_votos", "rank_medio", "eleita", "motivo"],
+              "additionalProperties": false,
+              "properties": {
+                "feature": { "type": "string" },
+                "votos": { "type": "object", "additionalProperties": { "enum": [0, 1] } },
+                "ranks": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+                "total_votos": { "$ref": "comum.schema.json#/$defs/contagem" },
+                "rank_medio": { "type": "number", "minimum": 1 },
+                "eleita": { "type": "boolean" },
+                "motivo": { "enum": ["votos_suficientes", "completou_minimo", null] }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

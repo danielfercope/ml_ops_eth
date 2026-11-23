@@ -19,5 +19,8 @@ nbformat==5.11.1
 ipykernel==7.4.0
 jupyter==1.1.1
 
+# contrato dos JSONs do painel (src/contrato_painel.py)
+jsonschema==4.26.0
+
 # testes
 pytest==9.2.0

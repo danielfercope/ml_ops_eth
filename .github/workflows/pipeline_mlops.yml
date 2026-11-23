@@ -30,7 +30,7 @@ permissions:
 
 env:
   PYTHON_VERSION: "3.12"
-  PAINEL_DADOS: web/public/data   # saída de src/exportar_painel.py (Dev 5)
+  PAINEL_DADOS: public/data       # saída de src/exportar_painel.py (Dev 5); o Vite serve public/ da raiz
 
 jobs:
   ciclo:
@@ -80,7 +80,7 @@ jobs:
         if: hashFiles('src/exportar_painel.py') != ''
         continue-on-error: true   # o painel nunca bloqueia o ciclo
         run: |
-          python -m src.exportar_painel
+          python -m src.exportar_painel --saida "$PAINEL_DADOS"   # valida o contrato antes de gravar
           echo "ok=true" >> "$GITHUB_OUTPUT"
 
       - name: Resumo do ciclo
@@ -160,9 +160,10 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Build do painel
+      - name: Testes e build do painel
         run: |
           npm ci
+          npm test                  # Vitest: renderização das 5 telas com os mocks
           npm run build -- --base=/${{ github.event.repository.name }}/
 
       - uses: actions/configure-pages@v5
