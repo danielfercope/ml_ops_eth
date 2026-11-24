@@ -1,9 +1,9 @@
 {
-  "cycle_id": "20261123-2318-r5",
+  "cycle_id": "20261124-2138-r6",
   "data_version": "v1-65ada979",
   "decisao": "mantido",
   "motivo": "F1_val do vencedor 0.9159 < F1_val do vigente 0.9159 + margem 0.01 (precisava de 0.9259); o vigente foi mantido",
-  "decidido_em": "2026-11-23T23:19:44+00:00",
+  "decidido_em": "2026-11-24T21:39:31+00:00",
   "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
   "model_uri": "runs:/bbbb69a8d43847d095fe702b2d9485d4/modelo",
   "modelo": "B",
@@ -55,18 +55,18 @@
   "desafiante": {
     "modelo": "B",
     "algoritmo": "xgboost",
-    "run_id": "53d2e5c23870425e9228bdb76605b2a2",
+    "run_id": "08e9d6744d6c40d2b01dfcddb76dcb6b",
     "f1_validacao": 0.9159212880143113
   },
   "candidatos": {
     "A": {
       "algoritmo": "logistic_regression",
-      "run_id": "958255580d6540fda55f44a8042529e7",
+      "run_id": "6761fad678234e92b7f52700f463f28f",
       "f1_validacao": 0.7036496350364964
     },
     "B": {
       "algoritmo": "xgboost",
-      "run_id": "53d2e5c23870425e9228bdb76605b2a2",
+      "run_id": "08e9d6744d6c40d2b01dfcddb76dcb6b",
       "f1_validacao": 0.9159212880143113
     }
   },
@@ -148,5 +148,5 @@
       "tolerancia_recarga": 1e-06
     }
   },
-  "decisao_run_id": "272daae2a5dd41d9b2984964e62c7dfa"
+  "decisao_run_id": "067977b24cac4ee3bf5628c2e0c50182"
 }
