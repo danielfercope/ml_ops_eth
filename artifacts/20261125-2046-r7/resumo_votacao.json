@@ -1,0 +1,13 @@
+{
+  "n_features_avaliadas": 38,
+  "n_eleitas": 6,
+  "n_eleitas_por_votos": 6,
+  "n_completadas_pelo_minimo": 0,
+  "n_com_3_votos": 1,
+  "n_com_2_votos": 5,
+  "n_com_1_voto": 17,
+  "n_sem_votos": 15,
+  "minimo_features": 5,
+  "votos_minimos": 2,
+  "top_k": 10
+}

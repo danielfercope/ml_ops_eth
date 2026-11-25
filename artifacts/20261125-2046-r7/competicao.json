@@ -1,0 +1,73 @@
+{
+  "cycle_id": "20261125-2046-r7",
+  "data_version": "v1-65ada979",
+  "etapa": "treino_competicao",
+  "gerado_em": "2026-11-25T20:47:26+00:00",
+  "votacao_run_id": "f872e6ce977146c9bca68127cddbadc1",
+  "features": [
+    "total_transactions_including_tnx_to_create_contract",
+    "avg_val_received",
+    "total_ether_received",
+    "erc20_uniq_rec_token_name",
+    "total_erc20_tnxs",
+    "unique_received_from_addresses"
+  ],
+  "limiar_classificacao": 0.5,
+  "candidatos": {
+    "A": {
+      "modelo": "A",
+      "algoritmo": "logistic_regression",
+      "run_id": "4554b856bdfa42a6ae0bc9a116103454",
+      "model_uri": "runs:/4554b856bdfa42a6ae0bc9a116103454/modelo",
+      "params": {
+        "C": 1.0,
+        "max_iter": 2000,
+        "class_weight": "balanced",
+        "random_state": 42
+      },
+      "metricas_validacao": {
+        "f1": 0.7036496350364964,
+        "precision": 0.5821256038647343,
+        "recall": 0.8892988929889298,
+        "roc_auc": 0.9382212952564309,
+        "average_precision": 0.7927295970435613,
+        "tn": 862,
+        "fp": 173,
+        "fn": 30,
+        "tp": 241,
+        "n": 1306
+      }
+    },
+    "B": {
+      "modelo": "B",
+      "algoritmo": "xgboost",
+      "run_id": "718fb8109a6b47339a4283d73321d892",
+      "model_uri": "runs:/718fb8109a6b47339a4283d73321d892/modelo",
+      "params": {
+        "n_estimators": 300,
+        "max_depth": 4,
+        "learning_rate": 0.05,
+        "subsample": 0.9,
+        "colsample_bytree": 0.9,
+        "min_child_weight": 1,
+        "scale_pos_weight": 3.445032,
+        "eval_metric": "logloss",
+        "tree_method": "hist",
+        "random_state": 42,
+        "n_jobs": 1
+      },
+      "metricas_validacao": {
+        "f1": 0.9159212880143113,
+        "precision": 0.8888888888888888,
+        "recall": 0.9446494464944649,
+        "roc_auc": 0.9938249817280782,
+        "average_precision": 0.9790672840633681,
+        "tn": 1003,
+        "fp": 32,
+        "fn": 15,
+        "tp": 256,
+        "n": 1306
+      }
+    }
+  }
+}
