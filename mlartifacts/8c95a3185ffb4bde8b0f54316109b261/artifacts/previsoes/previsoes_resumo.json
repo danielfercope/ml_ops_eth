@@ -1,0 +1,35 @@
+{
+  "cycle_id": "20261126-2039-r8",
+  "data_version": "v1-65ada979",
+  "etapa": "previsoes",
+  "gerado_em": "2026-11-26T20:40:00+00:00",
+  "particao": "teste",
+  "limiar": 0.5,
+  "vigente": {
+    "run_id": "bbbb69a8d43847d095fe702b2d9485d4",
+    "modelo": "B",
+    "algoritmo": "xgboost",
+    "treinado_no_ciclo": "20261121-1311-r1",
+    "promovido_no_ciclo": "20261121-1311-r1",
+    "features": [
+      "total_transactions_including_tnx_to_create_contract",
+      "avg_val_received",
+      "total_ether_received",
+      "erc20_uniq_rec_token_name",
+      "total_erc20_tnxs",
+      "unique_received_from_addresses"
+    ]
+  },
+  "resumo": {
+    "n": 1367,
+    "previstas_fraude": 334,
+    "fraudes_reais": 308,
+    "tp": 294,
+    "fp": 40,
+    "fn": 14,
+    "tn": 1019,
+    "f1": 0.9158878504672897,
+    "precision": 0.8802395209580839,
+    "recall": 0.9545454545454546
+  }
+}
