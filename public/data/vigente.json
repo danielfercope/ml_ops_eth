@@ -1,6 +1,6 @@
 {
   "versao_formato": 1,
-  "gerado_em": "2026-11-26T20:40:06Z",
+  "gerado_em": "2026-11-27T20:26:06Z",
   "origem": "pipeline",
   "regra_promocao": {
     "metrica": "f1",
@@ -26,15 +26,15 @@
     "promovido_em": "2026-11-21T13:12:00Z"
   },
   "ultimo_ciclo": {
-    "cycle_id": "20261126-2039-r8",
-    "executado_em": "2026-11-26T20:39:52Z",
+    "cycle_id": "20261127-2025-r9",
+    "executado_em": "2026-11-27T20:25:54Z",
     "data_version": "v1-65ada979",
     "decisao": "mantido",
     "motivo": "F1_val do vencedor 0.9159 < F1_val do vigente 0.9159 + margem 0.01 (precisava de 0.9259); o vigente foi mantido",
     "vencedor": {
       "modelo": "B",
       "algoritmo": "xgboost",
-      "run_id": "ab60d252b2a64337b8628d32106d5df7",
+      "run_id": "f9a1c13bf0504f0ba4edc63ecd5ded04",
       "f1_val": 0.9159
     },
     "f1_vigente_anterior": 0.9159

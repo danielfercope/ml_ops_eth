@@ -1,0 +1,11 @@
+{
+  "features": [
+    "total_transactions_including_tnx_to_create_contract",
+    "avg_val_received",
+    "total_ether_received",
+    "erc20_uniq_rec_token_name",
+    "total_erc20_tnxs",
+    "unique_received_from_addresses"
+  ],
+  "n_features": 6
+}
